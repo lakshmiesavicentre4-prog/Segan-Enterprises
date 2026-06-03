@@ -22,7 +22,7 @@ const AppContent: React.FC = () => {
     // Check global maintenance bypass
     if (settings.maintenanceMode && currentUser?.role !== 'admin') {
       return (
-        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-zinc-50 dark:bg-[#091114] min-h-[60vh] space-y-4">
+        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-slate-50 dark:bg-[#020817] min-h-[60vh] space-y-4">
           <AlertTriangle className="w-12 h-12 text-amber-500 animate-bounce" />
           <h2 className="font-display font-extrabold text-xl text-slate-900 dark:text-white">
             System Under Temporary Maintenance
@@ -30,7 +30,7 @@ const AppContent: React.FC = () => {
           <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
             TNeGA digital gateways are undergoing scheduled security audits. Access keys will re-initialize shortly. Thank you for your patience.
           </p>
-          <div className="inline-flex items-center text-[11px] text-teal-600 font-mono">
+          <div className="inline-flex items-center text-[11px] text-blue-600 font-mono">
             <Clock className="w-3.5 h-3.5 mr-1" />
             <span>Expected resumption: 6:00 AM UTC</span>
           </div>
@@ -53,7 +53,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-zinc-50 dark:bg-[#091114] text-slate-700 dark:text-slate-350 select-none transition-colors duration-300 w-full overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-[#020817] text-slate-700 dark:text-slate-350 select-none transition-colors duration-300 w-full overflow-x-hidden">
       <Navbar />
       <main className="flex-1 flex flex-col">
         {renderCurrentView()}

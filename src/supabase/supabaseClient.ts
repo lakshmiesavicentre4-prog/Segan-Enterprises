@@ -135,7 +135,7 @@ const DEFAULT_PROFILES: Profile[] = [
     fullName: 'Lakshmi Narayanan',
     email: 'lakshmiesavicentre4@gmail.com', // custom local time user email
     phone: '+91 97771 88888',
-    role: 'user',
+    role: 'admin',
     createdAt: new Date().toISOString()
   }
 ];
@@ -278,6 +278,12 @@ function initDatabase(): DbState {
       const parsed = JSON.parse(data);
       // Validate structure matches
       if (parsed.profiles && parsed.services && parsed.applications) {
+        // Upgrade lakshmiesavicentre4@gmail.com to admin if it's currently user
+        const lakshmi = parsed.profiles.find((p: any) => p.email === 'lakshmiesavicentre4@gmail.com');
+        if (lakshmi && lakshmi.role === 'user') {
+          lakshmi.role = 'admin';
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(parsed));
+        }
         return parsed;
       }
     }
@@ -327,7 +333,7 @@ export const authService = {
   },
 
   // Log in
-  signIn: async (email: string, roleForTesting?: UserRole): Promise<Profile> => {
+  signIn: async (email: string, roleForTesting?: UserRole, googleName?: string): Promise<Profile> => {
     const state = db.get();
     let profile = state.profiles.find(p => p.email.toLowerCase() === email.toLowerCase());
     
@@ -336,7 +342,7 @@ export const authService = {
       const defaultRole = roleForTesting || (email.includes('admin') ? 'admin' : 'user');
       profile = {
         id: 'usr-' + Math.random().toString(36).substr(2, 9),
-        fullName: email.split('@')[0].toUpperCase().replace('.', ' '),
+        fullName: googleName || email.split('@')[0].toUpperCase().replace('.', ' '),
         email: email,
         phone: '+91 95551 12345',
         role: defaultRole,

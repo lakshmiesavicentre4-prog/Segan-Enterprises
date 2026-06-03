@@ -53,7 +53,7 @@ interface AppContextType {
   
   // Helpers
   t: (key: keyof typeof i18n['en']) => string;
-  loginUser: (email: string, role?: 'user' | 'admin') => Promise<void>;
+  loginUser: (email: string, role?: 'user' | 'admin', fullName?: string) => Promise<void>;
   registerUser: (name: string, email: string, phone: string, role?: 'user' | 'admin') => Promise<void>;
   addUser: (name: string, email: string, phone: string, role: 'user' | 'admin') => Promise<void>;
   logoutUser: () => void;
@@ -136,8 +136,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   // Login handler
-  const loginUser = async (email: string, role?: 'user' | 'admin') => {
-    const profile = await authService.signIn(email, role);
+  const loginUser = async (email: string, role?: 'user' | 'admin', fullName?: string) => {
+    const profile = await authService.signIn(email, role, fullName);
     setCurrentUserState(profile);
     if (profile.role === 'user') {
       setViewState('user-dashboard');

@@ -11,7 +11,7 @@ export const Footer: React.FC = () => {
   const { t } = useApp();
 
   return (
-    <footer className="bg-white dark:bg-[#0b1418] border-t border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 py-12">
+    <footer className="bg-white dark:bg-[#0A1128] border-t border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Top Segment */}
@@ -38,10 +38,10 @@ export const Footer: React.FC = () => {
               DEPARTMENTS
             </h5>
             <ul className="space-y-2 text-xs">
-              <li><span className="hover:text-teal-600 dark:hover:text-amber-400 cursor-pointer transition-colors">TNeGA Portal</span></li>
-              <li><span className="hover:text-teal-600 dark:hover:text-amber-400 cursor-pointer transition-colors">Revenue Department</span></li>
-              <li><span className="hover:text-teal-600 dark:hover:text-amber-400 cursor-pointer transition-colors">Social Welfare Dept</span></li>
-              <li><span className="hover:text-teal-600 dark:hover:text-amber-400 cursor-pointer transition-colors">Central IT Services</span></li>
+              <li><span className="hover:text-blue-600 dark:hover:text-amber-400 cursor-pointer transition-colors">TNeGA Portal</span></li>
+              <li><span className="hover:text-blue-600 dark:hover:text-amber-400 cursor-pointer transition-colors">Revenue Department</span></li>
+              <li><span className="hover:text-blue-600 dark:hover:text-amber-400 cursor-pointer transition-colors">Social Welfare Dept</span></li>
+              <li><span className="hover:text-blue-600 dark:hover:text-amber-400 cursor-pointer transition-colors">Central IT Services</span></li>
             </ul>
           </div>
 
@@ -51,12 +51,12 @@ export const Footer: React.FC = () => {
               SECURITY AUDITS
             </h5>
             <div className="space-y-3.5">
-              <div className="flex items-center text-xs space-x-2 bg-zinc-50 dark:bg-slate-800/50 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
+              <div className="flex items-center text-xs space-x-2 bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
                 <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-500 shrink-0" />
                 <span className="text-slate-700 dark:text-slate-400">SSL Secured Vaulting (ISO/IEC 27001)</span>
               </div>
-              <div className="flex items-center text-xs space-x-2 bg-zinc-50 dark:bg-slate-800/50 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
-                <Award className="w-4 h-4 text-teal-600 dark:text-teal-400 shrink-0" />
+              <div className="flex items-center text-xs space-x-2 bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
+                <Award className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
                 <span className="text-slate-700 dark:text-slate-400">TNeGA Compliant e-Sevai Code</span>
               </div>
             </div>
@@ -69,15 +69,15 @@ export const Footer: React.FC = () => {
             </h5>
             <ul className="space-y-3 text-xs">
               <li className="flex items-center space-x-2">
-                <Phone className="w-4 h-4 text-teal-500" />
+                <Phone className="w-4 h-4 text-blue-500" />
                 <span>+91 94440 88888 (Toll Free)</span>
               </li>
               <li className="flex items-center space-x-2">
-                <Mail className="w-4 h-4 text-teal-500" />
+                <Mail className="w-4 h-4 text-blue-500" />
                 <span>operations@segan.in</span>
               </li>
               <li className="flex items-center space-x-2">
-                <Clock className="w-4 h-4 text-teal-500" />
+                <Clock className="w-4 h-4 text-blue-500" />
                 <span>Mon - Sat (9:00 AM - 6:00 PM)</span>
               </li>
             </ul>
