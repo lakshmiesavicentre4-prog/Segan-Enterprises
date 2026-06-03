@@ -25,7 +25,8 @@ import {
   Edit3, 
   FileSpreadsheet, 
   Filter, 
-  DollarSign 
+  DollarSign,
+  UserPlus
 } from 'lucide-react';
 import { 
   serviceService, 
@@ -49,7 +50,8 @@ export const AdminDashboard: React.FC = () => {
     refreshLogs, 
     settings, 
     updateGlobalSettings,
-    language 
+    language,
+    addUser
   } = useApp();
 
   // Active admin menu state
@@ -97,12 +99,8 @@ export const AdminDashboard: React.FC = () => {
 
   const uniqueCategories = ['All', ...new Set(services.map(s => s.category))];
 
-  // RBAC selection handler (Super Admin privilege only!)
-  const handleUpdateRole = (userId: string, newRole: 'user' | 'admin' | 'super_admin') => {
-    if (currentUser?.role !== 'super_admin') {
-      alert('Security Alert: Super-Admin credentials required for RBAC actions!');
-      return;
-    }
+  // RBAC selection handler
+  const handleUpdateRole = (userId: string, newRole: 'user' | 'admin') => {
     authService.updateUserRole(userId, newRole);
     refreshLogs();
   };
@@ -222,27 +220,30 @@ export const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-8 text-left">
+    <div className="relative min-h-[calc(100vh-5rem)] pb-12 w-full animate-fade-in bg-zinc-50/50 dark:bg-[#091114]">
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/40 via-transparent to-teal-50/40 dark:from-purple-900/5 dark:via-transparent dark:to-teal-900/5 pointer-events-none"></div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-8 text-left relative z-10">
       
       {/* LEFT ACCORD MOOD NAVIGATOR */}
-      <aside className="w-full lg:w-64 shrink-0 flex flex-col gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-3xl h-fit shadow-sm text-slate-700 dark:text-slate-300">
-        <div className="border-b border-slate-100 dark:border-slate-800 pb-3 mb-3 text-center lg:text-left">
-          <span className="text-[10px] uppercase font-extrabold tracking-widest text-slate-400">ADMIN CONTROL PANEL</span>
-          <h3 className="font-display font-bold text-sm text-slate-950 dark:text-white mt-1 uppercase max-w-[190px] truncate">
+      <aside className="w-full lg:w-72 shrink-0 flex flex-col gap-2 bg-white/70 dark:bg-[#0b1418]/70 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/80 p-5 rounded-3xl h-fit shadow-[0_4px_20px_rgb(0,0,0,0.02)] dark:shadow-[0_4px_20px_rgb(0,0,0,0.1)] text-slate-700 dark:text-slate-300">
+        <div className="border-b border-slate-100 dark:border-slate-800/80 pb-4 mb-4 text-center lg:text-left">
+          <span className="text-[10px] uppercase font-black tracking-widest text-slate-400">ADMIN CONTROL PANEL</span>
+          <h3 className="font-display font-black text-base text-slate-950 dark:text-white mt-1 uppercase max-w-[210px] truncate">
             {currentUser?.fullName}
           </h3>
-          <span className="inline-flex items-center space-x-1.5 px-2 py-0.5 mt-1 rounded bg-amber-50 dark:bg-amber-955/30 border border-amber-250 dark:border-amber-900/40 text-[9px] font-bold text-amber-700 dark:text-amber-400 uppercase">
+          <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 mt-2 mb-1 rounded-md bg-emerald-50 dark:bg-purple-900/20 border border-emerald-200 dark:border-purple-800/40 text-[10px] font-bold text-emerald-700 dark:text-purple-300 uppercase shadow-sm">
             <Sparkles className="w-3 h-3" />
-            <span>{currentUser?.role === 'super_admin' ? 'Super-Director' : 'Agent Access'}</span>
+            <span>Center Agent Admin</span>
           </span>
         </div>
 
         <button
           onClick={() => setAdminMenu('analytics')}
-          className={`flex items-center space-x-2 px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
+          className={`flex items-center space-x-2.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all active:scale-[0.98] ${
             adminMenu === 'analytics' 
-              ? 'bg-blue-600 text-white font-black shadow-md' 
-              : 'hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-650 dark:text-slate-350'
+              ? 'bg-teal-600 text-white font-black shadow-lg shadow-teal-600/20 ring-1 ring-teal-600/50' 
+              : 'hover:bg-slate-100/50 dark:hover:bg-slate-800/50 text-slate-600 dark:text-slate-400'
           }`}
         >
           <BarChart className="w-4 h-4" />
@@ -253,8 +254,8 @@ export const AdminDashboard: React.FC = () => {
           onClick={() => setAdminMenu('files')}
           className={`flex items-center space-x-2 px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
             adminMenu === 'files' 
-              ? 'bg-blue-600 text-white font-black shadow-md' 
-              : 'hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-650 dark:text-slate-350'
+              ? 'bg-teal-600 text-white font-black shadow-md' 
+              : 'hover:bg-zinc-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350'
           }`}
         >
           <FileCheck className="w-4 h-4" />
@@ -265,8 +266,8 @@ export const AdminDashboard: React.FC = () => {
           onClick={() => setAdminMenu('services')}
           className={`flex items-center space-x-2 px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
             adminMenu === 'services' 
-              ? 'bg-blue-600 text-white font-black shadow-md' 
-              : 'hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-650 dark:text-slate-350'
+              ? 'bg-teal-600 text-white font-black shadow-md' 
+              : 'hover:bg-zinc-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350'
           }`}
         >
           <Plus className="w-4 h-4" />
@@ -277,8 +278,8 @@ export const AdminDashboard: React.FC = () => {
           onClick={() => setAdminMenu('citizens')}
           className={`flex items-center space-x-2 px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
             adminMenu === 'citizens' 
-              ? 'bg-blue-600 text-white font-black shadow-md' 
-              : 'hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-650 dark:text-slate-350'
+              ? 'bg-teal-600 text-white font-black shadow-md' 
+              : 'hover:bg-zinc-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350'
           }`}
         >
           <Users className="w-4 h-4" />
@@ -289,8 +290,8 @@ export const AdminDashboard: React.FC = () => {
           onClick={() => setAdminMenu('reports')}
           className={`flex items-center space-x-2 px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
             adminMenu === 'reports' 
-              ? 'bg-blue-600 text-white font-black shadow-md' 
-              : 'hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-650 dark:text-slate-350'
+              ? 'bg-teal-600 text-white font-black shadow-md' 
+              : 'hover:bg-zinc-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350'
           }`}
         >
           <FileSpreadsheet className="w-4 h-4" />
@@ -301,8 +302,8 @@ export const AdminDashboard: React.FC = () => {
           onClick={() => setAdminMenu('logs')}
           className={`flex items-center space-x-2 px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
             adminMenu === 'logs' 
-              ? 'bg-blue-600 text-white font-black shadow-md' 
-              : 'hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-650 dark:text-slate-350'
+              ? 'bg-teal-600 text-white font-black shadow-md' 
+              : 'hover:bg-zinc-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350'
           }`}
         >
           <Activity className="w-4 h-4" />
@@ -313,8 +314,8 @@ export const AdminDashboard: React.FC = () => {
           onClick={() => setAdminMenu('config')}
           className={`flex items-center space-x-2 px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
             adminMenu === 'config' 
-              ? 'bg-blue-600 text-white font-black shadow-md' 
-              : 'hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-650 dark:text-slate-350'
+              ? 'bg-teal-600 text-white font-black shadow-md' 
+              : 'hover:bg-zinc-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350'
           }`}
         >
           <Settings className="w-4 h-4" />
@@ -337,30 +338,30 @@ export const AdminDashboard: React.FC = () => {
             
             {/* Bento dashboard cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="p-5 rounded-3xl bg-blue-600 text-white shadow-md relative overflow-hidden">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-blue-100">Portal Gross Revenue</span>
+              <div className="p-5 rounded-3xl bg-teal-600 text-white shadow-md relative overflow-hidden">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-teal-100">Portal Gross Revenue</span>
                 <p className="font-display font-black text-2xl mt-1.5 font-serif">₹{metricsTotalRevenue}.00</p>
-                <DollarSign className="absolute -right-4 -bottom-4 w-20 h-20 text-blue-500/20" />
+                <DollarSign className="absolute -right-4 -bottom-4 w-20 h-20 text-teal-500/20" />
               </div>
 
-              <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-205 dark:border-slate-800 text-slate-700 dark:text-slate-300">
+              <div className="p-5 rounded-3xl bg-white/70 dark:bg-[#0b1418]/70 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/80 text-slate-700 dark:text-slate-300">
                 <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block">Total Transactions</span>
                 <p className="font-display font-black text-2xl mt-1.5 text-slate-900 dark:text-white">{metricsVolume}</p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-205 dark:border-slate-800 text-slate-700 dark:text-slate-300">
+              <div className="p-5 rounded-3xl bg-white/70 dark:bg-[#0b1418]/70 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/80 text-slate-700 dark:text-slate-300">
                 <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block">Total Unresolved File Checks</span>
                 <p className="font-display font-black text-2xl mt-1.5 text-amber-500">{metricsPending}</p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-205 dark:border-slate-800 text-slate-750 dark:text-slate-300">
+              <div className="p-5 rounded-3xl bg-white/70 dark:bg-[#0b1418]/70 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/80 text-slate-700 dark:text-slate-300">
                 <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block">Audit completions</span>
                 <p className="font-display font-black text-2xl mt-1.5 text-emerald-500">{metricsCompleted}</p>
               </div>
             </div>
 
             {/* Custom High Quality Symmetrical SVG Line Chart for June 2026 */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl text-left shadow-sm">
+            <div className="bg-white/70 dark:bg-[#0b1418]/70 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/80 p-6 rounded-3xl text-left shadow-sm">
               <div className="border-b border-slate-50 dark:border-slate-800 pb-3 mb-5">
                 <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white uppercase tracking-wider">
                   Applications Traffic Load & Submissions Volume
@@ -369,16 +370,16 @@ export const AdminDashboard: React.FC = () => {
               </div>
 
               {/* Vector canvas lines bar graph */}
-              <div className="w-full h-56 flex items-end justify-between font-mono text-[9px] text-slate-400 pt-6 px-4 bg-slate-50 dark:bg-slate-950/40 rounded-2xl border border-slate-100 dark:border-slate-850">
+              <div className="w-full h-56 flex items-end justify-between font-mono text-[9px] text-slate-400 pt-6 px-4 bg-zinc-50 dark:bg-[#091114]/40 rounded-2xl border border-slate-100 dark:border-slate-800">
                 
                 {/* Visual bar groups block */}
                 <div className="flex flex-col items-center flex-1 h-full justify-end pr-2 space-y-1">
-                  <div className="w-8 md:w-12 bg-blue-600 rounded-t-lg transition-transform duration-500 hover:scale-105 shadow-inner" style={{ height: '35%' }}></div>
+                  <div className="w-8 md:w-12 bg-teal-600 rounded-t-lg transition-transform duration-500 hover:scale-105 shadow-inner" style={{ height: '35%' }}></div>
                   <span className="font-semibold text-slate-700 dark:text-slate-300">Wk 1</span>
                 </div>
 
                 <div className="flex flex-col items-center flex-1 h-full justify-end pr-2 space-y-1">
-                  <div className="w-8 md:w-12 bg-blue-600 rounded-t-lg transition-transform duration-500 hover:scale-105 shadow-inner" style={{ height: '65%' }}></div>
+                  <div className="w-8 md:w-12 bg-teal-600 rounded-t-lg transition-transform duration-500 hover:scale-105 shadow-inner" style={{ height: '65%' }}></div>
                   <span className="font-semibold text-slate-700 dark:text-slate-300">Wk 2</span>
                 </div>
 
@@ -388,7 +389,7 @@ export const AdminDashboard: React.FC = () => {
                 </div>
 
                 <div className="flex flex-col items-center flex-1 h-full justify-end pr-2 space-y-1">
-                  <div className="w-8 md:w-12 bg-blue-600 rounded-t-lg transition-transform duration-500 hover:scale-105 shadow-inner" style={{ height: '50%' }}></div>
+                  <div className="w-8 md:w-12 bg-teal-600 rounded-t-lg transition-transform duration-500 hover:scale-105 shadow-inner" style={{ height: '50%' }}></div>
                   <span className="font-semibold text-slate-700 dark:text-slate-300">Wk 4</span>
                 </div>
 
@@ -396,7 +397,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             {/* Quick operational activities log banner */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-205 dark:border-slate-800 p-6 rounded-3xl text-left shadow-sm">
+            <div className="bg-white/70 dark:bg-[#0b1418]/70 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/80 p-6 rounded-3xl text-left shadow-sm">
               <h4 className="font-display font-extrabold text-xs text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
                 Urgent Actions Queue
               </h4>
@@ -430,7 +431,7 @@ export const AdminDashboard: React.FC = () => {
             MENU 2: MANAGE CITIZEN APPLICATIONS (PREVIEW + PROCESS COUPLINGS)
             ===================================================================== */}
         {adminMenu === 'files' && (
-          <div className="bg-white dark:bg-slate-900 border border-slate-207 dark:border-slate-800 p-6 rounded-3xl text-left shadow-sm space-y-6">
+          <div className="bg-white/70 dark:bg-[#0b1418]/70 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/80 p-6 rounded-3xl text-left shadow-sm space-y-6">
             
             <div className="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-100 dark:border-slate-800 pb-4 gap-4">
               <div>
@@ -443,7 +444,7 @@ export const AdminDashboard: React.FC = () => {
               {/* Status filtering selector */}
               <div className="flex flex-wrap gap-2 text-xs font-bold">
                 <select 
-                  className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-2 rounded-xl"
+                  className="bg-zinc-50 dark:bg-[#091114] border border-slate-200 dark:border-slate-800 p-2 rounded-xl"
                   value={fileFilterStatus}
                   onChange={(e) => setFileFilterStatus(e.target.value)}
                 >
@@ -464,7 +465,7 @@ export const AdminDashboard: React.FC = () => {
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs whitespace-nowrap">
-                  <thead className="bg-slate-50 dark:bg-slate-955 text-[10px] uppercase tracking-wider font-display font-black text-slate-400 border-b border-slate-200 dark:border-slate-805">
+                  <thead className="bg-zinc-50 dark:bg-slate-955 text-[10px] uppercase tracking-wider font-display font-black text-slate-400 border-b border-slate-200 dark:border-slate-805">
                     <tr>
                       <th className="p-3">Ref Token</th>
                       <th className="p-3">Citizen Resident</th>
@@ -474,7 +475,7 @@ export const AdminDashboard: React.FC = () => {
                       <th className="p-3 text-center">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-850 font-semibold font-sans">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-semibold font-sans">
                     {filteredApplications.map(app => (
                       <tr key={app.id} className="hover:bg-slate-55/60 dark:hover:bg-slate-955/20">
                         <td className="p-3 text-slate-950 dark:text-white font-mono">{app.tokenNumber}</td>
@@ -485,14 +486,14 @@ export const AdminDashboard: React.FC = () => {
                         <td className="p-3 text-slate-900 dark:text-white">{app.serviceName}</td>
                         <td className="p-3 text-slate-400">{app.serviceCategory || 'e-Sevai'}</td>
                         <td className="p-3">
-                          <span className="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-extrabold tracking-wide uppercase bg-slate-100 dark:bg-slate-900">
+                          <span className="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-extrabold tracking-wide uppercase bg-slate-100 dark:bg-[#0b1418]">
                             {app.status}
                           </span>
                         </td>
                         <td className="p-3 text-center">
                           <button
                             onClick={() => handleOpenReview(app)}
-                            className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[10px] rounded-xl shadow-sm cursor-pointer transition uppercase"
+                            className="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-[10px] rounded-xl shadow-sm cursor-pointer transition uppercase"
                           >
                             Inspect Process
                           </button>
@@ -506,16 +507,17 @@ export const AdminDashboard: React.FC = () => {
 
             {/* REVIEW FLOW EXPANDED MODAL DIALOG */}
             {selectedReviewApp && (
-              <div className="fixed inset-0 z-50 bg-slate-950/65 flex items-center justify-center p-4 backdrop-blur-xs">
+              <div className="fixed inset-0 z-50 bg-[#091114]/65 flex items-center justify-center p-4 backdrop-blur-xs">
                 <div className="bg-white dark:bg-slate-904 max-w-2xl w-full rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 text-left relative max-h-[85vh] overflow-y-auto animate-scale-up">
                   
                   <div className="flex justify-between items-start border-b border-slate-100 dark:border-slate-802 pb-3 mb-4">
                     <div>
-                      <span className="text-[9px] uppercase tracking-wider font-extrabold text-blue-600">INSPECTION DESK AUDIT</span>
+                      <span className="text-[9px] uppercase tracking-wider font-extrabold text-teal-600">INSPECTION DESK AUDIT</span>
                       <h4 className="font-display font-extrabold text-sm text-slate-900 dark:text-white">{selectedReviewApp.serviceName}</h4>
                       <p className="text-[10px] text-slate-400 font-mono mt-0.5">Reference Number: {selectedReviewApp.tokenNumber}</p>
                     </div>
                     <button 
+                      type="button"
                       onClick={() => setSelectedReviewApp(null)}
                       className="p-1 px-2 border text-xs font-semibold rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                     >
@@ -526,11 +528,11 @@ export const AdminDashboard: React.FC = () => {
                   <div className="space-y-5">
                     
                     {/* Display verification status controls widgets */}
-                    <div className="p-4 p-x-5 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-802 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-xs font-bold">
+                    <div className="p-4 p-x-5 bg-zinc-50 dark:bg-[#091114] rounded-2xl border border-slate-200 dark:border-slate-802 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-xs font-bold">
                       <div>
                         <span className="text-[10px] text-slate-405 uppercase tracking-wider font-extrabold block">Citizen Reference Info:</span>
                         <div className="text-slate-900 dark:text-white mt-1">
-                          Aadhaar verified: <span className="font-mono text-blue-600 dark:text-blue-400">SUCCESS</span>
+                          Aadhaar verified: <span className="font-mono text-teal-600 dark:text-teal-400">SUCCESS</span>
                         </div>
                       </div>
 
@@ -544,7 +546,7 @@ export const AdminDashboard: React.FC = () => {
                         </button>
                         <button 
                           onClick={() => handleResolveApplicationDraft('Under Review')}
-                          className="px-2.5 py-1.5 bg-indigo-50/50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-[10px] uppercase font-bold cursor-pointer transition"
+                          className="px-2.5 py-1.5 bg-emerald-50/50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-[10px] uppercase font-bold cursor-pointer transition"
                         >
                           Step: Under Review
                         </button>
@@ -571,9 +573,9 @@ export const AdminDashboard: React.FC = () => {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {reviewDocuments.map(doc => (
-                          <div key={doc.id} className="p-3 border border-slate-100 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-950 text-xs flex justify-between items-center text-left">
+                          <div key={doc.id} className="p-3 border border-slate-100 dark:border-slate-800 rounded-2xl bg-white dark:bg-[#091114] text-xs flex justify-between items-center text-left">
                             <div className="space-y-0.5">
-                              <span className="font-display font-bold text-slate-800 dark:text-slate-250 block truncate max-w-[170px]">{doc.documentName}</span>
+                              <span className="font-display font-bold text-slate-800 dark:text-slate-200 block truncate max-w-[170px]">{doc.documentName}</span>
                               <span className={`text-[9px] font-bold ${doc.verified === 'Approved' ? 'text-emerald-500' : doc.verified === 'Rejected' ? 'text-red-500' : 'text-slate-400'}`}>
                                 State: {doc.verified}
                               </span>
@@ -585,7 +587,7 @@ export const AdminDashboard: React.FC = () => {
                                 href={doc.fileUrl} 
                                 target="_blank" 
                                 rel="noreferrer" 
-                                className="p-1 px-1.5 border hover:bg-slate-50 dark:hover:bg-slate-850 rounded text-[10px] text-slate-500 hover:text-slate-900 inline-flex items-center gap-1"
+                                className="p-1 px-1.5 border hover:bg-zinc-50 dark:hover:bg-slate-800 rounded text-[10px] text-slate-500 hover:text-slate-900 inline-flex items-center gap-1"
                               >
                                 <Eye className="w-3.5 h-3.5" />
                                 <span>Preview</span>
@@ -624,7 +626,7 @@ export const AdminDashboard: React.FC = () => {
                         <div className="mt-3 space-y-3">
                           <textarea
                             rows={3}
-                            className="w-full p-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs dark:text-white focus:outline-none"
+                            className="w-full p-2 bg-zinc-50 dark:bg-[#091114] border border-slate-200 dark:border-slate-800 rounded-xl text-xs dark:text-white focus:outline-none"
                             placeholder="State rejection reasons... (e.g. Income Salary Slip page 2 requires a center seal)"
                             value={rejectionComment}
                             onChange={(e) => setRejectionComment(e.target.value)}
@@ -656,7 +658,7 @@ export const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 text-slate-700 dark:text-slate-300">
             
             {/* Left box: Create Dynamic service with customizable fields */}
-            <div className="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-205 dark:border-slate-800 p-6 rounded-3xl text-left shadow-sm space-y-4 h-fit">
+            <div className="lg:col-span-5 bg-white/70 dark:bg-[#0b1418]/70 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/80 p-6 rounded-3xl text-left shadow-sm space-y-4 h-fit">
               <h4 className="font-display font-bold text-sm uppercase tracking-wider text-slate-950 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3">
                 {t('createNewService')}
               </h4>
@@ -668,7 +670,7 @@ export const AdminDashboard: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 bg-slate-100/50 dark:bg-slate-950 border border-slate-150 dark:border-slate-800 rounded-xl text-xs focus:ring-1 focus:ring-blue-500 font-medium dark:text-white"
+                    className="w-full px-3 py-2 bg-slate-100/50 dark:bg-[#091114] border border-slate-150 dark:border-slate-800 rounded-xl text-xs focus:ring-1 focus:ring-teal-500 font-medium dark:text-white"
                     placeholder="PAN Card Scheme (பான் கார்டு)"
                     value={newSvc.name}
                     onChange={(e) => setNewSvc({ ...newSvc, name: e.target.value })}
@@ -681,7 +683,7 @@ export const AdminDashboard: React.FC = () => {
                     Department Division Category
                   </label>
                   <select
-                    className="w-full p-2 bg-slate-100/50 dark:bg-slate-950 border border-slate-150 dark:border-slate-800 rounded-xl text-xs font-bold"
+                    className="w-full p-2 bg-slate-100/50 dark:bg-[#091114] border border-slate-150 dark:border-slate-800 rounded-xl text-xs font-bold"
                     value={newSvc.category}
                     onChange={(e) => setNewSvc({ ...newSvc, category: e.target.value })}
                   >
@@ -699,7 +701,7 @@ export const AdminDashboard: React.FC = () => {
                     </label>
                     <input
                       type="number"
-                      className="w-full px-3 py-2 bg-slate-100/50 dark:bg-slate-950 border border-slate-150 dark:border-slate-800 rounded-xl text-xs font-mono dark:text-white"
+                      className="w-full px-3 py-2 bg-slate-100/50 dark:bg-[#091114] border border-slate-150 dark:border-slate-800 rounded-xl text-xs font-mono dark:text-white"
                       value={newSvc.price}
                       onChange={(e) => setNewSvc({ ...newSvc, price: Number(e.target.value) })}
                       required
@@ -711,7 +713,7 @@ export const AdminDashboard: React.FC = () => {
                     </label>
                     <input
                       type="number"
-                      className="w-full px-3 py-2 bg-slate-100/50 dark:bg-slate-950 border border-slate-150 dark:border-slate-800 rounded-xl text-xs font-mono dark:text-white"
+                      className="w-full px-3 py-2 bg-slate-100/50 dark:bg-[#091114] border border-slate-150 dark:border-slate-800 rounded-xl text-xs font-mono dark:text-white"
                       value={newSvc.processingDays}
                       onChange={(e) => setNewSvc({ ...newSvc, processingDays: Number(e.target.value) })}
                     />
@@ -724,7 +726,7 @@ export const AdminDashboard: React.FC = () => {
                   </label>
                   <textarea
                     rows={2}
-                    className="w-full p-2 bg-slate-100/50 dark:bg-slate-950 border border-slate-150 dark:border-slate-800 rounded-xl text-xs dark:text-white focus:outline-none focus:ring-1"
+                    className="w-full p-2 bg-slate-100/50 dark:bg-[#091114] border border-slate-150 dark:border-slate-800 rounded-xl text-xs dark:text-white focus:outline-none focus:ring-1"
                     placeholder="Provide official brief description for citizens catalog details."
                     value={newSvc.description}
                     onChange={(e) => setNewSvc({ ...newSvc, description: e.target.value })}
@@ -740,7 +742,7 @@ export const AdminDashboard: React.FC = () => {
                   <div className="flex gap-2">
                     <input
                       type="text"
-                      className="flex-1 px-3 py-1.5 bg-slate-100/50 dark:bg-slate-950 border border-slate-150 dark:border-slate-850 rounded-lg text-xs"
+                      className="flex-1 px-3 py-1.5 bg-slate-100/50 dark:bg-[#091114] border border-slate-150 dark:border-slate-800 rounded-lg text-xs"
                       placeholder="e.g. Identity Proof, High TC"
                       value={newSvc.newDocName}
                       onChange={(e) => setNewSvc({ ...newSvc, newDocName: e.target.value })}
@@ -748,7 +750,7 @@ export const AdminDashboard: React.FC = () => {
                     <button
                       type="button"
                       onClick={handleAddDocToCreator}
-                      className="px-3 bg-slate-900 dark:bg-slate-800 hover:bg-slate-850 text-white font-bold text-xs rounded-lg cursor-pointer"
+                      className="px-3 bg-[#0b1418] dark:bg-slate-800 hover:bg-slate-800 text-white font-bold text-xs rounded-lg cursor-pointer"
                     >
                       Add
                     </button>
@@ -756,7 +758,7 @@ export const AdminDashboard: React.FC = () => {
 
                   <div className="flex flex-wrap gap-1.5 pt-2">
                     {newSvcDocs.map((doc, index) => (
-                      <span key={index} className="inline-flex items-center gap-1 bg-slate-105 border border-slate-205 py-1 px-2 text-[10px] font-bold rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-650 dark:text-slate-350">
+                      <span key={index} className="inline-flex items-center gap-1 bg-slate-105 border border-slate-200 py-1 px-2 text-[10px] font-bold rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-350">
                         <span>{doc}</span>
                         <button 
                           type="button" 
@@ -772,7 +774,7 @@ export const AdminDashboard: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="w-full py-2.5 bg-gradient-to-r from-blue-700 to-blue-600 text-white font-bold text-xs rounded-xl shadow shadow-blue-900/30 cursor-pointer uppercase flex items-center justify-center space-x-1.5"
+                  className="w-full py-2.5 bg-gradient-to-r from-teal-700 to-teal-600 text-white font-bold text-xs rounded-xl shadow shadow-teal-900/30 cursor-pointer uppercase flex items-center justify-center space-x-1.5"
                 >
                   <Save className="w-4 h-4" />
                   <span>{t('saveService')}</span>
@@ -782,7 +784,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             {/* Right box: Active dynamic e-Services catalog listing */}
-            <div className="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-205 dark:border-slate-800 p-6 rounded-3xl text-left shadow-sm space-y-4">
+            <div className="lg:col-span-7 bg-white/70 dark:bg-[#0b1418]/70 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/80 p-6 rounded-3xl text-left shadow-sm space-y-4">
               <h4 className="font-display font-bold text-sm uppercase tracking-wider text-slate-950 dark:text-white border-b border-slate-150 dark:border-slate-800 pb-3">
                 Active Dynamic Service Catalog Directories
               </h4>
@@ -790,7 +792,7 @@ export const AdminDashboard: React.FC = () => {
 
               <div className="space-y-4">
                 {services.map(svc => (
-                  <div key={svc.id} className="p-4 rounded-2xl border border-slate-200 dark:border-slate-850 bg-slate-50/40 dark:bg-slate-950/25 flex justify-between items-start">
+                  <div key={svc.id} className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-zinc-50/40 dark:bg-[#091114]/25 flex justify-between items-start">
                     <div className="space-y-1 text-xs">
                       <div className="flex items-center space-x-1.5">
                         <span className="font-display font-bold text-slate-900 dark:text-white text-sm">{svc.name}</span>
@@ -801,13 +803,13 @@ export const AdminDashboard: React.FC = () => {
                       {/* Document requisites listing */}
                       <div className="pt-2 flex flex-wrap gap-1">
                         {svc.requiredDocuments.map((doc, index) => (
-                          <span key={index} className="bg-white dark:bg-slate-900 border border-slate-105 dark:border-slate-800 p-0.5 px-1.5 text-[9px] rounded font-mono text-slate-600">{doc}</span>
+                          <span key={index} className="bg-white/70 dark:bg-[#0b1418]/70 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/80 p-0.5 px-1.5 text-[9px] rounded font-mono text-slate-600">{doc}</span>
                         ))}
                       </div>
                     </div>
 
                     <div className="text-right shrink-0 pl-3">
-                      <span className="font-display font-black text-blue-600 dark:text-blue-400 font-serif text-sm block">₹{svc.price}</span>
+                      <span className="font-display font-black text-teal-600 dark:text-teal-400 font-serif text-sm block">₹{svc.price}</span>
                       <span className="text-[9px] text-slate-400 font-bold block mt-1">{svc.processingDays} Working Days</span>
                       <button
                         onClick={() => { serviceService.deleteService(svc.id); refreshServices(); refreshLogs(); }}
@@ -830,7 +832,7 @@ export const AdminDashboard: React.FC = () => {
             MENU 4: CITIZENS USER SECURITY ROLES (SUPER PRIVILEGE)
             ===================================================================== */}
         {adminMenu === 'citizens' && (
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl text-left shadow-sm space-y-6">
+          <div className="bg-white/70 dark:bg-[#0b1418]/70 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/80 p-6 rounded-3xl text-left shadow-sm space-y-6">
             <div>
               <h4 className="font-display font-bold text-base text-slate-950 dark:text-white uppercase tracking-wider">
                 Citizens DB Roster & Access Controls
@@ -838,9 +840,37 @@ export const AdminDashboard: React.FC = () => {
               <p className="text-xs text-slate-400 mt-1">Audit security credentials, assign team role values, or override active session permissions (Super-Admin only).</p>
             </div>
 
+            <div className="bg-zinc-50 dark:bg-[#131f24] p-4 rounded-2xl border border-slate-100 dark:border-slate-800 mb-6 space-y-4">
+              <h5 className="font-bold text-[11px] uppercase text-slate-700 dark:text-slate-300">Add New Admin / Citizen</h5>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <input type="text" placeholder="Full Name" id="addUser-name" className="text-xs p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0b1418] focus:outline-none focus:ring-1 focus:ring-teal-500" />
+                <input type="email" placeholder="Email Address" id="addUser-email" className="text-xs p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0b1418] focus:outline-none focus:ring-1 focus:ring-teal-500" />
+                <input type="tel" placeholder="Phone Number" id="addUser-phone" className="text-xs p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0b1418] focus:outline-none focus:ring-1 focus:ring-teal-500" />
+                <button
+                  onClick={() => {
+                    const name = (document.getElementById('addUser-name') as HTMLInputElement).value;
+                    const email = (document.getElementById('addUser-email') as HTMLInputElement).value;
+                    const phone = (document.getElementById('addUser-phone') as HTMLInputElement).value;
+                    if (name && email) {
+                      addUser(name, email, phone, 'admin').then(() => {
+                        (document.getElementById('addUser-name') as HTMLInputElement).value = '';
+                        (document.getElementById('addUser-email') as HTMLInputElement).value = '';
+                        (document.getElementById('addUser-phone') as HTMLInputElement).value = '';
+                        refreshLogs();
+                      }).catch(e => alert(e.message));
+                    }
+                  }}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg p-2.5 transition-colors flex items-center justify-center space-x-2 shadow-md"
+                >
+                  <UserPlus className="w-3.5 h-3.5" />
+                  <span>Create Admin</span>
+                </button>
+              </div>
+            </div>
+
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs whitespace-nowrap">
-                <thead className="bg-slate-50 dark:bg-slate-955 text-[10px] font-display font-black uppercase text-slate-450 border-b border-slate-205 dark:border-slate-805">
+                <thead className="bg-zinc-50 dark:bg-slate-955 text-[10px] font-display font-black uppercase text-slate-450 border-b border-slate-200 dark:border-slate-805">
                   <tr>
                     <th className="p-3">Citizen Name</th>
                     <th className="p-3">Registered coordinates</th>
@@ -848,9 +878,9 @@ export const AdminDashboard: React.FC = () => {
                     <th className="p-3 text-center">RBAC Control Options</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-850 font-semibold text-slate-700 dark:text-slate-300 font-sans">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-semibold text-slate-700 dark:text-slate-300 font-sans">
                   {profilesList.map(profile => (
-                    <tr key={profile.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-950/20">
+                    <tr key={profile.id} className="hover:bg-zinc-50/50 dark:hover:bg-[#091114]/20">
                       <td className="p-3 text-slate-100 font-bold text-slate-900 dark:text-white">
                         {profile.fullName}
                       </td>
@@ -860,8 +890,7 @@ export const AdminDashboard: React.FC = () => {
                       </td>
                       <td className="p-3">
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                          profile.role === 'super_admin' ? 'bg-purple-100 text-purple-800 dark:bg-purple-955/50 dark:text-purple-400' :
-                          profile.role === 'admin' ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-955/50 dark:text-indigo-400' :
+                          profile.role === 'admin' ? 'bg-emerald-100 text-emerald-800 dark:bg-indigo-955/50 dark:text-emerald-400' :
                           'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
                         }`}>
                           {profile.role}
@@ -871,21 +900,15 @@ export const AdminDashboard: React.FC = () => {
                         <div className="flex justify-center items-center gap-1.5 text-[10px] font-black">
                           <button
                             onClick={() => handleUpdateRole(profile.id, 'user')}
-                            className="p-1 px-2 border hover:bg-slate-150 rounded-lg cursor-pointer bg-white dark:bg-slate-950"
+                            className="p-1 px-2 border hover:bg-slate-150 rounded-lg cursor-pointer bg-white dark:bg-[#091114]"
                           >
                             Set Citizen
                           </button>
                           <button
                             onClick={() => handleUpdateRole(profile.id, 'admin')}
-                            className="p-1 px-2 border text-indigo-600 dark:text-indigo-400 hover:bg-slate-150 rounded-lg cursor-pointer bg-white dark:bg-slate-950"
+                            className="p-1 px-2 border text-emerald-600 dark:text-emerald-400 hover:bg-slate-150 rounded-lg cursor-pointer bg-white dark:bg-[#091114]"
                           >
                             Set Agent
-                          </button>
-                          <button
-                            onClick={() => handleUpdateRole(profile.id, 'super_admin')}
-                            className="p-1 px-2 border text-purple-600 dark:text-purple-400 hover:bg-slate-150 rounded-lg cursor-pointer bg-white dark:bg-slate-950"
-                          >
-                            Set Director
                           </button>
                         </div>
                       </td>
@@ -898,7 +921,7 @@ export const AdminDashboard: React.FC = () => {
             {/* Broadcast center widgets notifications */}
             <div className="border-t border-slate-100 dark:border-slate-800 pt-6 mt-6 space-y-4 text-left">
               <h5 className="font-display font-extrabold text-sm text-slate-900 dark:text-white uppercase tracking-wider flex items-center">
-                <Bell className="w-4 h-4 mr-1.5 text-blue-600" />
+                <Bell className="w-4 h-4 mr-1.5 text-teal-600" />
                 <span>BroadCast Center Broadcast Desk</span>
               </h5>
 
@@ -906,7 +929,7 @@ export const AdminDashboard: React.FC = () => {
                 <div className="md:col-span-3">
                   <label className="text-[10px] uppercase font-extrabold text-slate-400 block mb-1">Target Account</label>
                   <select 
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-205 dark:border-slate-800 text-xs rounded-xl font-bold"
+                    className="w-full p-2.5 bg-zinc-50 dark:bg-[#091114] border border-slate-200 dark:border-slate-800 text-xs rounded-xl font-bold"
                     value={broadcast.targetUserId}
                     onChange={(e) => setBroadcast({ ...broadcast, targetUserId: e.target.value })}
                   >
@@ -921,7 +944,7 @@ export const AdminDashboard: React.FC = () => {
                   <label className="text-[10px] uppercase font-extrabold text-slate-400 block mb-1">Alert Title</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 bg-slate-55 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs rounded-xl"
+                    className="w-full px-3 py-2 bg-slate-55 dark:bg-[#091114] border border-slate-200 dark:border-slate-800 text-xs rounded-xl"
                     placeholder="System Alert: Maintenance window"
                     value={broadcast.title}
                     onChange={(e) => setBroadcast({ ...broadcast, title: e.target.value })}
@@ -933,7 +956,7 @@ export const AdminDashboard: React.FC = () => {
                   <label className="text-[10px] uppercase font-extrabold text-slate-400 block mb-1">SMS message alert</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 bg-slate-55 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs rounded-xl"
+                    className="w-full px-3 py-2 bg-slate-55 dark:bg-[#091114] border border-slate-200 dark:border-slate-800 text-xs rounded-xl"
                     placeholder="E-Sevai files are processing with delay due to general holidays..."
                     value={broadcast.message}
                     onChange={(e) => setBroadcast({ ...broadcast, message: e.target.value })}
@@ -944,7 +967,7 @@ export const AdminDashboard: React.FC = () => {
                 <div className="md:col-span-2 flex items-end">
                   <button
                     type="submit"
-                    className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow cursor-pointer uppercase text-center"
+                    className="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow cursor-pointer uppercase text-center"
                   >
                     Dispatch Msg
                   </button>
@@ -965,7 +988,7 @@ export const AdminDashboard: React.FC = () => {
             MENU 5: REPORTS & FILE EXPORTS CONTROLLING ENGINE
             ===================================================================== */}
         {adminMenu === 'reports' && (
-          <div className="bg-white dark:bg-slate-900 border border-slate-210 dark:border-slate-800 p-6 rounded-3xl text-left shadow-sm space-y-6 text-slate-700 dark:text-slate-300">
+          <div className="bg-white/70 dark:bg-[#0b1418]/70 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/80 p-6 rounded-3xl text-left shadow-sm space-y-6 text-slate-700 dark:text-slate-300">
             <div>
               <h4 className="font-display font-bold text-sm uppercase tracking-wider text-slate-950 dark:text-white">
                 Reports & Analytics Hub
@@ -978,8 +1001,8 @@ export const AdminDashboard: React.FC = () => {
                 onClick={() => setReprOption('daily')}
                 className={`p-4 rounded-2xl border text-center transition ${
                   reprOption === 'daily' 
-                    ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-955/20 text-blue-700 dark:text-blue-300' 
-                    : 'border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-950'
+                    ? 'border-teal-500 bg-teal-50/50 dark:bg-blue-955/20 text-teal-700 dark:text-teal-300' 
+                    : 'border-slate-200 dark:border-slate-800 bg-zinc-50/40 dark:bg-[#091114]'
                 }`}
               >
                 <span className="font-display font-bold text-xs block mb-1">Daily Audit Report</span>
@@ -990,8 +1013,8 @@ export const AdminDashboard: React.FC = () => {
                 onClick={() => setReprOption('weekly')}
                 className={`p-4 rounded-2xl border text-center transition ${
                   reprOption === 'weekly' 
-                    ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-955/20 text-blue-700 dark:text-blue-300' 
-                    : 'border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-950'
+                    ? 'border-teal-500 bg-teal-50/50 dark:bg-blue-955/20 text-teal-700 dark:text-teal-300' 
+                    : 'border-slate-200 dark:border-slate-800 bg-zinc-50/40 dark:bg-[#091114]'
                 }`}
               >
                 <span className="font-display font-bold text-xs block mb-1">Weekly Resolution</span>
@@ -1002,8 +1025,8 @@ export const AdminDashboard: React.FC = () => {
                 onClick={() => setReprOption('monthly')}
                 className={`p-4 rounded-2xl border text-center transition ${
                   reprOption === 'monthly' 
-                    ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-955/20 text-blue-700 dark:text-blue-300' 
-                    : 'border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-950'
+                    ? 'border-teal-500 bg-teal-50/50 dark:bg-blue-955/20 text-teal-700 dark:text-teal-300' 
+                    : 'border-slate-200 dark:border-slate-800 bg-zinc-50/40 dark:bg-[#091114]'
                 }`}
               >
                 <span className="font-display font-bold text-xs block mb-1">Monthly Analytics</span>
@@ -1014,8 +1037,8 @@ export const AdminDashboard: React.FC = () => {
                 onClick={() => setReprOption('revenue')}
                 className={`p-4 rounded-2xl border text-center transition ${
                   reprOption === 'revenue' 
-                    ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-955/20 text-blue-700 dark:text-blue-300' 
-                    : 'border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-950'
+                    ? 'border-teal-500 bg-teal-50/50 dark:bg-blue-955/20 text-teal-700 dark:text-teal-300' 
+                    : 'border-slate-200 dark:border-slate-800 bg-zinc-50/40 dark:bg-[#091114]'
                 }`}
               >
                 <span className="font-display font-bold text-xs block mb-1">Revenue Stream</span>
@@ -1024,10 +1047,10 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             {/* Simulated report viewer screens */}
-            <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-4">
+            <div className="p-5 rounded-2xl bg-zinc-50 dark:bg-[#091114] border border-slate-200 dark:border-slate-800 space-y-4">
               <div className="flex justify-between items-center pb-2 border-b border-slate-200 dark:border-slate-800">
                 <span className="font-mono text-xs uppercase font-extrabold tracking-widest text-slate-420">Reports Summary Panel</span>
-                <span className="text-[10px] font-bold text-blue-600">June-2026 Audit Ready</span>
+                <span className="text-[10px] font-bold text-teal-600">June-2026 Audit Ready</span>
               </div>
 
               {reprOption === 'daily' && (
@@ -1076,7 +1099,7 @@ export const AdminDashboard: React.FC = () => {
                 <button
                   onClick={() => handleExportTrigger('csv')}
                   disabled={!!exportTriggered}
-                  className="px-3 py-2 border border-slate-250 hover:bg-slate-100 rounded-lg bg-white inline-flex items-center space-x-1.5 cursor-pointer dark:text-slate-800"
+                  className="px-3 py-2 border border-slate-200 hover:bg-slate-100 rounded-lg bg-white inline-flex items-center space-x-1.5 cursor-pointer dark:text-slate-800"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>{exportTriggered === 'csv' ? 'Compiling CSV...' : 'Export CSV'}</span>
@@ -1084,7 +1107,7 @@ export const AdminDashboard: React.FC = () => {
                 <button
                   onClick={() => handleExportTrigger('excel')}
                   disabled={!!exportTriggered}
-                  className="px-3 py-2 border border-slate-250 hover:bg-slate-100 rounded-lg bg-white inline-flex items-center space-x-1.5 cursor-pointer dark:text-slate-800"
+                  className="px-3 py-2 border border-slate-200 hover:bg-slate-100 rounded-lg bg-white inline-flex items-center space-x-1.5 cursor-pointer dark:text-slate-800"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>{exportTriggered === 'excel' ? 'Formatting XLS...' : 'Export Excel'}</span>
@@ -1100,7 +1123,7 @@ export const AdminDashboard: React.FC = () => {
             MENU 6: MASTER SYSTEM ACTIVITY LOGGER AUDIT (RLS & ACTION TRACKS)
             ===================================================================== */}
         {adminMenu === 'logs' && (
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl text-left shadow-sm space-y-6">
+          <div className="bg-white/70 dark:bg-[#0b1418]/70 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/80 p-6 rounded-3xl text-left shadow-sm space-y-6">
             <div className="border-b border-slate-50 dark:border-slate-800 pb-4 flex justify-between items-center gap-4">
               <div>
                 <h4 className="font-display font-bold text-base text-slate-950 dark:text-white uppercase tracking-wider">
@@ -1121,9 +1144,9 @@ export const AdminDashboard: React.FC = () => {
                 <p className="text-center text-xs text-slate-400 font-semibold py-6">No system activity tracking records found.</p>
               ) : (
                 logs.map(log => (
-                  <div key={log.id} className="p-3 border border-slate-100 dark:border-slate-860 rounded-xl bg-slate-50/50 dark:bg-slate-950/20 text-slate-700 dark:text-slate-400">
+                  <div key={log.id} className="p-3 border border-slate-100 dark:border-slate-860 rounded-xl bg-zinc-50/50 dark:bg-[#091114]/20 text-slate-700 dark:text-slate-400">
                     <div className="flex justify-between items-start gap-4 mb-1 border-b border-dashed border-slate-150 pb-1.5 text-[9px] uppercase tracking-wider font-extrabold text-slate-450 rounded">
-                      <span className="text-blue-600 dark:text-blue-400">{log.userRole}: {log.userEmail}</span>
+                      <span className="text-teal-600 dark:text-teal-400">{log.userRole}: {log.userEmail}</span>
                       <span>{new Date(log.createdAt).toLocaleTimeString()}</span>
                     </div>
                     <p className="font-bold text-slate-900 dark:text-white">{log.action}</p>
@@ -1140,7 +1163,7 @@ export const AdminDashboard: React.FC = () => {
             MENU 7: GLOBAL CONFORMS CONFIGURATION PANELS
             ===================================================================== */}
         {adminMenu === 'config' && (
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl text-left shadow-sm space-y-6 text-slate-700 dark:text-slate-300">
+          <div className="bg-white/70 dark:bg-[#0b1418]/70 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/80 p-6 rounded-3xl text-left shadow-sm space-y-6 text-slate-700 dark:text-slate-300">
             <div>
               <h4 className="font-display font-bold text-base text-slate-955 dark:text-white uppercase tracking-wider">
                 Portal global settings
@@ -1153,7 +1176,7 @@ export const AdminDashboard: React.FC = () => {
                 <label className="text-[10px] uppercase tracking-wider font-extrabold text-slate-430 block mb-1">Portal Name</label>
                 <input
                   type="text"
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-205 dark:border-slate-800 rounded-xl text-xs font-bold focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-zinc-50 dark:bg-[#091114] border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold focus:ring-1 focus:ring-teal-500"
                   value={settings.portalName}
                   onChange={(e) => updateGlobalSettings({ portalName: e.target.value })}
                 />
@@ -1163,7 +1186,7 @@ export const AdminDashboard: React.FC = () => {
                 <label className="text-[10px] uppercase tracking-wider font-extrabold text-slate-430 block mb-1">Helpline Contacts</label>
                 <input
                   type="text"
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-205 dark:border-slate-800 rounded-xl text-xs font-bold focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-zinc-50 dark:bg-[#091114] border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold focus:ring-1 focus:ring-teal-500"
                   value={settings.supportPhone}
                   onChange={(e) => updateGlobalSettings({ supportPhone: e.target.value })}
                 />
@@ -1173,7 +1196,7 @@ export const AdminDashboard: React.FC = () => {
                 <label className="text-[10px] uppercase tracking-wider font-extrabold text-slate-430 block mb-1">Administrative Support Inbox</label>
                 <input
                   type="email"
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-205 dark:border-slate-800 rounded-xl text-xs font-bold focus:ring-1"
+                  className="w-full px-3 py-2 bg-zinc-50 dark:bg-[#091114] border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold focus:ring-1"
                   value={settings.supportEmail}
                   onChange={(e) => updateGlobalSettings({ supportEmail: e.target.value })}
                 />
@@ -1189,7 +1212,7 @@ export const AdminDashboard: React.FC = () => {
                 </div>
                 <input 
                   type="checkbox" 
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-750 dark:border-gray-651"
+                  className="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 dark:focus:ring-teal-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-750 dark:border-gray-651"
                   checked={settings.allowNewRegistrations}
                   onChange={(e) => updateGlobalSettings({ allowNewRegistrations: e.target.checked })}
                 />
@@ -1204,7 +1227,7 @@ export const AdminDashboard: React.FC = () => {
                   type="checkbox" 
                   className="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-500"
                   checked={settings.maintenanceMode}
-                  onChange={(e) => updateGlobalSettings({ maintenanceMode: e.checked })}
+                  onChange={(e) => updateGlobalSettings({ maintenanceMode: e.target.checked })}
                 />
               </div>
             </div>
@@ -1214,6 +1237,7 @@ export const AdminDashboard: React.FC = () => {
 
       </main>
 
+    </div>
     </div>
   );
 };

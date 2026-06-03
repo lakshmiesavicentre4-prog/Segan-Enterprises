@@ -7,6 +7,18 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
+html, body {
+  height: 100%;
+  background-color: #fafafa;
+  overflow-x: hidden;
+  @apply bg-zinc-50 text-slate-800 antialiased;
+}
+
+html.dark, html.dark body {
+  background-color: #091114;
+  @apply bg-[#091114] text-slate-200;
+}
+
 /* Custom animated overlays and scrollbars */
 ::-webkit-scrollbar {
   width: 6px;

@@ -86,7 +86,7 @@ export const PublicHome: React.FC = () => {
       if (found) {
         setTrackedApplication(found);
       } else {
-        setTrackError('Token number not found. Verify format: SEGAN-2026-000001');
+        setTrackError('Token number not found. Verify format: SEAGAN-2026-000001');
       }
     } else {
       setTrackError('No submission records found.');
@@ -139,52 +139,56 @@ export const PublicHome: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+    <div className="flex flex-col min-h-screen bg-zinc-50 dark:bg-[#091114] transition-colors duration-300">
       
-      {/* 1. HERO BANNER - Premium Government Portal Style */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-blue-700 via-blue-800 to-slate-905 dark:from-slate-950 dark:via-blue-950/80 dark:to-slate-950 text-white py-16 md:py-24">
-        {/* Vector patterns */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-600/30 via-transparent to-transparent"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
-
+      {/* 1. HERO BANNER - Premium Modern Layout */}
+      <section className="relative overflow-hidden bg-zinc-50 border-b border-slate-200 dark:bg-[#091114] text-slate-800 dark:text-white pt-24 pb-16 md:pt-32 md:pb-24">
+        {/* Layered Gradient Backgrounds for a premium feel */}
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-teal-100/40 dark:bg-teal-900/10 blur-[120px] pointer-events-none"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-100/40 dark:bg-purple-900/10 blur-[120px] pointer-events-none"></div>
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="flex flex-col lg:flex-row gap-12 items-center">
             
             {/* Visual Intro Headline */}
-            <div className="lg:col-span-7 space-y-6 text-left">
-              <div id="tn-emblem-badge" className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-blue-900/60 dark:bg-blue-950 border border-blue-600/40 text-xs text-blue-200 font-semibold tracking-wide backdrop-blur-md">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                <span>{language === 'en' ? 'Tamil Nadu e-Sevai Service Gateway' : 'தமிழ்நாடு இ-சேவை சேவை நுழைவாயில்'}</span>
+            <div className="lg:w-1/2 flex flex-col space-y-6 text-left relative z-10 w-full xl:pr-10">
+              <div className="flex justify-start mb-2 animate-fade-in">
+                <div className="w-20 h-20 md:w-28 md:h-28 bg-white dark:bg-white/5 backdrop-blur-3xl p-1.5 md:p-2.5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] border border-slate-200 dark:border-white/10 ring-1 ring-black/5 dark:ring-white/10">
+                  <img src="/logo1.png" alt="SEAGAN ENTERPRISES Logo" className="w-full h-full object-contain rounded-2xl drop-shadow-sm" />
+                </div>
               </div>
               
-              <h1 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-white tracking-tight leading-tight">
+              <div id="tn-emblem-badge" className="inline-flex max-w-max items-center space-x-2 px-4 py-2 rounded-full bg-teal-50/80 dark:bg-teal-950/40 border border-teal-200/60 dark:border-teal-800/60 text-xs text-teal-700 dark:text-teal-200 font-semibold tracking-wide backdrop-blur-xl shadow-sm">
+                <span className="w-2 h-2 rounded-full bg-teal-500 shadow-[0_0_8px_2px_rgba(59,130,246,0.3)] animate-pulse"></span>
+                <span>{language === 'en' ? 'Tamil Nadu e-Sevai Gateway' : 'தமிழ்நாடு இ-சேவை நுழைவாயில்'}</span>
+              </div>
+              
+              <h1 className="font-display font-black text-4xl sm:text-5xl md:text-6xl text-slate-950 dark:text-white tracking-tight leading-[1.1]">
                 {language === 'en' ? 'Digital Services' : 'அனைத்து அரசு சேவைகளும்'}{' '}
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-amber-300">
-                  {language === 'en' ? 'Simplified' : 'ஒரே இடத்தில் எளிய முறையில்'}
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-600 via-emerald-600 to-purple-600 dark:from-teal-400 dark:via-emerald-400 dark:to-purple-400">
+                  {language === 'en' ? 'Simplified' : 'எளிய முறையில்'}
                 </span>
-                <br />
-                {language === 'en' ? 'For Every Citizen.' : 'குடிமக்களுக்கான டிஜிட்டல் மேடை.'}
               </h1>
 
-              <p className="text-slate-200 text-sm sm:text-base leading-relaxed max-w-xl">
+              <p className="text-slate-600/90 dark:text-slate-300 font-medium text-base sm:text-lg leading-relaxed max-w-lg mb-2">
                 {language === 'en' 
-                  ? 'Apply for Revenue Certificates, Aadhaar address revisions, PAN registrations, social pension schemes, and graduation benefits directly. Realtime status checks and authorized signed prints.'
-                  : 'வருமானச் சான்றிதழ், சாதிச் சான்றிதழ், பான் கார்டு, ரேஷன் கார்டு, முதியோர் ஓய்வூதியத் திட்டம் போன்ற அரசு சேவைகளைப் பெற எளிய முறையில் ஆன்லைனில் விண்ணப்பித்து பதிவிறக்கிக் கொள்ளுங்கள்.'}
+                  ? 'Access Revenue Certificates, Aadhaar revisions, PAN registrations, and social schemes instantly. Realtime tracking backed by TNeGA.'
+                  : 'வருமானச் சான்றிதழ், சாதிச் சான்றிதழ், பான் கார்டு, ரேஷன் கார்டு, முதியோர் ஓய்வூதியத் திட்டம் போன்ற அரசு சேவைகளைப் பெற ஆன்லைனில் விண்ணப்பிக்கவும்.'}
               </p>
 
-              <div className="flex flex-wrap gap-4 pt-2">
+              <div className="flex flex-col sm:flex-row gap-4 pt-2 w-full sm:w-auto">
                 <button 
                   onClick={() => {
                     document.getElementById('services-grid-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl text-sm font-semibold hover:glow hover:shadow-emerald-900/30 flex items-center space-x-2 shadow-md transition-all cursor-pointer"
+                  className="px-8 py-4 bg-[#0b1418] dark:bg-white text-white dark:text-slate-950 rounded-2xl text-sm font-bold shadow-[0_8px_16px_rgba(0,0,0,0.1)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.15)] transition-all cursor-pointer flex items-center justify-center space-x-2 w-full sm:w-auto hover:-translate-y-0.5 active:translate-y-0"
                 >
                   <span>{language === 'en' ? 'Explore Services' : 'சேவைகளை ஆராய்க'}</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 ml-1" />
                 </button>
                 <button 
                   onClick={() => setView('auth')}
-                  className="px-6 py-3 bg-white/10 text-white border border-white/20 rounded-xl text-sm font-semibold hover:bg-white/20 transition-all cursor-pointer"
+                  className="px-8 py-4 bg-white dark:bg-[#0b1418] text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-semibold hover:bg-zinc-50 dark:hover:bg-slate-800 shadow-sm transition-all cursor-pointer w-full sm:w-auto flex items-center justify-center hover:-translate-y-0.5 active:translate-y-0"
                 >
                   {language === 'en' ? 'Register Account' : 'கணக்கை உருவாக்கு'}
                 </button>
@@ -192,97 +196,118 @@ export const PublicHome: React.FC = () => {
             </div>
 
             {/* Application Token Status Tracker Card on Home! */}
-            <div className="lg:col-span-5">
-              <div className="p-6 md:p-8 rounded-3xl bg-white/10 dark:bg-slate-900/80 border border-white/10 dark:border-slate-800 shadow-2xl backdrop-blur-xl shrink-0">
-                <h3 className="font-display font-bold text-lg text-white mb-2 tracking-wide flex items-center space-x-2">
-                  <BadgeCheck className="w-5 h-5 text-amber-400" />
-                  <span>{language === 'en' ? 'Instant Status Tracker' : 'விண்ணப்ப நிலை கண்டறிதல்'}</span>
-                </h3>
-                <p className="text-xs text-slate-300 mb-6 font-medium">
-                  {language === 'en' 
-                    ? 'Enter file reference code to check document approvals, verification audits, and print certifications.' 
-                    : 'விண்ணப்ப நிலையை அறிய, உங்கள் டோக்கன் எண்ணை உள்ளிடவும்.'}
-                </p>
-
-                <form onSubmit={handleTrackStatus} className="space-y-4">
-                  <div className="relative">
-                    <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
-                    <input
-                      id="home-tracker-input"
-                      type="text"
-                      className="w-full pl-10 pr-4 py-3 bg-white/20 dark:bg-slate-950/60 border border-white/20 dark:border-slate-800 rounded-xl text-xs placeholder-slate-300 text-white font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all uppercase"
-                      placeholder="SEGAN-2026-000001"
-                      value={trackToken}
-                      onChange={(e) => setTrackToken(e.target.value)}
-                    />
+            <div className="lg:w-1/2 w-full mt-8 lg:mt-0 relative z-20">
+              <div className="relative">
+                {/* Decorative Elements around card */}
+                <div className="absolute -top-6 -right-6 w-24 h-24 bg-teal-500/10 rounded-full blur-2xl"></div>
+                <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"></div>
+                
+                <div className="p-8 md:p-10 rounded-3xl bg-white/70 dark:bg-[#0b1418]/80 border border-slate-200/50 dark:border-slate-800/80 shadow-[0_8px_40px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_40px_rgb(0,0,0,0.2)] backdrop-blur-3xl w-full">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center shrink-0">
+                      <BadgeCheck className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+                    </div>
+                    <h3 className="font-display font-black text-xl text-slate-900 dark:text-white tracking-tight">
+                      {language === 'en' ? 'Track Application' : 'விண்ணப்ப நிலை'}
+                    </h3>
                   </div>
-
-                  <button
-                    id="home-tracker-submit-btn"
-                    type="submit"
-                    className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl shadow-md transition-all uppercase cursor-pointer"
-                  >
-                    {language === 'en' ? 'Audit File Progress' : 'நிலையைச் சரிபார்'}
-                  </button>
-                </form>
-
-                {trackError && (
-                  <p className="text-red-400 text-xs font-semibold mt-3 text-left">
-                    ⚠️ {trackError}
+                  
+                  <p className="text-[13px] text-slate-500 dark:text-slate-400 mb-8 font-medium leading-relaxed">
+                    {language === 'en' 
+                      ? 'Enter your file reference token to verify audits and securely download your approved certificates.' 
+                      : 'உங்கள் டோக்கன் எண்ணை உள்ளிட்டு சான்றிதழ்களைப் பதிவிறக்கவும்.'}
                   </p>
-                )}
 
-                {/* Animated progress results */}
-                {trackedApplication && (
-                  <div className="mt-6 border-t border-white/10 pt-5 text-left text-xs animate-fade-in">
-                    <div className="flex justify-between items-center mb-3">
-                      <div>
-                        <h4 className="font-display font-bold text-white text-sm">
-                          {trackedApplication.serviceName}
-                        </h4>
-                        <span className="text-[10px] text-slate-300 font-mono">
-                          {trackedApplication.tokenNumber}
-                        </span>
+                  <form onSubmit={handleTrackStatus} className="space-y-4">
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                        <Search className="w-5 h-5 text-slate-400 group-focus-within:text-teal-500 transition-colors" />
                       </div>
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                        trackedApplication.status === 'Completed' || trackedApplication.status === 'Approved'
-                          ? 'bg-emerald-500/20 text-emerald-400'
-                          : trackedApplication.status === 'Rejected'
-                          ? 'bg-red-500/20 text-red-400'
-                          : 'bg-amber-500/20 text-amber-400'
-                      }`}>
-                        {trackedApplication.status}
-                      </span>
+                      <input
+                        id="home-tracker-input"
+                        type="text"
+                        className="w-full pl-12 pr-4 py-4 bg-zinc-50 dark:bg-[#091114]/50 border border-slate-200/80 dark:border-slate-800 rounded-2xl text-sm placeholder-slate-400 dark:placeholder-slate-500 text-slate-900 dark:text-white font-mono font-medium focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-all uppercase shadow-inner"
+                        placeholder="SEAGAN-2026-000001"
+                        value={trackToken}
+                        onChange={(e) => setTrackToken(e.target.value)}
+                      />
                     </div>
 
-                    {/* Progress Segment bar */}
-                    {trackedApplication.status !== 'Rejected' ? (
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-[9px] text-slate-400 font-medium">
-                          <span>Submitted</span>
-                          <span>In Review</span>
-                          <span>Completed</span>
-                        </div>
-                        <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-gradient-to-r from-emerald-500 to-blue-500 transition-all duration-700"
-                            style={{ 
-                              width: `${Math.max(10, ((getStageIndex(trackedApplication.status) + 1) / STAGES.length) * 100)}%` 
-                            }}
-                          ></div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="p-3 bg-red-950/40 rounded-xl border border-red-900/30">
-                        <span className="font-semibold text-red-400 block mb-1">Rejection Reason:</span>
-                        <p className="text-slate-300 text-[11px] leading-relaxed">
-                          {trackedApplication.rejectionReason || 'Submitted documents contain formatting issues.'}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )}
+                    <button
+                      id="home-tracker-submit-btn"
+                      type="submit"
+                      className="w-full py-4 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-2xl shadow-lg shadow-teal-600/20 hover:shadow-xl hover:shadow-teal-600/30 transition-all active:scale-[0.98] uppercase tracking-wide cursor-pointer flex items-center justify-center space-x-2"
+                    >
+                      <span>{language === 'en' ? 'Audit File Progress' : 'நிலையைச் சரிபார்'}</span>
+                    </button>
+                  </form>
 
+                  {trackError && (
+                    <div className="mt-4 p-3 bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/50 rounded-xl flex items-start space-x-2">
+                       <span className="text-red-500 dark:text-red-400 text-sm mt-0.5">⚠️</span>
+                       <p className="text-red-600 dark:text-red-400 text-xs font-medium text-left leading-relaxed">
+                         {trackError}
+                       </p>
+                    </div>
+                  )}
+
+                  {/* Animated progress results */}
+                  {trackedApplication && (
+                    <div className="mt-6 border-t border-slate-100 dark:border-slate-800/80 pt-6 text-left animate-fade-in">
+                      <div className="flex justify-between items-center mb-4 bg-zinc-50 dark:bg-[#0b1418]/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                        <div>
+                          <h4 className="font-display font-bold text-slate-900 dark:text-white text-sm mb-1">
+                            {trackedApplication.serviceName}
+                          </h4>
+                          <span className="inline-block px-2 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md text-[10px] text-slate-600 dark:text-slate-300 font-mono font-semibold">
+                            {trackedApplication.tokenNumber}
+                          </span>
+                        </div>
+                        <span className={`px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider ${
+                          trackedApplication.status === 'Completed' || trackedApplication.status === 'Approved'
+                            ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 ring-1 ring-emerald-500/20'
+                            : trackedApplication.status === 'Rejected'
+                            ? 'bg-red-500/10 text-red-600 dark:text-red-400 ring-1 ring-red-500/20'
+                            : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-1 ring-amber-500/20'
+                        }`}>
+                          {trackedApplication.status}
+                        </span>
+                      </div>
+
+                      {/* Progress Segment bar */}
+                      {trackedApplication.status !== 'Rejected' ? (
+                        <div className="space-y-3 px-1">
+                          <div className="flex justify-between text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
+                            <span>Submitted</span>
+                            <span>In Review</span>
+                            <span>Completed</span>
+                          </div>
+                          <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden shadow-inner">
+                            <div 
+                              className="h-full bg-gradient-to-r from-teal-500 to-emerald-500 transition-all duration-1000 ease-out"
+                              style={{ 
+                                width: `${Math.max(10, ((getStageIndex(trackedApplication.status) + 1) / STAGES.length) * 100)}%` 
+                              }}
+                            ></div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="p-4 bg-red-50 dark:bg-red-950/30 rounded-2xl border border-red-100 dark:border-red-900/50 flex space-x-3">
+                          <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/40 flex items-center justify-center shrink-0">
+                             <span className="text-red-600 dark:text-red-400 font-bold">!</span>
+                          </div>
+                          <div>
+                            <span className="font-bold text-red-700 dark:text-red-400 text-sm block mb-1">Rejection Reason:</span>
+                            <p className="text-slate-700 dark:text-slate-300 text-xs font-medium leading-relaxed">
+                              {trackedApplication.rejectionReason || 'Submitted documents contain formatting issues.'}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                </div>
               </div>
             </div>
 
@@ -291,14 +316,14 @@ export const PublicHome: React.FC = () => {
       </section>
 
       {/* 2. SERVICES SEARCH & DYNAMIC GRID SECTIONS */}
-      <section id="services-grid-section" className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="services-grid-section" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-10">
         
         {/* Section Heading */}
-        <div className="text-center max-w-xl mx-auto mb-10 space-y-2">
-          <h2 className="font-display font-extrabold text-2xl md:text-3xl text-slate-900 dark:text-white tracking-tight">
+        <div className="text-center max-w-xl mx-auto mb-10 space-y-3">
+          <h2 className="font-display font-black text-3xl md:text-4xl text-slate-900 dark:text-white tracking-tight">
             {language === 'en' ? 'Our Service Catalogue' : 'அனைத்து டிஜிட்டல் சேவைகள்'}
           </h2>
-          <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+          <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
             {language === 'en' 
               ? 'Select from our wide array of digital services, input your secure details, and generate certifications out of the box.'
               : 'கீழே உள்ள சேவைகளில் தேவையானதைத் தேர்ந்தெடுத்து, எளிய முறையில் உங்களது ஆவணங்களை பதிவேற்றி பலன் பெறுங்கள்.'}
@@ -306,16 +331,20 @@ export const PublicHome: React.FC = () => {
         </div>
 
         {/* Global Search Interface and Category filters */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 md:p-6 mb-10 shadow-sm space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div className="bg-white/80 dark:bg-[#0b1418]/80 backdrop-blur-xl border border-slate-200/50 dark:border-slate-800/80 rounded-3xl p-6 mb-12 shadow-[0_8px_40px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_40px_rgb(0,0,0,0.2)] space-y-6 relative">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/5 rounded-full blur-3xl"></div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center relative z-10">
             
             {/* Search Input */}
-            <div className="md:col-span-8 relative">
-              <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+            <div className="md:col-span-8 relative group">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                <Search className="w-5 h-5 text-slate-400 group-focus-within:text-teal-500 transition-colors" />
+              </div>
               <input
                 id="search-services-input"
                 type="text"
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:text-white transition-all font-medium"
+                className="w-full pl-12 pr-4 py-4 bg-zinc-50 dark:bg-[#0b1418]/50 border border-slate-200/80 dark:border-slate-800 rounded-2xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 dark:text-white transition-all font-medium shadow-inner"
                 placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -323,22 +352,22 @@ export const PublicHome: React.FC = () => {
             </div>
 
             {/* Slogan details box */}
-            <div className="md:col-span-4 flex items-center justify-end text-xs text-slate-500 font-mono">
-              <Clock className="w-3.5 h-3.5 text-blue-600 mr-1.5" />
+            <div className="md:col-span-4 flex items-center justify-end text-sm text-slate-500 font-mono font-medium bg-zinc-50 dark:bg-[#0b1418]/50 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+              <Clock className="w-4 h-4 text-teal-600 dark:text-teal-400 mr-2" />
               <span>{language === 'en' ? 'Avg Processing: 2-7 Days' : 'சராசரி நேரம்: 2-7 நாட்கள்'}</span>
             </div>
 
           </div>
 
           {/* Department Pills filters */}
-          <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex flex-wrap gap-2.5 pt-4 border-t border-slate-100 dark:border-slate-800/80 relative z-10">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider cursor-pointer transition-all active:scale-95 ${
                   selectedCategory === cat
-                    ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
+                    ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/20 ring-2 ring-teal-600/30'
                     : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
                 }`}
               >
@@ -350,42 +379,43 @@ export const PublicHome: React.FC = () => {
 
         {/* Highlighted Services Cards */}
         {filteredServices.length === 0 ? (
-          <div className="text-center py-20 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl">
-            <p className="text-sm font-medium text-slate-400">No services match your specifications.</p>
+          <div className="text-center py-24 bg-white/50 dark:bg-[#0b1418]/50 backdrop-blur-xl border border-slate-200/50 dark:border-slate-800/80 rounded-3xl shadow-sm">
+            <Search className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
+            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">No services match your specifications.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredServices.map(svc => (
               <div 
                 key={svc.id}
-                className="flex flex-col justify-between p-6 rounded-2xl border border-slate-200 dark:border-slate-850 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md hover:border-blue-400 dark:hover:border-blue-700 transition-all duration-300 group"
+                className="flex flex-col justify-between p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-[#0b1418]/80 backdrop-blur-xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_20px_rgb(0,0,0,0.2)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)] hover:border-teal-400/50 dark:hover:border-teal-500/50 hover:-translate-y-1 transition-all duration-300 group"
               >
                 <div>
-                  <div className="flex justify-between items-start gap-2 mb-3">
-                    <span className="px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-extrabold bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300">
+                  <div className="flex justify-between items-start gap-4 mb-4">
+                    <span className="px-3 py-1 rounded-lg text-[10px] uppercase tracking-wider font-extrabold bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 ring-1 ring-teal-500/20">
                       {svc.category}
                     </span>
-                    <span className="font-mono text-xs font-extrabold text-blue-600 dark:text-blue-400">
+                    <span className="font-mono text-xs font-black text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
                       ₹{svc.price}
                     </span>
                   </div>
 
-                  <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white mb-2 leading-snug">
+                  <h3 className="font-display font-black text-lg text-slate-900 dark:text-white mb-2 leading-tight group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
                     {svc.name}
                   </h3>
                   
-                  <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed line-clamp-3">
+                  <p className="text-slate-500 dark:text-slate-400 text-[13px] leading-relaxed line-clamp-3 mb-4">
                     {svc.description}
                   </p>
 
                   {/* Required Document counts lists */}
-                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5Packed">
-                      {language === 'en' ? 'REQUIRED DOCUMENTS:' : 'தேவையான ஆவணங்கள்:'}
+                  <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/80">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                       {language === 'en' ? 'Required Documents' : 'தேவையான ஆவணங்கள்'}
                     </span>
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1.5">
                       {svc.requiredDocuments.map((doc, idx) => (
-                        <span key={idx} className="inline-flex items-center text-[9px] font-medium bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-1.5 py-0.5 rounded border border-slate-100 dark:border-slate-750">
+                        <span key={idx} className="inline-flex items-center text-[10px] font-semibold bg-zinc-50 dark:bg-[#0b1418] text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-md border border-slate-200 dark:border-slate-800">
                           {doc}
                         </span>
                       ))}
@@ -393,18 +423,18 @@ export const PublicHome: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="mt-6 pt-3 flex items-center justify-between gap-2 border-t border-slate-50 dark:border-slate-800">
-                  <span className="text-[10px] text-slate-400 font-semibold flex items-center">
-                    <Clock className="w-3 h-3 mr-1 text-slate-400 shrink-0" />
+                <div className="mt-6 flex items-center justify-between gap-4">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium flex items-center bg-zinc-50 dark:bg-[#0b1418]/50 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-800">
+                    <Clock className="w-3.5 h-3.5 mr-1.5 text-slate-400 dark:text-slate-500 shrink-0" />
                     <span>{svc.processingDays} {language === 'en' ? 'Days' : 'நாட்கள்'}</span>
                   </span>
 
                   <button
                     onClick={() => handleApplyClick(svc.id)}
-                    className="inline-flex items-center space-x-1 text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 bg-transparent py-1 group-hover:translate-x-1 transition-transform cursor-pointer"
+                    className="inline-flex items-center justify-center space-x-1.5 text-xs font-bold text-white bg-[#0b1418] dark:bg-teal-600 hover:bg-teal-600 dark:hover:bg-teal-500 px-4 py-2 rounded-xl shadow-md transition-all active:scale-[0.98] cursor-pointer w-full sm:w-auto mt-2 sm:mt-0"
                   >
                     <span>{t('applyBtn')}</span>
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="w-4 h-4 ml-0.5" />
                   </button>
                 </div>
               </div>
@@ -414,47 +444,47 @@ export const PublicHome: React.FC = () => {
       </section>
 
       {/* 3. PORTAL CORE METRICS & DIGITAL IMPACT */}
-      <section className="bg-slate-900 text-white py-16">
+      <section className="bg-zinc-50 dark:bg-[#0b1418] border-y border-slate-200 dark:border-slate-800 text-slate-800 dark:text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-xl mx-auto mb-12">
-            <h3 className="font-display font-extrabold text-2xl text-white mb-2">
+            <h3 className="font-display font-extrabold text-2xl text-slate-900 dark:text-white mb-2">
               {t('statsTitle')}
             </h3>
-            <p className="text-xs text-slate-400 font-medium">
-              Real-time operational achievements of SEGAN ENTERPRISES E-Sevai Portal
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              Real-time operational achievements of SEAGAN ENTERPRISES E-Sevai Portal
             </p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div className="p-6 bg-slate-800/40 rounded-2xl border border-slate-800">
-              <span className="font-display font-extrabold text-3xl md:text-4xl text-amber-400 block mb-1">
+            <div className="p-6 bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="font-display font-extrabold text-3xl md:text-4xl text-teal-600 dark:text-amber-400 block mb-1">
                 48,290+
               </span>
               <span className="text-[11px] uppercase tracking-wider font-bold text-slate-400 block">
                 {language === 'en' ? 'Citizen Families Served' : 'பயன்பெற்ற குடிமக்கள்'}
               </span>
             </div>
-            <div className="p-6 bg-slate-800/40 rounded-2xl border border-slate-800">
-              <span className="font-display font-extrabold text-3xl md:text-4xl text-amber-400 block mb-1">
+            <div className="p-6 bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="font-display font-extrabold text-3xl md:text-4xl text-amber-500 dark:text-amber-400 block mb-1">
                 99.8%
               </span>
-              <span className="text-[11px] uppercase tracking-wider font-bold text-slate-400 block">
+              <span className="text-[11px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400 block">
                 {language === 'en' ? 'Audit Validation Rate' : 'சரிபார்ப்பு வெற்றி வீதம்'}
               </span>
             </div>
-            <div className="p-6 bg-slate-800/40 rounded-2xl border border-slate-800">
-              <span className="font-display font-extrabold text-3xl md:text-4xl text-emerald-400 block mb-1">
+            <div className="p-6 bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="font-display font-extrabold text-3xl md:text-4xl text-emerald-600 dark:text-emerald-400 block mb-1">
                 3 Mins
               </span>
-              <span className="text-[11px] uppercase tracking-wider font-bold text-slate-400 block">
+              <span className="text-[11px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400 block">
                 {language === 'en' ? 'Avg Digital Form Setup' : 'பதிவிறக்கம் சராசரி நேரம்'}
               </span>
             </div>
-            <div className="p-6 bg-slate-800/40 rounded-2xl border border-slate-800">
-              <span className="font-display font-extrabold text-3xl md:text-4xl text-emerald-400 block mb-1">
+            <div className="p-6 bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="font-display font-extrabold text-3xl md:text-4xl text-emerald-600 dark:text-emerald-400 block mb-1">
                 24/7
               </span>
-              <span className="text-[11px] uppercase tracking-wider font-bold text-slate-400 block">
+              <span className="text-[11px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400 block">
                 {language === 'en' ? 'File Check Access' : '24/7 விண்கண் கண்காணிப்பு'}
               </span>
             </div>
@@ -463,7 +493,7 @@ export const PublicHome: React.FC = () => {
       </section>
 
       {/* 4. WHY CHOOSE US */}
-      <section className="py-16 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 transition-colors">
+      <section className="py-16 bg-white dark:bg-[#0b1418] border-b border-slate-100 dark:border-slate-800 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-xl mx-auto mb-12">
             <h3 className="font-display font-extrabold text-2xl text-slate-900 dark:text-white">
@@ -475,8 +505,8 @@ export const PublicHome: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-6 bg-slate-50 dark:bg-slate-950/50 rounded-2xl border border-slate-200/80 dark:border-slate-850 text-left">
-              <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-4 shadow-inner">
+            <div className="p-6 bg-zinc-50 dark:bg-[#091114]/50 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-left">
+              <div className="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-950 flex items-center justify-center text-teal-600 dark:text-teal-400 mb-4 shadow-inner">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white mb-2">
@@ -487,7 +517,7 @@ export const PublicHome: React.FC = () => {
               </p>
             </div>
 
-            <div className="p-6 bg-slate-50 dark:bg-slate-950/50 rounded-2xl border border-slate-200/80 dark:border-slate-850 text-left">
+            <div className="p-6 bg-zinc-50 dark:bg-[#091114]/50 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-left">
               <div className="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-950/40 flex items-center justify-center text-orange-600 dark:text-orange-400 mb-4 shadow-inner">
                 <Award className="w-5 h-5" />
               </div>
@@ -499,7 +529,7 @@ export const PublicHome: React.FC = () => {
               </p>
             </div>
 
-            <div className="p-6 bg-slate-50 dark:bg-slate-950/50 rounded-2xl border border-slate-200/80 dark:border-slate-850 text-left">
+            <div className="p-6 bg-zinc-50 dark:bg-[#091114]/50 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-left">
               <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-4 shadow-inner">
                 <Clock className="w-5 h-5" />
               </div>
@@ -521,17 +551,17 @@ export const PublicHome: React.FC = () => {
             {language === 'en' ? 'What Citizens Say' : 'மக்களின் சான்றுகள்'}
           </h3>
           <p className="text-xs text-slate-500 mt-2">
-            Verifiable reviews from residents across Tamil Nadu benefitting from SEGAN ENTERPRISES.
+            Verifiable reviews from residents across Tamil Nadu benefitting from SEAGAN ENTERPRISES.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-250/60 dark:border-slate-850 text-left">
+          <div className="p-6 rounded-2xl bg-white dark:bg-[#0b1418] border border-slate-200/60 dark:border-slate-800 text-left">
             <p className="text-xs text-slate-500 dark:text-slate-400 italic leading-relaxed">
               "The dynamic form feature is incredible. Applied for my Income proof, downloaded files within 4 days. The SMS notification update kept me completely relaxed."
             </p>
             <div className="mt-4 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-xs uppercase">
+              <div className="w-8 h-8 rounded-full bg-teal-100 text-teal-800 flex items-center justify-center font-bold text-xs uppercase">
                 R
               </div>
               <div>
@@ -541,7 +571,7 @@ export const PublicHome: React.FC = () => {
             </div>
           </div>
 
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-250/60 dark:border-slate-850 text-left">
+          <div className="p-6 rounded-2xl bg-white dark:bg-[#0b1418] border border-slate-200/60 dark:border-slate-800 text-left">
             <p className="text-xs text-slate-500 dark:text-slate-400 italic leading-relaxed">
               "First graduate certificate issued under 7 days! Helped me complete university registration concession quickly. Verified QR seal is genuinely accepted everywhere."
             </p>
@@ -556,7 +586,7 @@ export const PublicHome: React.FC = () => {
             </div>
           </div>
 
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-250/60 dark:border-slate-850 text-left">
+          <div className="p-6 rounded-2xl bg-white dark:bg-[#0b1418] border border-slate-200/60 dark:border-slate-800 text-left">
             <p className="text-xs text-slate-500 dark:text-slate-400 italic leading-relaxed">
               "My grandfather's pension approval was very transparent here. Admin checked original Aadhaar upload, validated verification within weeks. Immensely thankful."
             </p>
@@ -574,7 +604,7 @@ export const PublicHome: React.FC = () => {
       </section>
 
       {/* 6. FAQ SECTIONS (Accordion) */}
-      <section className="py-16 bg-slate-100 dark:bg-slate-900/40 border-t border-slate-250/40 dark:border-slate-850 transition-colors">
+      <section className="py-16 bg-slate-100 dark:bg-[#0b1418]/40 border-t border-slate-200/40 dark:border-slate-800 transition-colors">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-10">
             <h3 className="font-display font-extrabold text-2xl text-slate-900 dark:text-white">
@@ -589,14 +619,14 @@ export const PublicHome: React.FC = () => {
             {FAQS.map((faq, idx) => (
               <div 
                 key={idx}
-                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden transition-all"
+                className="bg-white dark:bg-[#0b1418] border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
-                  className="w-full p-4 text-left font-display font-bold text-xs md:text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/50 flex justify-between items-center transition-colors cursor-pointer"
+                  className="w-full p-4 text-left font-display font-bold text-xs md:text-sm text-slate-800 dark:text-slate-200 hover:bg-zinc-50 dark:hover:bg-slate-800/50 flex justify-between items-center transition-colors cursor-pointer"
                 >
                   <span className="flex items-center space-x-2">
-                    <HelpCircle className="w-4 h-4 text-blue-600 shrink-0" />
+                    <HelpCircle className="w-4 h-4 text-teal-600 shrink-0" />
                     <span>{faq.q}</span>
                   </span>
                   <span className="font-mono text-xs text-slate-400">{activeFaq === idx ? '−' : '+'}</span>
@@ -615,7 +645,7 @@ export const PublicHome: React.FC = () => {
 
       {/* 7. CONTACT FEEDBACK FORM */}
       <section id="contact-section-id" className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 md:p-12 shadow-sm">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 bg-white dark:bg-[#0b1418] border border-slate-200 dark:border-slate-800 rounded-3xl p-8 md:p-12 shadow-sm">
           
           {/* Quick coordinates */}
           <div className="lg:col-span-5 text-left space-y-6">
@@ -628,15 +658,15 @@ export const PublicHome: React.FC = () => {
 
             <div className="space-y-4 text-xs font-semibold text-slate-700 dark:text-slate-300">
               <div className="flex items-center space-x-3.5">
-                <MapPin className="w-4 h-4 text-blue-600" />
+                <MapPin className="w-4 h-4 text-teal-600" />
                 <span>3/21, Anna Salai Road, Chennai, TN - 600002</span>
               </div>
               <div className="flex items-center space-x-3.5">
-                <Phone className="w-4 h-4 text-blue-600" />
+                <Phone className="w-4 h-4 text-teal-600" />
                 <span>+91 94440 88888 (Toll Free)</span>
               </div>
               <div className="flex items-center space-x-3.5">
-                <Mail className="w-4 h-4 text-blue-600" />
+                <Mail className="w-4 h-4 text-teal-600" />
                 <span>office@segan.in / support@segan.in</span>
               </div>
             </div>
@@ -659,7 +689,7 @@ export const PublicHome: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs dark:text-white font-medium"
+                      className="w-full px-3 py-2.5 bg-zinc-50 dark:bg-[#091114] border border-slate-200 dark:border-slate-800 rounded-xl text-xs dark:text-white font-medium"
                       value={contactForm.name}
                       onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                       required
@@ -671,7 +701,7 @@ export const PublicHome: React.FC = () => {
                     </label>
                     <input
                       type="email"
-                      className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs dark:text-white font-medium"
+                      className="w-full px-3 py-2.5 bg-zinc-50 dark:bg-[#091114] border border-slate-200 dark:border-slate-800 rounded-xl text-xs dark:text-white font-medium"
                       value={contactForm.email}
                       onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
                       required
@@ -685,7 +715,7 @@ export const PublicHome: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs dark:text-white font-medium"
+                    className="w-full px-3 py-2.5 bg-zinc-50 dark:bg-[#091114] border border-slate-200 dark:border-slate-800 rounded-xl text-xs dark:text-white font-medium"
                     value={contactForm.subject}
                     onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
                   />
@@ -697,7 +727,7 @@ export const PublicHome: React.FC = () => {
                   </label>
                   <textarea
                     rows={4}
-                    className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs dark:text-white font-medium focus:outline-none"
+                    className="w-full px-3 py-2.5 bg-zinc-50 dark:bg-[#091114] border border-slate-200 dark:border-slate-800 rounded-xl text-xs dark:text-white font-medium focus:outline-none"
                     value={contactForm.message}
                     onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                     required
@@ -707,7 +737,7 @@ export const PublicHome: React.FC = () => {
                 <button
                   id="contact-submit-btn"
                   type="submit"
-                  className="inline-flex items-center space-x-2 px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-md cursor-pointer transition-all"
+                  className="inline-flex items-center space-x-2 px-5 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold text-xs rounded-xl shadow-md cursor-pointer transition-all"
                 >
                   <span>Transmit Query</span>
                   <Send className="w-3.5 h-3.5" />

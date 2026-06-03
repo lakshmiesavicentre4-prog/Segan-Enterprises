@@ -1,5 +1,5 @@
 -- =====================================================================
--- SEGAN ENTERPRISES - DATABASE SCHEMA & SECURITIES SETUP
+-- SEAGAN ENTERPRISES - DATABASE SCHEMA & SECURITIES SETUP
 -- Platform: Supabase PostgreSQL
 -- =====================================================================
 
@@ -9,7 +9,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- Create Sequence for Token Numbers (Auto-increment)
 CREATE SEQUENCE IF NOT EXISTS application_token_seq START WITH 1;
 
--- Function to generate Segan Token format (SEGAN-2026-000001)
+-- Function to generate Segan Token format (SEAGAN-2026-000001)
 CREATE OR REPLACE FUNCTION generate_segan_token()
 RETURNS TEXT AS $$
 DECLARE
@@ -18,7 +18,7 @@ DECLARE
 BEGIN
   SELECT nextval('application_token_seq') INTO next_val;
   SELECT to_char(CURRENT_DATE, 'YYYY') INTO year_str;
-  RETURN 'SEGAN-' || year_str || '-' || lpad(next_val::TEXT, 6, '0');
+  RETURN 'SEAGAN-' || year_str || '-' || lpad(next_val::TEXT, 6, '0');
 END;
 $$ LANGUAGE plpgsql;
 
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   full_name TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
   phone TEXT,
-  role TEXT NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'admin', 'super_admin')),
+  role TEXT NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'admin')),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -146,7 +146,7 @@ ALTER TABLE public.activity_logs ENABLE ROW LEVEL SECURITY;
 -- --------------------------------------------------
 CREATE TABLE IF NOT EXISTS public.settings (
   id UUID PRIMARY KEY DEFAULT '00000000-0000-0000-0000-000000000000'::uuid,
-  portal_name TEXT NOT NULL DEFAULT 'SEGAN ENTERPRISES',
+  portal_name TEXT NOT NULL DEFAULT 'SEAGAN ENTERPRISES',
   portal_tagline TEXT NOT NULL DEFAULT 'Digital Services Simplified',
   support_phone TEXT DEFAULT '+91 98765 43210',
   support_email TEXT DEFAULT 'support@segan.in',
@@ -159,7 +159,7 @@ ALTER TABLE public.settings ENABLE ROW LEVEL SECURITY;
 
 -- Ensure a default setting structure exists
 INSERT INTO public.settings (id, portal_name, portal_tagline)
-VALUES ('00000000-0000-0000-0000-000000000000'::uuid, 'SEGAN ENTERPRISES', 'Digital Services Simplified')
+VALUES ('00000000-0000-0000-0000-000000000000'::uuid, 'SEAGAN ENTERPRISES', 'Digital Services Simplified')
 ON CONFLICT DO NOTHING;
 
 
@@ -173,7 +173,7 @@ RETURNS BOOLEAN AS $$
 BEGIN
   RETURN EXISTS (
     SELECT 1 FROM public.profiles
-    WHERE id = auth.uid() AND role IN ('admin', 'super_admin')
+    WHERE id = auth.uid() AND role = 'admin'
   );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -274,11 +274,11 @@ CREATE POLICY "Only admins can view activity logs" ON public.activity_logs
 CREATE POLICY "Settings are viewable by everyone" ON public.settings
   FOR SELECT USING (true);
 
-CREATE POLICY "Only super admins can modify settings" ON public.settings
+CREATE POLICY "Only admins can modify settings" ON public.settings
   FOR UPDATE USING (
     EXISTS (
       SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'super_admin'
+      WHERE id = auth.uid() AND role = 'admin'
     )
   );
 

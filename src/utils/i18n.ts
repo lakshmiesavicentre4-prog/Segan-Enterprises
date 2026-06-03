@@ -5,7 +5,7 @@
 
 export const i18n = {
   en: {
-    portalName: 'SEGAN ENTERPRISES',
+    portalName: 'SEAGAN ENTERPRISES',
     tagline: 'Digital Services Simplified',
     home: 'Home',
     services: 'Services',
@@ -22,7 +22,7 @@ export const i18n = {
     popularServices: 'Popular Services',
     categories: 'Service Categories',
     statsTitle: 'Our Digital Impact',
-    whyUs: 'Why Choose SEGAN?',
+    whyUs: 'Why Choose SEAGAN?',
     getInTouch: 'Get In Touch',
     
     // Auth Labels
@@ -64,7 +64,7 @@ export const i18n = {
     allowedFormats: 'Supported formats: PDF, PNG, JPG, JPEG, WEBP (Max 5MB)',
     
     // Payment Desk
-    paymentSubtext: 'Secured Payment Processing Gateway powered by SEGAN Pay',
+    paymentSubtext: 'Secured Payment Processing Gateway powered by SEAGAN Pay',
     transactionSummary: 'Transaction Summary',
     payPrice: 'Service Processing Fee',
     serviceGst: 'TNeGA & Portal Charges',
@@ -76,7 +76,7 @@ export const i18n = {
     // Receipt Cards
     downloadReceipt: 'Download Smart Receipt',
     verifiedSeal: 'GOVERNMENT AUDITED AND VERIFIED DIGITAL RECEIPT',
-    digitallySigned: 'Digitally Verified Document - SEGAN ENTERPRISES',
+    digitallySigned: 'Digitally Verified Document - SEAGAN ENTERPRISES',
     qrScanText: 'Scan to verify status on official app',
     
     // Admin Panels

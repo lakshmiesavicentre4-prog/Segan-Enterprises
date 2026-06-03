@@ -107,6 +107,14 @@ const DEFAULT_SERVICES: Service[] = [
 
 const DEFAULT_PROFILES: Profile[] = [
   {
+    id: 'usr-admin-2',
+    fullName: 'Niranjan N S',
+    email: 'niranjanns1925@gmail.com',
+    phone: '+91 99999 99999',
+    role: 'admin',
+    createdAt: new Date().toISOString()
+  },
+  {
     id: 'usr-admin-1',
     fullName: 'Arun Kumar M',
     email: 'admin@segan.in',
@@ -119,7 +127,7 @@ const DEFAULT_PROFILES: Profile[] = [
     fullName: 'Segan Durai (Senthil)',
     email: 'superadmin@segan.in',
     phone: '+91 98840 99999',
-    role: 'super_admin',
+    role: 'admin',
     createdAt: new Date().toISOString()
   },
   {
@@ -135,7 +143,7 @@ const DEFAULT_PROFILES: Profile[] = [
 const DEFAULT_APPLICATIONS: Application[] = [
   {
     id: 'app-001',
-    tokenNumber: 'SEGAN-2026-000001',
+    tokenNumber: 'SEAGAN-2026-000001',
     userId: 'usr-user-1',
     serviceId: 'srv-001',
     status: 'Completed',
@@ -149,7 +157,7 @@ const DEFAULT_APPLICATIONS: Application[] = [
   },
   {
     id: 'app-002',
-    tokenNumber: 'SEGAN-2026-000002',
+    tokenNumber: 'SEAGAN-2026-000002',
     userId: 'usr-user-1',
     serviceId: 'srv-002',
     status: 'Processing',
@@ -199,7 +207,7 @@ const DEFAULT_NOTIFICATIONS: Notification[] = [
     id: 'not-001',
     userId: 'usr-user-1',
     title: 'Application Completed Successfully',
-    message: 'Your Community Certificate (SEGAN-2026-000001) has been approved and issued. You can now download the certificate from your dashboard.',
+    message: 'Your Community Certificate (SEAGAN-2026-000001) has been approved and issued. You can now download the certificate from your dashboard.',
     isRead: false,
     createdAt: new Date().toISOString()
   },
@@ -207,14 +215,14 @@ const DEFAULT_NOTIFICATIONS: Notification[] = [
     id: 'not-002',
     userId: 'usr-user-1',
     title: 'Payment Confirmed',
-    message: 'Payment of ₹60 for Income Certificate (SEGAN-2026-000002) was processed successfully.',
+    message: 'Payment of ₹60 for Income Certificate (SEAGAN-2026-000002) was processed successfully.',
     isRead: true,
     createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
   }
 ];
 
 const DEFAULT_SETTINGS: AppSettings = {
-  portalName: 'SEGAN ENTERPRISES',
+  portalName: 'SEAGAN ENTERPRISES',
   portalTagline: 'Digital Services Simplified',
   supportPhone: '+91 94440 88888',
   supportEmail: 'support@segan.in',
@@ -248,7 +256,7 @@ const DEFAULT_LOGS: ActivityLog[] = [
     id: 'log-1',
     userId: 'usr-super-1',
     userEmail: 'superadmin@segan.in',
-    userRole: 'super_admin',
+    userRole: 'admin',
     action: 'Portal initialization and master services set active.',
     createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString()
   },
@@ -257,7 +265,7 @@ const DEFAULT_LOGS: ActivityLog[] = [
     userId: 'usr-admin-1',
     userEmail: 'admin@segan.in',
     userRole: 'admin',
-    action: 'Verified Aadhaar Card for Application SEGAN-2026-000001',
+    action: 'Verified Aadhaar Card for Application SEAGAN-2026-000001',
     createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString()
   }
 ];
@@ -353,6 +361,44 @@ export const authService = {
     return profile;
   },
 
+  // Add user without changing current user session (for admin panel)
+  addUser: async (fullName: string, email: string, phone: string, role: UserRole): Promise<Profile> => {
+    const state = db.get();
+    
+    if (state.currentUser?.role !== 'admin') {
+      throw new Error('Unauthorized');
+    }
+
+    const existing = state.profiles.find(p => p.email.toLowerCase() === email.toLowerCase());
+    if (existing) {
+      throw new Error('An account with this email already exists.');
+    }
+
+    const newProfile: Profile = {
+      id: 'usr-' + Math.random().toString(36).substr(2, 9),
+      fullName,
+      email,
+      phone,
+      role,
+      createdAt: new Date().toISOString()
+    };
+
+    state.profiles.push(newProfile);
+
+    // Track admin action
+    state.activityLogs.unshift({
+      id: 'log-' + Math.random().toString(36).substr(2, 9),
+      userId: state.currentUser.id,
+      userEmail: state.currentUser.email,
+      userRole: state.currentUser.role,
+      action: `Created new ${role} account for ${email}`,
+      createdAt: new Date().toISOString()
+    });
+
+    db.save(state);
+    return newProfile;
+  },
+
   // Register
   signUp: async (fullName: string, email: string, phone: string, role: UserRole = 'user'): Promise<Profile> => {
     const state = db.get();
@@ -378,7 +424,7 @@ export const authService = {
     state.notifications.unshift({
       id: 'not-' + Math.random().toString(36).substr(2, 9),
       userId: newProfile.id,
-      title: 'Welcome to SEGAN ENTERPRISES',
+      title: 'Welcome to SEAGAN ENTERPRISES',
       message: 'Hello! Your digital service center profile is active. You can now apply for e-Sevai services, PAN card, pension, and track files in real-time.',
       isRead: false,
       createdAt: new Date().toISOString()
@@ -419,7 +465,7 @@ export const authService = {
     return state.profiles;
   },
 
-  // Update a user's role (Super Admin only RBAC)
+  // Update a user's role (Admin only RBAC)
   updateUserRole: (userId: string, newRole: UserRole): Profile[] => {
     const state = db.get();
     const profile = state.profiles.find(p => p.id === userId);
@@ -431,7 +477,7 @@ export const authService = {
         id: 'log-' + Math.random().toString(36).substr(2, 9),
         userId: 'usr-super-1',
         userEmail: 'superadmin@segan.in',
-        userRole: 'super_admin',
+        userRole: 'admin',
         action: `RBAC Override: Updated ${profile.email} role from ${oldRole} to ${newRole}`,
         createdAt: new Date().toISOString()
       });
@@ -524,7 +570,7 @@ export const applicationService = {
     const curUser = state.currentUser;
     if (!curUser) return [];
 
-    if (curUser.role === 'admin' || curUser.role === 'super_admin') {
+    if (curUser.role === 'admin') {
       return state.applications;
     }
     // Standard user gets own applications
@@ -555,7 +601,7 @@ export const applicationService = {
     // Token Auto Increment Sequence simulator
     const count = state.applications.length + 1;
     const yearStr = new Date().getFullYear();
-    const tokenNumber = `SEGAN-${yearStr}-${String(count).padStart(6, '0')}`;
+    const tokenNumber = `SEAGAN-${yearStr}-${String(count).padStart(6, '0')}`;
 
     const appId = 'app-' + Math.random().toString(36).substr(2, 9);
     

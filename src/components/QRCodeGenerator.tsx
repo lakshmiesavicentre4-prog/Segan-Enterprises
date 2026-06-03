@@ -53,7 +53,7 @@ export const QRCodeGenerator: React.FC<QRCodeProps> = ({
     return hash;
   };
 
-  const randomBits = hashString(value || 'SEGAN_EMPTY');
+  const randomBits = hashString(value || 'SEAGAN_EMPTY');
 
   // Matrix generation
   const matrix: boolean[][] = Array(gridCount).fill(null).map(() => Array(gridCount).fill(false));

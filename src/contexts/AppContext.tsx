@@ -53,8 +53,9 @@ interface AppContextType {
   
   // Helpers
   t: (key: keyof typeof i18n['en']) => string;
-  loginUser: (email: string, role?: 'user' | 'admin' | 'super_admin') => Promise<void>;
-  registerUser: (name: string, email: string, phone: string, role?: 'user' | 'admin' | 'super_admin') => Promise<void>;
+  loginUser: (email: string, role?: 'user' | 'admin') => Promise<void>;
+  registerUser: (name: string, email: string, phone: string, role?: 'user' | 'admin') => Promise<void>;
+  addUser: (name: string, email: string, phone: string, role: 'user' | 'admin') => Promise<void>;
   logoutUser: () => void;
   
   // Abstraction payment ready engine
@@ -135,7 +136,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   // Login handler
-  const loginUser = async (email: string, role?: 'user' | 'admin' | 'super_admin') => {
+  const loginUser = async (email: string, role?: 'user' | 'admin') => {
     const profile = await authService.signIn(email, role);
     setCurrentUserState(profile);
     if (profile.role === 'user') {
@@ -150,7 +151,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   // Registration handler
-  const registerUser = async (name: string, email: string, phone: string, role: 'user' | 'admin' | 'super_admin' = 'user') => {
+  const registerUser = async (name: string, email: string, phone: string, role: 'user' | 'admin' = 'user') => {
     const profile = await authService.signUp(name, email, phone, role);
     setCurrentUserState(profile);
     if (profile.role === 'user') {
@@ -161,6 +162,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     // Refresh states
     setApplications(applicationService.getApplications());
     setNotifications(notificationService.getNotifications());
+    setLogs(reportService.getActivityLogs());
+  };
+
+  const addUser = async (name: string, email: string, phone: string, role: 'user' | 'admin') => {
+    await authService.addUser(name, email, phone, role);
     setLogs(reportService.getActivityLogs());
   };
 
@@ -187,7 +193,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const options = {
         key: process.env.VITE_RAZORPAY_KEY,
         amount: amount * 100, // paisa
-        name: 'SEGAN ENTERPRISES',
+        name: 'SEAGAN ENTERPRISES',
         handler: function(response) {
            // update Supabase backend status
         }
@@ -251,6 +257,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       t,
       loginUser,
       registerUser,
+      addUser,
       logoutUser,
       initiatePaymentGateways
     }}>
