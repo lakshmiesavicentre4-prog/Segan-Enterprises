@@ -22,6 +22,7 @@ import {
   BadgeCheck
 } from 'lucide-react';
 import { applicationService } from '../supabase/supabaseClient';
+import { Hero3D } from '../components/Hero3D';
 
 export const PublicHome: React.FC = () => {
   const { t, services, setView, currentUser, language } = useApp();
@@ -36,8 +37,7 @@ export const PublicHome: React.FC = () => {
   const [trackError, setTrackError] = useState('');
 
   // Contact form state
-  const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
-  const [contactSuccess, setContactSuccess] = useState(false);
+  // Removed
 
   // FAQ states
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
@@ -93,16 +93,6 @@ export const PublicHome: React.FC = () => {
     }
   };
 
-  const handleContactSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!contactForm.name || !contactForm.email || !contactForm.message) return;
-    setContactSuccess(true);
-    setTimeout(() => {
-      setContactSuccess(false);
-      setContactForm({ name: '', email: '', subject: '', message: '' });
-    }, 4000);
-  };
-
   // Progression steps mapping for visualization bar
   const STAGES = [
     'Submitted',
@@ -143,6 +133,9 @@ export const PublicHome: React.FC = () => {
       
       {/* 1. HERO BANNER - Premium Modern Layout */}
       <section className="relative overflow-hidden bg-slate-50 border-b border-slate-200 dark:bg-[#020817] text-slate-800 dark:text-white pt-24 pb-16 md:pt-32 md:pb-24">
+        {/* 3D Canvas Background */}
+        <Hero3D />
+        
         {/* Layered Gradient Backgrounds for a premium feel */}
         <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-blue-100/40 dark:bg-blue-900/10 blur-[120px] pointer-events-none"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-amber-100/40 dark:bg-purple-900/10 blur-[120px] pointer-events-none"></div>
@@ -172,7 +165,7 @@ export const PublicHome: React.FC = () => {
 
               <p className="text-slate-600/90 dark:text-slate-300 font-medium text-base sm:text-lg leading-relaxed max-w-lg mb-2">
                 {language === 'en' 
-                  ? 'Access Revenue Certificates, Aadhaar revisions, PAN registrations, and social schemes instantly. Realtime tracking backed by TNeGA.'
+                  ? 'Access Revenue Certificates, Aadhaar revisions, PAN registrations, and social schemes instantly. Realtime tracking.'
                   : 'வருமானச் சான்றிதழ், சாதிச் சான்றிதழ், பான் கார்டு, ரேஷன் கார்டு, முதியோர் ஓய்வூதியத் திட்டம் போன்ற அரசு சேவைகளைப் பெற ஆன்லைனில் விண்ணப்பிக்கவும்.'}
               </p>
 
@@ -228,7 +221,7 @@ export const PublicHome: React.FC = () => {
                         type="text"
                         className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-[#020817]/50 border border-slate-200/80 dark:border-slate-800 rounded-2xl text-sm placeholder-slate-400 dark:placeholder-slate-500 text-slate-900 dark:text-white font-mono font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all uppercase shadow-inner"
                         placeholder="SEAGAN-2026-000001"
-                        value={trackToken}
+                        value={trackToken || ''}
                         onChange={(e) => setTrackToken(e.target.value)}
                       />
                     </div>
@@ -643,111 +636,7 @@ export const PublicHome: React.FC = () => {
         </div>
       </section>
 
-      {/* 7. CONTACT FEEDBACK FORM */}
-      <section id="contact-section-id" className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 bg-white dark:bg-[#0A1128] border border-slate-200 dark:border-slate-800 rounded-3xl p-8 md:p-12 shadow-sm">
-          
-          {/* Quick coordinates */}
-          <div className="lg:col-span-5 text-left space-y-6">
-            <h3 className="font-display font-extrabold text-2xl text-slate-900 dark:text-white">
-              {t('getInTouch')}
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Have questions regarding document approvals, verification audits, or setting up premium e-Sevai franchises? Drop us a secure message.
-            </p>
 
-            <div className="space-y-4 text-xs font-semibold text-slate-700 dark:text-slate-300">
-              <div className="flex items-center space-x-3.5">
-                <MapPin className="w-4 h-4 text-blue-600" />
-                <span>3/21, Anna Salai Road, Chennai, TN - 600002</span>
-              </div>
-              <div className="flex items-center space-x-3.5">
-                <Phone className="w-4 h-4 text-blue-600" />
-                <span>+91 94440 88888 (Toll Free)</span>
-              </div>
-              <div className="flex items-center space-x-3.5">
-                <Mail className="w-4 h-4 text-blue-600" />
-                <span>office@segan.in / support@segan.in</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Contact interactive Form */}
-          <div className="lg:col-span-7">
-            {contactSuccess ? (
-              <div className="h-full flex flex-col items-center justify-center py-10 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-800 dark:text-emerald-400 rounded-2xl border border-emerald-100/55 dark:border-emerald-900/30 text-center space-y-2 p-6 animate-scale-up">
-                <HelpCircle className="w-8 h-8 text-emerald-500" />
-                <span className="font-bold text-sm">Message Transmitted Cleanly!</span>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Our administrative support center will email/call you within 12 working hours.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleContactSubmit} className="space-y-4 text-left">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-[11px] uppercase tracking-wider font-extrabold text-slate-500 block mb-1">
-                      Your Full Name
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#020817] border border-slate-200 dark:border-slate-800 rounded-xl text-xs dark:text-white font-medium"
-                      value={contactForm.name}
-                      onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] uppercase tracking-wider font-extrabold text-slate-500 block mb-1">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      className="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#020817] border border-slate-200 dark:border-slate-800 rounded-xl text-xs dark:text-white font-medium"
-                      value={contactForm.email}
-                      onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-[11px] uppercase tracking-wider font-extrabold text-slate-500 block mb-1">
-                    Message Subject
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#020817] border border-slate-200 dark:border-slate-800 rounded-xl text-xs dark:text-white font-medium"
-                    value={contactForm.subject}
-                    onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[11px] uppercase tracking-wider font-extrabold text-slate-500 block mb-1">
-                    Your Narrative
-                  </label>
-                  <textarea
-                    rows={4}
-                    className="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#020817] border border-slate-200 dark:border-slate-800 rounded-xl text-xs dark:text-white font-medium focus:outline-none"
-                    value={contactForm.message}
-                    onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                    required
-                  ></textarea>
-                </div>
-
-                <button
-                  id="contact-submit-btn"
-                  type="submit"
-                  className="inline-flex items-center space-x-2 px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-md cursor-pointer transition-all"
-                >
-                  <span>Transmit Query</span>
-                  <Send className="w-3.5 h-3.5" />
-                </button>
-              </form>
-            )}
-          </div>
-
-        </div>
-      </section>
 
     </div>
   );

@@ -23,6 +23,7 @@ import {
   reportService
 } from '../supabase/supabaseClient';
 import { i18n } from '../utils/i18n';
+import { CashfreeMockModal } from '../components/CashfreeMockModal';
 
 interface AppContextType {
   language: Language;
@@ -70,9 +71,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return (localStorage.getItem('segan_lang') as Language) || 'en';
   });
   
-  const [theme, setThemeState] = useState<Theme>(() => {
-    return (localStorage.getItem('segan_theme') as Theme) || 'light';
-  });
+  const [theme, setThemeState] = useState<Theme>('light');
 
   const [currentUser, setCurrentUserState] = useState<Profile | null>(() => {
     return authService.getSession();
@@ -89,6 +88,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [notifications, setNotifications] = useState<Notification[]>(() => notificationService.getNotifications());
   const [settings, setSettings] = useState<AppSettings>(() => settingsService.getSettings());
   const [logs, setLogs] = useState<ActivityLog[]>(() => reportService.getActivityLogs());
+  const [cashfreePayment, setCashfreePayment] = useState<{appId: string, amount: number, resolve: (v: boolean) => void} | null>(null);
 
   // Localization translator helper
   const t = (key: keyof typeof i18n['en']): string => {
@@ -99,12 +99,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Sync HTML wrapper element on Dark Mode triggers
   useEffect(() => {
     const root = window.document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    localStorage.setItem('segan_theme', theme);
+    root.classList.remove('dark');
+    localStorage.setItem('segan_theme', 'light');
   }, [theme]);
 
   const setTheme = (t: Theme) => setThemeState(t);
@@ -183,28 +179,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setViewState(view);
   };
 
-  // Abstract Payment Gateways (Razorpay/Cashfree) Simulator and abstraction logic
+  // Abstract Payment Gateways (Cashfree) Simulator and abstraction logic
   const initiatePaymentGateways = async (appId: string, amount: number): Promise<boolean> => {
-    console.log(`Payment gateway abstraction triggered for application ${appId} (₹${amount})`);
+    console.log(`Cashfree Payment Gateway initialized for application ${appId} (₹${amount})`);
     
-    // Abstract payment structure model:
-    // in future systems, this calls window.Razorpay or Cashfree SDK config:
-    /*
-      const options = {
-        key: process.env.VITE_RAZORPAY_KEY,
-        amount: amount * 100, // paisa
-        name: 'SEAGAN ENTERPRISES',
-        handler: function(response) {
-           // update Supabase backend status
-        }
-      }
-    */
-    
-    // Simulating instant authorization validation:
+    // Instead of resolving immediately, we'll open the Cashfree UI and return a promise
     return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true); // authorized successfully
-      }, 800);
+      setCashfreePayment({ appId, amount, resolve });
     });
   };
 
@@ -262,6 +243,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       initiatePaymentGateways
     }}>
       {children}
+      {cashfreePayment && (
+        <CashfreeMockModal 
+          appId={cashfreePayment.appId} 
+          amount={cashfreePayment.amount} 
+          onSuccess={() => {
+            cashfreePayment.resolve(true);
+            setCashfreePayment(null);
+          }}
+          onCancel={() => {
+            cashfreePayment.resolve(false);
+            setCashfreePayment(null);
+          }}
+        />
+      )}
     </AppContext.Provider>
   );
 };

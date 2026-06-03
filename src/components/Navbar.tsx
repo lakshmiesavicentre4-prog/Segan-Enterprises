@@ -5,7 +5,6 @@
 
 import React, { useState } from 'react';
 import { useApp } from '../contexts/AppContext';
-import { ThemeToggle } from './ThemeToggle';
 import { Bell, LogOut, Shield, User, Globe, MessageSquare, Check, CheckSquare, Menu, X } from 'lucide-react';
 import { notificationService, applicationService } from '../supabase/supabaseClient';
 
@@ -131,9 +130,6 @@ export const Navbar: React.FC = () => {
             <Globe className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" />
             <span>{language === 'en' ? 'தமிழ்' : 'English'}</span>
           </button>
-
-          {/* Theme Switcher */}
-          <ThemeToggle />
 
           {/* Realtime Notification Bell */}
           {currentUser && (

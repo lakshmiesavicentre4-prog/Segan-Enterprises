@@ -94,7 +94,6 @@ export interface AppSettings {
   portalTagline: string;
   supportPhone: string;
   supportEmail: string;
-  maintenanceMode: boolean;
   allowNewRegistrations: boolean;
 }
 

@@ -443,7 +443,7 @@ export const UserDashboard: React.FC = () => {
                       maxLength={12}
                       className="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#020817] border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-mono text-slate-900 dark:text-white"
                       placeholder="123412341234"
-                      value={formData.citizenAadhaar}
+                      value={formData.citizenAadhaar || ''}
                       onChange={(e) => setFormData({ ...formData, citizenAadhaar: e.target.value.replace(/\D/g, '') })}
                       required
                     />
@@ -457,7 +457,7 @@ export const UserDashboard: React.FC = () => {
                       type="text"
                       className="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#020817] border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white font-medium"
                       placeholder="Annual income approx ₹2,40,000 / Priority card citizen"
-                      value={formData.categoryDetails}
+                      value={formData.categoryDetails || ''}
                       onChange={(e) => setFormData({ ...formData, categoryDetails: e.target.value })}
                     />
                   </div>
@@ -470,7 +470,7 @@ export const UserDashboard: React.FC = () => {
                       rows={3}
                       className="w-full px-3 py-2 bg-slate-50 dark:bg-[#020817] border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none"
                       placeholder="Need priority certificate because of immediate engineering admission"
-                      value={formData.extraRemarks}
+                      value={formData.extraRemarks || ''}
                       onChange={(e) => setFormData({ ...formData, extraRemarks: e.target.value })}
                     ></textarea>
                   </div>
@@ -594,7 +594,7 @@ export const UserDashboard: React.FC = () => {
                     </div>
 
                     <div className="flex justify-between items-center text-[11px] text-slate-400 font-medium">
-                      <span>TNeGA Administrative Charge & PG GST</span>
+                      <span>Administrative Charge & PG GST</span>
                       <span className="font-mono">₹10.80</span>
                     </div>
 

@@ -592,6 +592,14 @@ export const AdminDashboard: React.FC = () => {
                                 <Eye className="w-3.5 h-3.5" />
                                 <span>Preview</span>
                               </a>
+                              <a 
+                                href={doc.fileUrl} 
+                                download={`${doc.documentName}_${selectedReviewApp?.tokenNumber || 'doc'}.png`}
+                                className="p-1 px-1.5 border hover:bg-slate-50 dark:hover:bg-slate-800 rounded text-[10px] text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 inline-flex items-center gap-1"
+                              >
+                                <Download className="w-3.5 h-3.5" />
+                                <span>Download</span>
+                              </a>
                               <button 
                                 onClick={() => handleVerifyDocumentAction(doc.id, 'Approved')}
                                 className="p-1 text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 rounded hover:bg-emerald-100"
@@ -672,7 +680,7 @@ export const AdminDashboard: React.FC = () => {
                     type="text"
                     className="w-full px-3 py-2 bg-slate-100/50 dark:bg-[#020817] border border-slate-150 dark:border-slate-800 rounded-xl text-xs focus:ring-1 focus:ring-blue-500 font-medium dark:text-white"
                     placeholder="PAN Card Scheme (பான் கார்டு)"
-                    value={newSvc.name}
+                    value={newSvc.name || ''}
                     onChange={(e) => setNewSvc({ ...newSvc, name: e.target.value })}
                     required
                   />
@@ -684,13 +692,13 @@ export const AdminDashboard: React.FC = () => {
                   </label>
                   <select
                     className="w-full p-2 bg-slate-100/50 dark:bg-[#020817] border border-slate-150 dark:border-slate-800 rounded-xl text-xs font-bold"
-                    value={newSvc.category}
+                    value={newSvc.category || ''}
                     onChange={(e) => setNewSvc({ ...newSvc, category: e.target.value })}
                   >
                     <option value="Revenue Department">Revenue Department</option>
                     <option value="Social Welfare Department">Social Welfare Department</option>
                     <option value="Central Services">Central Services</option>
-                    <option value="TNeGA Services">TNeGA Services</option>
+                    <option value="Other Services">Other Services</option>
                   </select>
                 </div>
 
@@ -702,7 +710,7 @@ export const AdminDashboard: React.FC = () => {
                     <input
                       type="number"
                       className="w-full px-3 py-2 bg-slate-100/50 dark:bg-[#020817] border border-slate-150 dark:border-slate-800 rounded-xl text-xs font-mono dark:text-white"
-                      value={newSvc.price}
+                      value={newSvc.price !== undefined ? newSvc.price : ''}
                       onChange={(e) => setNewSvc({ ...newSvc, price: Number(e.target.value) })}
                       required
                     />
@@ -714,7 +722,7 @@ export const AdminDashboard: React.FC = () => {
                     <input
                       type="number"
                       className="w-full px-3 py-2 bg-slate-100/50 dark:bg-[#020817] border border-slate-150 dark:border-slate-800 rounded-xl text-xs font-mono dark:text-white"
-                      value={newSvc.processingDays}
+                      value={newSvc.processingDays !== undefined ? newSvc.processingDays : ''}
                       onChange={(e) => setNewSvc({ ...newSvc, processingDays: Number(e.target.value) })}
                     />
                   </div>
@@ -728,7 +736,7 @@ export const AdminDashboard: React.FC = () => {
                     rows={2}
                     className="w-full p-2 bg-slate-100/50 dark:bg-[#020817] border border-slate-150 dark:border-slate-800 rounded-xl text-xs dark:text-white focus:outline-none focus:ring-1"
                     placeholder="Provide official brief description for citizens catalog details."
-                    value={newSvc.description}
+                    value={newSvc.description || ''}
                     onChange={(e) => setNewSvc({ ...newSvc, description: e.target.value })}
                   ></textarea>
                 </div>
@@ -744,7 +752,7 @@ export const AdminDashboard: React.FC = () => {
                       type="text"
                       className="flex-1 px-3 py-1.5 bg-slate-100/50 dark:bg-[#020817] border border-slate-150 dark:border-slate-800 rounded-lg text-xs"
                       placeholder="e.g. Identity Proof, High TC"
-                      value={newSvc.newDocName}
+                      value={newSvc.newDocName || ''}
                       onChange={(e) => setNewSvc({ ...newSvc, newDocName: e.target.value })}
                     />
                     <button
@@ -1177,7 +1185,7 @@ export const AdminDashboard: React.FC = () => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-[#020817] border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold focus:ring-1 focus:ring-blue-500"
-                  value={settings.portalName}
+                  value={settings?.portalName || ''}
                   onChange={(e) => updateGlobalSettings({ portalName: e.target.value })}
                 />
               </div>
@@ -1187,7 +1195,7 @@ export const AdminDashboard: React.FC = () => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-[#020817] border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold focus:ring-1 focus:ring-blue-500"
-                  value={settings.supportPhone}
+                  value={settings?.supportPhone || ''}
                   onChange={(e) => updateGlobalSettings({ supportPhone: e.target.value })}
                 />
               </div>
@@ -1197,7 +1205,7 @@ export const AdminDashboard: React.FC = () => {
                 <input
                   type="email"
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-[#020817] border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold focus:ring-1"
-                  value={settings.supportEmail}
+                  value={settings?.supportEmail || ''}
                   onChange={(e) => updateGlobalSettings({ supportEmail: e.target.value })}
                 />
               </div>
@@ -1218,18 +1226,6 @@ export const AdminDashboard: React.FC = () => {
                 />
               </div>
 
-              <div className="flex justify-between items-center text-red-650 dark:text-red-400 font-semibold p-3 bg-red-105/5 rounded-2xl border border-red-200/40">
-                <div>
-                  <span className="block text-slate-900 dark:text-white">Emergency Maintenance mode</span>
-                  <span className="text-[10px] text-slate-400 font-semibold block">Lock out civilian dashboards triggers globally</span>
-                </div>
-                <input 
-                  type="checkbox" 
-                  className="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-500"
-                  checked={settings.maintenanceMode}
-                  onChange={(e) => updateGlobalSettings({ maintenanceMode: e.target.checked })}
-                />
-              </div>
             </div>
 
           </div>

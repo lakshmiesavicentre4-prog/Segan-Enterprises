@@ -150,7 +150,6 @@ CREATE TABLE IF NOT EXISTS public.settings (
   portal_tagline TEXT NOT NULL DEFAULT 'Digital Services Simplified',
   support_phone TEXT DEFAULT '+91 98765 43210',
   support_email TEXT DEFAULT 'support@segan.in',
-  maintenance_mode BOOLEAN NOT NULL DEFAULT false,
   allow_new_registrations BOOLEAN NOT NULL DEFAULT true,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );

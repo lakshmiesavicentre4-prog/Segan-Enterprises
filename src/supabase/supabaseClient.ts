@@ -226,7 +226,6 @@ const DEFAULT_SETTINGS: AppSettings = {
   portalTagline: 'Digital Services Simplified',
   supportPhone: '+91 94440 88888',
   supportEmail: 'support@segan.in',
-  maintenanceMode: false,
   allowNewRegistrations: true
 };
 
@@ -282,8 +281,15 @@ function initDatabase(): DbState {
         const lakshmi = parsed.profiles.find((p: any) => p.email === 'lakshmiesavicentre4@gmail.com');
         if (lakshmi && lakshmi.role === 'user') {
           lakshmi.role = 'admin';
-          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(parsed));
         }
+        
+        // Ensure settings exists
+        if (!parsed.settings) parsed.settings = DEFAULT_SETTINGS;
+        if (!parsed.settings.portalName) parsed.settings.portalName = DEFAULT_SETTINGS.portalName;
+        if (!parsed.settings.supportPhone) parsed.settings.supportPhone = DEFAULT_SETTINGS.supportPhone;
+        if (!parsed.settings.supportEmail) parsed.settings.supportEmail = DEFAULT_SETTINGS.supportEmail;
+
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(parsed));
         return parsed;
       }
     }
