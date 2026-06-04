@@ -24,7 +24,8 @@ import {
   CheckCircle,
   Printer,
   Mail,
-  Phone
+  Phone,
+  MapPin
 } from 'lucide-react';
 import { applicationService, serviceService } from '../supabase/supabaseClient';
 import { QRCodeGenerator } from '../components/QRCodeGenerator';
@@ -37,7 +38,8 @@ export const UserDashboard: React.FC = () => {
     applications, 
     refreshApplications, 
     initiatePaymentGateways,
-    language 
+    language,
+    updateUserProfile
   } = useApp();
 
   // Active dashboard view state inside user panel
@@ -53,6 +55,43 @@ export const UserDashboard: React.FC = () => {
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, string>>({}); // docTitle: base64Data
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newlyCreatedApp, setNewlyCreatedApp] = useState<any>(null);
+
+  // Profile Edit State
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [profileFormData, setProfileFormData] = useState({
+    fullName: currentUser?.fullName || '',
+    phone: currentUser?.phone || '',
+    aadhaarNumber: currentUser?.aadhaarNumber || '',
+    panNumber: currentUser?.panNumber || '',
+    address: currentUser?.address || '',
+    district: currentUser?.district || '',
+    pincode: currentUser?.pincode || '',
+  });
+
+  // Sync profile form state if user changes
+  useEffect(() => {
+    if (currentUser) {
+      setProfileFormData({
+        fullName: currentUser.fullName || '',
+        phone: currentUser.phone || '',
+        aadhaarNumber: currentUser.aadhaarNumber || '',
+        panNumber: currentUser.panNumber || '',
+        address: currentUser.address || '',
+        district: currentUser.district || '',
+        pincode: currentUser.pincode || '',
+      });
+    }
+  }, [currentUser]);
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await updateUserProfile(profileFormData);
+      setIsEditingProfile(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // Check if landing page directed to apply a service
   useEffect(() => {
@@ -105,31 +144,27 @@ export const UserDashboard: React.FC = () => {
     });
   };
 
-  // Initiate simulated Razorpay check and create record
-  const handleProceedPayment = async () => {
+  // Submit application without payment step
+  const handleSubmitApplication = async () => {
     if (!selectedService) return;
     setIsSubmitting(true);
 
     try {
-      // Trigger payment abstraction layer Cashfree/Razorpay Simulator
-      const success = await initiatePaymentGateways('TEMP-REF-' + selectedService.id, selectedService.price);
-      if (success) {
-        // Document packing
-        const docPayload = selectedService.requiredDocuments.map((docName: string) => ({
-          documentName: docName,
-          fileUrl: uploadedFiles[docName] || 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600&auto=format&fit=crop&q=60'
-        }));
+      // Document packing
+      const docPayload = selectedService.requiredDocuments.map((docName: string) => ({
+        documentName: docName,
+        fileUrl: uploadedFiles[docName] || 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600&auto=format&fit=crop&q=60'
+      }));
 
-        // Insert to local virtual database
-        const result = await applicationService.createApplication(selectedService.id, docPayload, {
-          aadhaar: formData.citizenAadhaar,
-          remarks: formData.extraRemarks
-        });
+      // Insert to local virtual database
+      const result = await applicationService.createApplication(selectedService.id, docPayload, {
+        aadhaar: formData.citizenAadhaar,
+        remarks: formData.extraRemarks
+      });
 
-        setNewlyCreatedApp(result);
-        refreshApplications();
-        setApplyStep(4);
-      }
+      setNewlyCreatedApp(result);
+      refreshApplications();
+      setApplyStep(3); // Receipt step
     } catch (e: any) {
       console.error('Error submitting application:', e);
     } finally {
@@ -421,9 +456,7 @@ export const UserDashboard: React.FC = () => {
                   <span>➔</span>
                   <span className={applyStep >= 2 ? 'text-blue-600 dark:text-blue-400' : ''}>2. Documents</span>
                   <span>➔</span>
-                  <span className={applyStep >= 3 ? 'text-blue-600 dark:text-blue-400' : ''}>3. Payment Check</span>
-                  <span>➔</span>
-                  <span className={applyStep >= 4 ? 'text-emerald-500' : ''}>4. Receipt</span>
+                  <span className={applyStep >= 3 ? 'text-emerald-500' : ''}>3. Receipt</span>
                 </div>
               </div>
 
@@ -561,78 +594,18 @@ export const UserDashboard: React.FC = () => {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setApplyStep(3)}
-                      className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-sm text-xs font-bold shadow-md cursor-pointer"
-                    >
-                      Proceed to Payment Desk
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* STEP 3: PAYMENTS ABSTRACTION GATEWAYS SIMULATOR */}
-              {applyStep === 3 && (
-                <div className="space-y-6 max-w-lg">
-                  <div className="mb-4">
-                    <h4 className="font-display font-bold text-sm text-slate-950 dark:text-white">
-                      {t('paymentTitle')}
-                    </h4>
-                    <p className="text-xs text-slate-400 mt-1">
-                      {t('paymentSubtext')}
-                    </p>
-                  </div>
-
-                  {/* Pricing transaction summary */}
-                  <div className="p-5 rounded-sm bg-slate-50 dark:bg-[#0c0a09] border-2 border-slate-200 dark:border-slate-800 space-y-3 font-semibold text-xs text-slate-600 dark:text-slate-450 text-left">
-                    <h5 className="font-display font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-2">
-                      {t('transactionSummary')}
-                    </h5>
-                    
-                    <div className="flex justify-between items-center">
-                      <span>{selectedService.name}</span>
-                      <span className="font-mono">₹{selectedService.price}.00</span>
-                    </div>
-
-                    <div className="flex justify-between items-center text-[11px] text-slate-400 font-medium">
-                      <span>Administrative Charge & PG GST</span>
-                      <span className="font-mono">₹10.80</span>
-                    </div>
-
-                    <div className="flex justify-between items-center border-t border-dashed border-slate-200 dark:border-slate-800 pt-2 font-black text-sm text-slate-900 dark:text-white">
-                      <span>{t('totalPay')}</span>
-                      <span className="font-mono text-blue-600 dark:text-blue-400">₹{(selectedService.price + 10.80).toFixed(2)}</span>
-                    </div>
-                  </div>
-
-                  <div className="p-4 rounded-sm border-2 border-dashed border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c1917]/10 text-[10px] text-slate-400 flex items-start space-x-2 leading-relaxed">
-                    <Sparkles className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                    <span>
-                      {t('paymentAbstNote')} Clicking proceed will configure abstract token interfaces, mocking payment gateways authorize response, and instantly submit files to admin.
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <button 
-                      type="button"
-                      onClick={() => setApplyStep(2)}
-                      className="px-4 py-2 border-2 border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-500 rounded-sm hover:bg-slate-50 cursor-pointer"
-                    >
-                      Back
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleProceedPayment}
+                      onClick={handleSubmitApplication}
                       disabled={isSubmitting}
-                      className="px-5 py-3 bg-gradient-to-r from-amber-400 to-amber-600 disabled:opacity-40 hover:from-amber-400 hover:to-amber-500 text-white rounded-sm text-xs font-bold shadow-md cursor-pointer flex items-center space-x-2"
+                      className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-sm text-xs font-bold shadow-md cursor-pointer flex items-center space-x-2"
                     >
-                      <span>{isSubmitting ? 'Securing auth parameters...' : t('payProceedBtn')}</span>
+                      <span>{isSubmitting ? 'Submitting...' : 'Submit Application'}</span>
                     </button>
                   </div>
                 </div>
               )}
 
-              {/* STEP 4: SEAGAN TICKET SUCCESS ENGINES */}
-              {applyStep === 4 && newlyCreatedApp && (
+              {/* STEP 3: SEAGAN TICKET SUCCESS ENGINES */}
+              {applyStep === 3 && newlyCreatedApp && (
                 <div className="space-y-6 text-center max-w-xl mx-auto py-6">
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-400">
                     <CheckCircle className="w-8 h-8" />
@@ -794,13 +767,23 @@ export const UserDashboard: React.FC = () => {
           ===================================================================== */}
       {activeTab === 'profile' && (
         <div className="bg-white dark:bg-[#1c1917] border-2 border-slate-200 dark:border-slate-800 p-6 rounded-sm text-left shadow-sm max-w-3xl mx-auto space-y-6">
-          <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
-            <h3 className="font-display font-extrabold text-sm uppercase tracking-wider text-slate-900 dark:text-white">
-              My Profile Details
-            </h3>
-            <p className="text-xs text-slate-400 mt-1">
-              Your digital identity on SEAGAN ENTERPRISES.
-            </p>
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+            <div>
+              <h3 className="font-display font-extrabold text-sm uppercase tracking-wider text-slate-900 dark:text-white">
+                My Profile Details
+              </h3>
+              <p className="text-xs text-slate-400 mt-1">
+                Your digital identity on SEAGAN ENTERPRISES.
+              </p>
+            </div>
+            {!isEditingProfile && currentUser && (
+              <button 
+                onClick={() => setIsEditingProfile(true)}
+                className="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-sm text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800/50 flex flex-row items-center gap-2"
+              >
+                <span>Edit Profile</span>
+              </button>
+            )}
           </div>
 
           {currentUser ? (
@@ -819,38 +802,115 @@ export const UserDashboard: React.FC = () => {
                 </div>
               </div>
 
+              {isEditingProfile ? (
+                 <form onSubmit={handleSaveProfile} className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     <div>
+                        <label className="text-xs font-bold text-slate-500 mb-1 block">Full Name</label>
+                        <input required type="text" value={profileFormData.fullName} onChange={(e) => setProfileFormData({...profileFormData, fullName: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                     </div>
+                     <div>
+                        <label className="text-xs font-bold text-slate-500 mb-1 block">Phone Number</label>
+                        <input required type="text" value={profileFormData.phone} onChange={(e) => setProfileFormData({...profileFormData, phone: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                     </div>
+                     <div>
+                        <label className="text-xs font-bold text-slate-500 mb-1 block">Aadhaar Number</label>
+                        <input type="text" value={profileFormData.aadhaarNumber} onChange={(e) => setProfileFormData({...profileFormData, aadhaarNumber: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                     </div>
+                     <div>
+                        <label className="text-xs font-bold text-slate-500 mb-1 block">PAN Number</label>
+                        <input type="text" value={profileFormData.panNumber} onChange={(e) => setProfileFormData({...profileFormData, panNumber: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                     </div>
+                     <div className="md:col-span-2">
+                        <label className="text-xs font-bold text-slate-500 mb-1 block">Address</label>
+                        <input type="text" value={profileFormData.address} onChange={(e) => setProfileFormData({...profileFormData, address: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                     </div>
+                     <div>
+                        <label className="text-xs font-bold text-slate-500 mb-1 block">District</label>
+                        <input type="text" value={profileFormData.district} onChange={(e) => setProfileFormData({...profileFormData, district: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                     </div>
+                     <div>
+                        <label className="text-xs font-bold text-slate-500 mb-1 block">Pincode</label>
+                        <input type="text" value={profileFormData.pincode} onChange={(e) => setProfileFormData({...profileFormData, pincode: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                     </div>
+                   </div>
+                   
+                   <div className="flex gap-4 pt-4 justify-end">
+                     <button type="button" onClick={() => setIsEditingProfile(false)} className="px-6 py-2.5 rounded-sm border-2 border-slate-200 text-xs font-bold dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50">Cancel</button>
+                     <button type="submit" className="px-6 py-2.5 rounded-sm bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md">Save Changes</button>
+                   </div>
+                 </form>
+              ) : (
+
               <div className="bg-slate-50 dark:bg-[#0c0a09] rounded-sm border-2 border-slate-200 dark:border-slate-800 p-5 space-y-4 text-sm font-medium">
-                <div className="flex items-center space-x-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-                  <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
-                    <Mail className="w-4 h-4" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+                      <Mail className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Email Address</label>
+                      <p className="text-slate-900 dark:text-slate-200 mt-0.5">{currentUser.email}</p>
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Email Address</label>
-                    <p className="text-slate-900 dark:text-slate-200 mt-0.5">{currentUser.email}</p>
-                  </div>
-                </div>
 
-                <div className="flex items-center space-x-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-                  <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
-                    <Phone className="w-4 h-4" />
+                  <div className="flex items-center space-x-4">
+                    <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+                      <Phone className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Phone Number</label>
+                      <p className="text-slate-900 dark:text-slate-200 mt-0.5">{currentUser.phone}</p>
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Phone Number</label>
-                    <p className="text-slate-900 dark:text-slate-200 mt-0.5">{currentUser.phone}</p>
+                  
+                  <div className="flex items-center space-x-4">
+                    <div className="w-8 h-8 rounded-sm bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Aadhaar Number</label>
+                      <p className="text-slate-900 dark:text-slate-200 mt-0.5 font-mono">{currentUser.aadhaarNumber || 'Not provided'}</p>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="flex items-center space-x-4">
-                  <div className="w-8 h-8 rounded-sm bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
-                    <Calendar className="w-4 h-4" />
+                  
+                  <div className="flex items-center space-x-4">
+                    <div className="w-8 h-8 rounded-sm bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">PAN Number</label>
+                      <p className="text-slate-900 dark:text-slate-200 mt-0.5 font-mono uppercase">{currentUser.panNumber || 'Not provided'}</p>
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Joined On</label>
-                    <p className="text-slate-900 dark:text-slate-200 mt-0.5">{new Date(currentUser.createdAt).toLocaleDateString()}</p>
-                  </div>
-                </div>
 
+                  <div className="flex items-start space-x-4 md:col-span-2 mt-2">
+                    <div className="w-8 h-8 rounded-sm bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 shrink-0">
+                      <MapPin className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Registered Address</label>
+                      <p className="text-slate-900 dark:text-slate-200 mt-0.5">
+                         {currentUser.address ? (
+                            <>{currentUser.address}<br/>{currentUser.district && `${currentUser.district}, `}{currentUser.pincode}</>
+                         ) : 'No address saved.'}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-4 pt-4 border-t border-slate-200 dark:border-slate-800 md:col-span-2">
+                    <div className="w-8 h-8 rounded-sm bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                      <Calendar className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Joined On</label>
+                      <p className="text-slate-900 dark:text-slate-200 mt-0.5">{new Date(currentUser.createdAt).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
+
+               )}
             </div>
           ) : (
             <p className="text-xs text-slate-500">Could not pull profile identity. Please log in again.</p>

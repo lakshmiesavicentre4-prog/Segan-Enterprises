@@ -12,6 +12,11 @@ export interface Profile {
   phone: string;
   role: UserRole;
   createdAt: string;
+  aadhaarNumber?: string;
+  panNumber?: string;
+  address?: string;
+  district?: string;
+  pincode?: string;
 }
 
 export interface Service {

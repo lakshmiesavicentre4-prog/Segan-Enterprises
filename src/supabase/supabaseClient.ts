@@ -455,6 +455,20 @@ export const authService = {
     return newProfile;
   },
 
+  updateProfile: async (updates: Partial<Profile>): Promise<Profile> => {
+    const state = db.get();
+    if (!state.currentUser) throw new Error('Not logged in');
+
+    const index = state.profiles.findIndex(p => p.id === state.currentUser!.id);
+    if (index === -1) throw new Error('Profile not found');
+
+    const updatedProfile = { ...state.profiles[index], ...updates };
+    state.profiles[index] = updatedProfile;
+    state.currentUser = updatedProfile;
+    db.save(state);
+    return updatedProfile;
+  },
+
   signOut: (): void => {
     const state = db.get();
     if (state.currentUser) {

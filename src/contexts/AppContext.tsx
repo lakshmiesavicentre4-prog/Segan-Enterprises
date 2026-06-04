@@ -56,6 +56,7 @@ interface AppContextType {
   t: (key: keyof typeof i18n['en']) => string;
   loginUser: (email: string, role?: 'user' | 'admin', fullName?: string) => Promise<void>;
   registerUser: (name: string, email: string, phone: string, role?: 'user' | 'admin') => Promise<void>;
+  updateUserProfile: (updates: Partial<Profile>) => Promise<void>;
   addUser: (name: string, email: string, phone: string, role: 'user' | 'admin') => Promise<void>;
   logoutUser: () => void;
   
@@ -161,6 +162,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setLogs(reportService.getActivityLogs());
   };
 
+  const updateUserProfile = async (updates: Partial<Profile>) => {
+    const updated = await authService.updateProfile(updates);
+    setCurrentUserState(updated);
+  };
+
   const addUser = async (name: string, email: string, phone: string, role: 'user' | 'admin') => {
     await authService.addUser(name, email, phone, role);
     setLogs(reportService.getActivityLogs());
@@ -238,6 +244,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       t,
       loginUser,
       registerUser,
+      updateUserProfile,
       addUser,
       logoutUser,
       initiatePaymentGateways
