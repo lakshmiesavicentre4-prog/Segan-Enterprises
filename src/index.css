@@ -6,30 +6,44 @@
   --font-display: "Space Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  /* TN Premium Palette */
-  --color-blue-50: #f0f6fc;
-  --color-blue-100: #dceaf7;
-  --color-blue-200: #b9d5f0;
-  --color-blue-300: #88bbed;
-  --color-blue-400: #559ee3;
-  --color-blue-500: #2982d6;
-  --color-blue-600: #0056A6; /* TN BLUE Primary */
-  --color-blue-700: #00458a;
-  --color-blue-800: #00366b;
-  --color-blue-900: #002952;
-  --color-blue-950: #001a38;
+  /* Terracotta (Replaces Blue) */
+  --color-blue-50: #fcf8f6;
+  --color-blue-100: #f7e6e0;
+  --color-blue-200: #eed5cc;
+  --color-blue-300: #e2b7a9;
+  --color-blue-400: #d1927e;
+  --color-blue-500: #c1725b;
+  --color-blue-600: #a7553f; /* Terracotta Primary */
+  --color-blue-700: #8b4432;
+  --color-blue-800: #713a2b;
+  --color-blue-900: #5c3227;
+  --color-blue-950: #311812;
 
-  --color-amber-50: #fef8f0;
-  --color-amber-100: #feeid9;
-  --color-amber-200: #fcd5b0;
-  --color-amber-300: #faba80;
-  --color-amber-400: #f7a055;
-  --color-amber-500: #F5A623; /* TN AMBER Secondary */
-  --color-amber-600: #e08b17;
-  --color-amber-700: #b86b11;
-  --color-amber-800: #915112;
-  --color-amber-900: #754212;
-  --color-amber-950: #422106;
+  /* Sandstone (Replaces Amber) */
+  --color-amber-50: #fbfaf8;
+  --color-amber-100: #f5f3ee;
+  --color-amber-200: #e8e2d5;
+  --color-amber-300: #d7ccb6;
+  --color-amber-400: #c1b092;
+  --color-amber-500: #af9774;
+  --color-amber-600: #9e8460; /* Sand Secondary */
+  --color-amber-700: #836a4d;
+  --color-amber-800: #6b5742;
+  --color-amber-900: #574838;
+  --color-amber-950: #2e251c;
+
+  /* Stone (Replaces Slate) */
+  --color-slate-50: #fafaf9;
+  --color-slate-100: #f5f5f4;
+  --color-slate-200: #e7e5e4;
+  --color-slate-300: #d6d3d1;
+  --color-slate-400: #a8a29e;
+  --color-slate-500: #78716c;
+  --color-slate-600: #57534e;
+  --color-slate-700: #44403c;
+  --color-slate-800: #292524;
+  --color-slate-900: #1c1917;
+  --color-slate-950: #0c0a09;
 }
 
 html, body {

@@ -5,7 +5,7 @@ import { Cashfree } from '@cashfreepayments/cashfree-js';
 // Load cashfree to satisfy the import, even though we mock it for pure client-side behavior
 const cashfreeLoad = async () => {
   try {
-    await window.Cashfree?.({ mode: 'sandbox' });
+    await (window as any).Cashfree?.({ mode: 'sandbox' });
   } catch (e) {
     // Ignore as we run without backend
   }
@@ -39,7 +39,7 @@ export const CashfreeMockModal: React.FC<CashfreeMockModalProps> = ({ appId, amo
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col relative animate-reveal">
+      <div className="w-full max-w-md bg-white rounded-sm shadow-2xl overflow-hidden flex flex-col relative animate-reveal">
         <button 
           onClick={() => { if (!loading && step === 1) onCancel(); }}
           className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 z-10"
@@ -79,7 +79,7 @@ export const CashfreeMockModal: React.FC<CashfreeMockModalProps> = ({ appId, amo
                 <button 
                   onClick={handlePay}
                   disabled={loading}
-                  className="w-full bg-[#3A229E] hover:bg-[#321c8b] text-white py-3.5 rounded-xl font-bold flex flex-col items-center justify-center transition-all min-h-[56px] shadow-lg shadow-[#3A229E]/20"
+                  className="w-full bg-[#3A229E] hover:bg-[#321c8b] text-white py-3.5 rounded-sm font-bold flex flex-col items-center justify-center transition-all min-h-[56px] shadow-lg shadow-[#3A229E]/20"
                 >
                   {loading ? (
                     <div className="flex items-center gap-2">

@@ -11,7 +11,7 @@ export const Footer: React.FC = () => {
   const { t } = useApp();
 
   return (
-    <footer className="bg-white dark:bg-[#0A1128] border-t border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 py-12">
+    <footer className="bg-white dark:bg-[#1c1917] border-t border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Top Segment */}
@@ -20,7 +20,7 @@ export const Footer: React.FC = () => {
           {/* Column 1: Info and Slogan */}
           <div className="md:col-span-1 space-y-4">
             <div className="flex items-center space-x-3">
-              <div className="flex items-center justify-center w-12 h-12 md:w-16 md:h-16 shrink-0 animate-fade-in bg-white p-1 rounded-xl shadow-md border border-slate-100 dark:border-slate-800">
+              <div className="flex items-center justify-center w-12 h-12 md:w-16 md:h-16 shrink-0 animate-fade-in bg-white p-1 rounded-sm shadow-md border-2 border-slate-100 dark:border-slate-800">
                 <img src="/logo1.png" alt="Logo" className="w-full h-full object-contain rounded-lg" />
               </div>
               <span className="font-display font-semibold text-lg text-slate-900 dark:text-white tracking-wide">

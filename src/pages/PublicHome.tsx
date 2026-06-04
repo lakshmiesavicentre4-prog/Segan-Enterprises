@@ -19,7 +19,8 @@ import {
   Phone, 
   MapPin, 
   Send,
-  BadgeCheck
+  BadgeCheck,
+  Users
 } from 'lucide-react';
 import { applicationService } from '../supabase/supabaseClient';
 import { Hero3D } from '../components/Hero3D';
@@ -129,515 +130,175 @@ export const PublicHome: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-[#020817] transition-colors duration-300">
+    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-[#0c0a09] transition-colors duration-300 pb-20">
       
-      {/* 1. HERO BANNER - Premium Modern Layout */}
-      <section className="relative overflow-hidden bg-slate-50 border-b border-slate-200 dark:bg-[#020817] text-slate-800 dark:text-white pt-24 pb-16 md:pt-32 md:pb-24">
-        {/* 3D Canvas Background */}
+      {/* Dynamic Header Block */}
+      <section className="relative overflow-hidden pt-28 pb-10">
         <Hero3D />
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
         
-        {/* Layered Gradient Backgrounds for a premium feel */}
-        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-blue-100/40 dark:bg-blue-900/10 blur-[120px] pointer-events-none"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-amber-100/40 dark:bg-purple-900/10 blur-[120px] pointer-events-none"></div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex flex-col lg:flex-row gap-12 items-center">
-            
-            {/* Visual Intro Headline */}
-            <div className="lg:w-1/2 flex flex-col space-y-6 text-left relative z-10 w-full xl:pr-10">
-              <div className="flex justify-start mb-2 animate-fade-in">
-                <div className="w-20 h-20 md:w-28 md:h-28 bg-white dark:bg-white/5 backdrop-blur-3xl p-1.5 md:p-2.5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] border border-slate-200 dark:border-white/10 ring-1 ring-black/5 dark:ring-white/10">
-                  <img src="/logo1.png" alt="SEAGAN ENTERPRISES Logo" className="w-full h-full object-contain rounded-2xl drop-shadow-sm" />
-                </div>
-              </div>
-              
-              <div id="tn-emblem-badge" className="inline-flex max-w-max items-center space-x-2 px-4 py-2 rounded-full bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-800/60 text-xs text-blue-700 dark:text-blue-200 font-semibold tracking-wide backdrop-blur-xl shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_2px_rgba(59,130,246,0.3)] animate-pulse"></span>
-                <span>{language === 'en' ? 'Tamil Nadu e-Sevai Gateway' : 'தமிழ்நாடு இ-சேவை நுழைவாயில்'}</span>
-              </div>
-              
-              <h1 className="font-display font-black text-4xl sm:text-5xl md:text-6xl text-slate-950 dark:text-white tracking-tight leading-[1.1]">
-                {language === 'en' ? 'Digital Services' : 'அனைத்து அரசு சேவைகளும்'}{' '}
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-amber-500 to-purple-600 dark:from-blue-400 dark:via-amber-400 dark:to-purple-400">
-                  {language === 'en' ? 'Simplified' : 'எளிய முறையில்'}
-                </span>
-              </h1>
-
-              <p className="text-slate-600/90 dark:text-slate-300 font-medium text-base sm:text-lg leading-relaxed max-w-lg mb-2">
-                {language === 'en' 
-                  ? 'Access Revenue Certificates, Aadhaar revisions, PAN registrations, and social schemes instantly. Realtime tracking.'
-                  : 'வருமானச் சான்றிதழ், சாதிச் சான்றிதழ், பான் கார்டு, ரேஷன் கார்டு, முதியோர் ஓய்வூதியத் திட்டம் போன்ற அரசு சேவைகளைப் பெற ஆன்லைனில் விண்ணப்பிக்கவும்.'}
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 pt-2 w-full sm:w-auto">
-                <button 
-                  onClick={() => {
-                    document.getElementById('services-grid-section')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="px-8 py-4 bg-[#0A1128] dark:bg-white text-white dark:text-slate-950 rounded-2xl text-sm font-bold shadow-[0_8px_16px_rgba(0,0,0,0.1)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.15)] transition-all cursor-pointer flex items-center justify-center space-x-2 w-full sm:w-auto hover:-translate-y-0.5 active:translate-y-0"
-                >
-                  <span>{language === 'en' ? 'Explore Services' : 'சேவைகளை ஆராய்க'}</span>
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </button>
-                <button 
-                  onClick={() => setView('auth')}
-                  className="px-8 py-4 bg-white dark:bg-[#0A1128] text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm transition-all cursor-pointer w-full sm:w-auto flex items-center justify-center hover:-translate-y-0.5 active:translate-y-0"
-                >
-                  {language === 'en' ? 'Register Account' : 'கணக்கை உருவாக்கு'}
-                </button>
-              </div>
-            </div>
-
-            {/* Application Token Status Tracker Card on Home! */}
-            <div className="lg:w-1/2 w-full mt-8 lg:mt-0 relative z-20">
-              <div className="relative">
-                {/* Decorative Elements around card */}
-                <div className="absolute -top-6 -right-6 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl"></div>
-                <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"></div>
-                
-                <div className="p-8 md:p-10 rounded-3xl bg-white/70 dark:bg-[#0A1128]/80 border border-slate-200/50 dark:border-slate-800/80 shadow-[0_8px_40px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_40px_rgb(0,0,0,0.2)] backdrop-blur-3xl w-full">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
-                      <BadgeCheck className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <h3 className="font-display font-black text-xl text-slate-900 dark:text-white tracking-tight">
-                      {language === 'en' ? 'Track Application' : 'விண்ணப்ப நிலை'}
-                    </h3>
-                  </div>
-                  
-                  <p className="text-[13px] text-slate-500 dark:text-slate-400 mb-8 font-medium leading-relaxed">
-                    {language === 'en' 
-                      ? 'Enter your file reference token to verify audits and securely download your approved certificates.' 
-                      : 'உங்கள் டோக்கன் எண்ணை உள்ளிட்டு சான்றிதழ்களைப் பதிவிறக்கவும்.'}
-                  </p>
-
-                  <form onSubmit={handleTrackStatus} className="space-y-4">
-                    <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                        <Search className="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
-                      </div>
-                      <input
-                        id="home-tracker-input"
-                        type="text"
-                        className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-[#020817]/50 border border-slate-200/80 dark:border-slate-800 rounded-2xl text-sm placeholder-slate-400 dark:placeholder-slate-500 text-slate-900 dark:text-white font-mono font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all uppercase shadow-inner"
-                        placeholder="SEAGAN-2026-000001"
-                        value={trackToken || ''}
-                        onChange={(e) => setTrackToken(e.target.value)}
-                      />
-                    </div>
-
-                    <button
-                      id="home-tracker-submit-btn"
-                      type="submit"
-                      className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-2xl shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-600/30 transition-all active:scale-[0.98] uppercase tracking-wide cursor-pointer flex items-center justify-center space-x-2"
-                    >
-                      <span>{language === 'en' ? 'Audit File Progress' : 'நிலையைச் சரிபார்'}</span>
-                    </button>
-                  </form>
-
-                  {trackError && (
-                    <div className="mt-4 p-3 bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/50 rounded-xl flex items-start space-x-2">
-                       <span className="text-red-500 dark:text-red-400 text-sm mt-0.5">⚠️</span>
-                       <p className="text-red-600 dark:text-red-400 text-xs font-medium text-left leading-relaxed">
-                         {trackError}
-                       </p>
-                    </div>
-                  )}
-
-                  {/* Animated progress results */}
-                  {trackedApplication && (
-                    <div className="mt-6 border-t border-slate-100 dark:border-slate-800/80 pt-6 text-left animate-fade-in">
-                      <div className="flex justify-between items-center mb-4 bg-slate-50 dark:bg-[#0A1128]/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
-                        <div>
-                          <h4 className="font-display font-bold text-slate-900 dark:text-white text-sm mb-1">
-                            {trackedApplication.serviceName}
-                          </h4>
-                          <span className="inline-block px-2 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md text-[10px] text-slate-600 dark:text-slate-300 font-mono font-semibold">
-                            {trackedApplication.tokenNumber}
-                          </span>
-                        </div>
-                        <span className={`px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider ${
-                          trackedApplication.status === 'Completed' || trackedApplication.status === 'Approved'
-                            ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 ring-1 ring-emerald-500/20'
-                            : trackedApplication.status === 'Rejected'
-                            ? 'bg-red-500/10 text-red-600 dark:text-red-400 ring-1 ring-red-500/20'
-                            : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-1 ring-amber-500/20'
-                        }`}>
-                          {trackedApplication.status}
-                        </span>
-                      </div>
-
-                      {/* Progress Segment bar */}
-                      {trackedApplication.status !== 'Rejected' ? (
-                        <div className="space-y-3 px-1">
-                          <div className="flex justify-between text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
-                            <span>Submitted</span>
-                            <span>In Review</span>
-                            <span>Completed</span>
-                          </div>
-                          <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden shadow-inner">
-                            <div 
-                              className="h-full bg-gradient-to-r from-blue-500 to-amber-500 transition-all duration-1000 ease-out"
-                              style={{ 
-                                width: `${Math.max(10, ((getStageIndex(trackedApplication.status) + 1) / STAGES.length) * 100)}%` 
-                              }}
-                            ></div>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="p-4 bg-red-50 dark:bg-red-950/30 rounded-2xl border border-red-100 dark:border-red-900/50 flex space-x-3">
-                          <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/40 flex items-center justify-center shrink-0">
-                             <span className="text-red-600 dark:text-red-400 font-bold">!</span>
-                          </div>
-                          <div>
-                            <span className="font-bold text-red-700 dark:text-red-400 text-sm block mb-1">Rejection Reason:</span>
-                            <p className="text-slate-700 dark:text-slate-300 text-xs font-medium leading-relaxed">
-                              {trackedApplication.rejectionReason || 'Submitted documents contain formatting issues.'}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                </div>
-              </div>
-            </div>
-
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-sm bg-white dark:bg-[#1c1917] border-2 border-slate-200 dark:border-slate-800 shadow-sm mb-6">
+            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+            <span className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-widest">{language === 'en' ? 'TN e-Sevai Gateway' : 'தமிழ்நாடு இ-சேவை'}</span>
           </div>
+          <h1 className="font-display font-black text-5xl md:text-7xl text-slate-900 dark:text-white tracking-tighter leading-tight mb-6 max-w-4xl mx-auto">
+            {language === 'en' ? 'Civic Services,' : 'அனைத்து அரசு சேவைகளும்,'} <br />
+            <span className="text-blue-600 dark:text-blue-400">{language === 'en' ? 'Reimagined.' : 'எளிய முறையில்.'}</span>
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 font-medium text-lg max-w-2xl mx-auto leading-relaxed">
+            {language === 'en' 
+              ? 'Revenue Certificates, Aadhaar revisions, PAN registrations, and social schemes processed with unprecedented velocity.'
+              : 'வருமானச் சான்றிதழ், சாதிச் சான்றிதழ், முதியோர் ஓய்வூதியத் திட்டம் போன்ற அரசு சேவைகளைப் பெற ஆன்லைனில் விண்ணப்பிக்கவும்.'}
+          </p>
         </div>
       </section>
 
-      {/* 2. SERVICES SEARCH & DYNAMIC GRID SECTIONS */}
-      <section id="services-grid-section" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-10">
-        
-        {/* Section Heading */}
-        <div className="text-center max-w-xl mx-auto mb-10 space-y-3">
-          <h2 className="font-display font-black text-3xl md:text-4xl text-slate-900 dark:text-white tracking-tight">
-            {language === 'en' ? 'Our Service Catalogue' : 'அனைத்து டிஜிட்டல் சேவைகள்'}
-          </h2>
-          <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
-            {language === 'en' 
-              ? 'Select from our wide array of digital services, input your secure details, and generate certifications out of the box.'
-              : 'கீழே உள்ள சேவைகளில் தேவையானதைத் தேர்ந்தெடுத்து, எளிய முறையில் உங்களது ஆவணங்களை பதிவேற்றி பலன் பெறுங்கள்.'}
-          </p>
-        </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        {/* BENTO GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-        {/* Global Search Interface and Category filters */}
-        <div className="bg-white/80 dark:bg-[#0A1128]/80 backdrop-blur-xl border border-slate-200/50 dark:border-slate-800/80 rounded-3xl p-6 mb-12 shadow-[0_8px_40px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_40px_rgb(0,0,0,0.2)] space-y-6 relative">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl"></div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center relative z-10">
-            
-            {/* Search Input */}
-            <div className="md:col-span-8 relative group">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                <Search className="w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+          {/* BENTO ITEM: Search & Filter (Spans 2 cols on Desktop) */}
+          <div className="md:col-span-2 lg:col-span-2 bg-white dark:bg-[#1c1917]  border-2 border-slate-200 dark:border-slate-800 rounded-sm p-6 lg:p-8 shadow-md dark:shadow-md flex flex-col justify-between group">
+            <div>
+              <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-sm flex items-center justify-center mb-6">
+                <Search className="w-6 h-6" />
               </div>
+              <h3 className="font-display font-black text-2xl text-slate-900 dark:text-white mb-2">{t('searchPlaceholder')}</h3>
+              <p className="text-slate-500 text-sm font-medium mb-6">Search from our comprehensive catalog of state-authorized civic certificates.</p>
+            </div>
+            
+            <div className="relative">
               <input
-                id="search-services-input"
                 type="text"
-                className="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-[#0A1128]/50 border border-slate-200/80 dark:border-slate-800 rounded-2xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:text-white transition-all font-medium shadow-inner"
-                placeholder={t('searchPlaceholder')}
+                className="w-full pl-5 pr-12 py-4 bg-slate-50 dark:bg-[#0c0a09] border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-600 dark:ring-slate-800 rounded-sm text-sm placeholder-slate-400 font-medium transition-shadow dark:text-white"
+                placeholder="E.g., Income Certificate, PAN Card..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-blue-600 text-white rounded-sm shadow-md">
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+
+          {/* BENTO ITEM: Status Tracker */}
+          <div className="md:col-span-1 lg:col-span-2 bg-blue-600 text-white rounded-sm p-6 lg:p-8 shadow-sm  relative overflow-hidden flex flex-col justify-between">
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div>
+              <div className="w-12 h-12 bg-white/20 text-white rounded-sm flex items-center justify-center mb-6 backdrop-blur-sm">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <h3 className="font-display font-black text-2xl mb-2">{language === 'en' ? 'Track Application' : 'விண்ணப்ப நிலை'}</h3>
+              <p className="text-blue-100 text-sm font-medium mb-6">Enter your reference token to instantly verify audit progress and download approved files.</p>
             </div>
 
-            {/* Slogan details box */}
-            <div className="md:col-span-4 flex items-center justify-end text-sm text-slate-500 font-mono font-medium bg-slate-50 dark:bg-[#0A1128]/50 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800">
-              <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400 mr-2" />
-              <span>{language === 'en' ? 'Avg Processing: 2-7 Days' : 'சராசரி நேரம்: 2-7 நாட்கள்'}</span>
-            </div>
-
-          </div>
-
-          {/* Department Pills filters */}
-          <div className="flex flex-wrap gap-2.5 pt-4 border-t border-slate-100 dark:border-slate-800/80 relative z-10">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider cursor-pointer transition-all active:scale-95 ${
-                  selectedCategory === cat
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 ring-2 ring-blue-600/30'
-                    : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
-                }`}
-              >
-                {cat === 'All' ? (language === 'en' ? 'All Departments' : 'அனைத்து துறைகள்') : cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Highlighted Services Cards */}
-        {filteredServices.length === 0 ? (
-          <div className="text-center py-24 bg-white/50 dark:bg-[#0A1128]/50 backdrop-blur-xl border border-slate-200/50 dark:border-slate-800/80 rounded-3xl shadow-sm">
-            <Search className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">No services match your specifications.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredServices.map(svc => (
-              <div 
-                key={svc.id}
-                className="flex flex-col justify-between p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-[#0A1128]/80 backdrop-blur-xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_20px_rgb(0,0,0,0.2)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)] hover:border-blue-400/50 dark:hover:border-blue-500/50 hover:-translate-y-1 transition-all duration-300 group"
-              >
-                <div>
-                  <div className="flex justify-between items-start gap-4 mb-4">
-                    <span className="px-3 py-1 rounded-lg text-[10px] uppercase tracking-wider font-extrabold bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 ring-1 ring-blue-500/20">
-                      {svc.category}
-                    </span>
-                    <span className="font-mono text-xs font-black text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
-                      ₹{svc.price}
-                    </span>
+            <form onSubmit={handleTrackStatus} className="space-y-4 relative z-10">
+              <input
+                type="text"
+                className="w-full px-5 py-4 bg-white/10 border-0 ring-1 ring-white/20 focus:ring-2 focus:ring-white rounded-sm text-sm placeholder-blue-200 font-mono text-white transition-shadow uppercase"
+                placeholder="SEAGAN-2026-..."
+                value={trackToken}
+                onChange={(e) => setTrackToken(e.target.value)}
+              />
+              {trackError && <p className="text-red-200 text-xs font-bold bg-red-900/40 p-2 rounded-lg">{trackError}</p>}
+              
+              {/* Inline Progress Bar if tracked */}
+              {trackedApplication && trackedApplication.status !== 'Rejected' && (
+                <div className="mt-4 bg-white/10 p-4 rounded-sm">
+                  <div className="flex justify-between text-xs font-bold mb-2 text-white">
+                    <span>{trackedApplication.serviceName}</span>
+                    <span className="bg-white text-blue-900 px-2 py-0.5 rounded-md uppercase tracking-wider text-[10px]">{trackedApplication.status}</span>
                   </div>
-
-                  <h3 className="font-display font-black text-lg text-slate-900 dark:text-white mb-2 leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    {svc.name}
-                  </h3>
-                  
-                  <p className="text-slate-500 dark:text-slate-400 text-[13px] leading-relaxed line-clamp-3 mb-4">
-                    {svc.description}
-                  </p>
-
-                  {/* Required Document counts lists */}
-                  <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/80">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
-                       {language === 'en' ? 'Required Documents' : 'தேவையான ஆவணங்கள்'}
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {svc.requiredDocuments.map((doc, idx) => (
-                        <span key={idx} className="inline-flex items-center text-[10px] font-semibold bg-slate-50 dark:bg-[#0A1128] text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-md border border-slate-200 dark:border-slate-800">
-                          {doc}
-                        </span>
-                      ))}
-                    </div>
+                  <div className="w-full h-1.5 bg-white/20 rounded-full overflow-hidden">
+                    <div className="h-full bg-amber-400" style={{ width: `${Math.max(10, ((getStageIndex(trackedApplication.status) + 1) / STAGES.length) * 100)}%` }}></div>
                   </div>
                 </div>
-
-                <div className="mt-6 flex items-center justify-between gap-4">
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium flex items-center bg-slate-50 dark:bg-[#0A1128]/50 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-800">
-                    <Clock className="w-3.5 h-3.5 mr-1.5 text-slate-400 dark:text-slate-500 shrink-0" />
-                    <span>{svc.processingDays} {language === 'en' ? 'Days' : 'நாட்கள்'}</span>
-                  </span>
-
-                  <button
-                    onClick={() => handleApplyClick(svc.id)}
-                    className="inline-flex items-center justify-center space-x-1.5 text-xs font-bold text-white bg-[#0A1128] dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-500 px-4 py-2 rounded-xl shadow-md transition-all active:scale-[0.98] cursor-pointer w-full sm:w-auto mt-2 sm:mt-0"
-                  >
-                    <span>{t('applyBtn')}</span>
-                    <ChevronRight className="w-4 h-4 ml-0.5" />
-                  </button>
-                </div>
-              </div>
-            ))}
+              )}
+            </form>
           </div>
-        )}
-      </section>
 
-      {/* 3. PORTAL CORE METRICS & DIGITAL IMPACT */}
-      <section className="bg-slate-50 dark:bg-[#0A1128] border-y border-slate-200 dark:border-slate-800 text-slate-800 dark:text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-xl mx-auto mb-12">
-            <h3 className="font-display font-extrabold text-2xl text-slate-900 dark:text-white mb-2">
-              {t('statsTitle')}
+          {/* BENTO ITEM: Categories List (Spans full width) */}
+          <div className="md:col-span-3 lg:col-span-4 bg-white dark:bg-[#1c1917]  border-2 border-slate-200 dark:border-slate-800 rounded-sm p-6 lg:p-8 shadow-md dark:shadow-md">
+            <h3 className="font-display font-black text-xl text-slate-900 dark:text-white mb-6 flex items-center gap-3">
+              <FileText className="w-5 h-5 text-amber-500" />
+              {language === 'en' ? 'Available Services' : 'அனைத்து டிஜிட்டல் சேவைகள்'}
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              Real-time operational achievements of SEAGAN ENTERPRISES E-Sevai Portal
-            </p>
-          </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div className="p-6 bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <span className="font-display font-extrabold text-3xl md:text-4xl text-blue-600 dark:text-amber-400 block mb-1">
-                48,290+
-              </span>
-              <span className="text-[11px] uppercase tracking-wider font-bold text-slate-400 block">
-                {language === 'en' ? 'Citizen Families Served' : 'பயன்பெற்ற குடிமக்கள்'}
-              </span>
-            </div>
-            <div className="p-6 bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <span className="font-display font-extrabold text-3xl md:text-4xl text-amber-500 dark:text-amber-400 block mb-1">
-                99.8%
-              </span>
-              <span className="text-[11px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400 block">
-                {language === 'en' ? 'Audit Validation Rate' : 'சரிபார்ப்பு வெற்றி வீதம்'}
-              </span>
-            </div>
-            <div className="p-6 bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <span className="font-display font-extrabold text-3xl md:text-4xl text-emerald-600 dark:text-emerald-400 block mb-1">
-                3 Mins
-              </span>
-              <span className="text-[11px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400 block">
-                {language === 'en' ? 'Avg Digital Form Setup' : 'பதிவிறக்கம் சராசரி நேரம்'}
-              </span>
-            </div>
-            <div className="p-6 bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <span className="font-display font-extrabold text-3xl md:text-4xl text-emerald-600 dark:text-emerald-400 block mb-1">
-                24/7
-              </span>
-              <span className="text-[11px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400 block">
-                {language === 'en' ? 'File Check Access' : '24/7 விண்கண் கண்காணிப்பு'}
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. WHY CHOOSE US */}
-      <section className="py-16 bg-white dark:bg-[#0A1128] border-b border-slate-100 dark:border-slate-800 transition-colors">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-xl mx-auto mb-12">
-            <h3 className="font-display font-extrabold text-2xl text-slate-900 dark:text-white">
-              {t('whyUs')}
-            </h3>
-            <p className="text-xs text-slate-500 mt-2">
-              Enterprise security features engineered for seamless digital administrative workflows.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-6 bg-slate-50 dark:bg-[#020817]/50 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-left">
-              <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-4 shadow-inner">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white mb-2">
-                {language === 'en' ? 'Biometrics & KYC Security' : 'பாதுகாப்பான ஆவணம் அப்லோடு'}
-              </h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                SSL configurations protect citizens data assets. Multi-factor verification locks unauthorized viewing.
-              </p>
-            </div>
-
-            <div className="p-6 bg-slate-50 dark:bg-[#020817]/50 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-left">
-              <div className="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-950/40 flex items-center justify-center text-orange-600 dark:text-orange-400 mb-4 shadow-inner">
-                <Award className="w-5 h-5" />
-              </div>
-              <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white mb-2">
-                {language === 'en' ? 'Direct PDF & QR Verification' : 'கிரிப்டோ கையொப்பமிட்ட ஆவணங்கள்'}
-              </h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                Download verified governmental PDFs complete with high resolution crypto QR validation codes accepted natively.
-              </p>
-            </div>
-
-            <div className="p-6 bg-slate-50 dark:bg-[#020817]/50 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-left">
-              <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-4 shadow-inner">
-                <Clock className="w-5 h-5" />
-              </div>
-              <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white mb-2">
-                {language === 'en' ? 'Automated Speed Reminders' : 'விரைவான செயலாக்க வேகம்'}
-              </h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                Status tracker sends instant notification alerts on file stages, ensuring smooth and transparent e-governance.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. TESTIMONIALS */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-xl mx-auto mb-10">
-          <h3 className="font-display font-extrabold text-2xl text-slate-900 dark:text-white">
-            {language === 'en' ? 'What Citizens Say' : 'மக்களின் சான்றுகள்'}
-          </h3>
-          <p className="text-xs text-slate-500 mt-2">
-            Verifiable reviews from residents across Tamil Nadu benefitting from SEAGAN ENTERPRISES.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="p-6 rounded-2xl bg-white dark:bg-[#0A1128] border border-slate-200/60 dark:border-slate-800 text-left">
-            <p className="text-xs text-slate-500 dark:text-slate-400 italic leading-relaxed">
-              "The dynamic form feature is incredible. Applied for my Income proof, downloaded files within 4 days. The SMS notification update kept me completely relaxed."
-            </p>
-            <div className="mt-4 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-xs uppercase">
-                R
-              </div>
-              <div>
-                <span className="font-bold text-xs text-slate-800 dark:text-white block">Ramesh Kumar</span>
-                <span className="text-[10px] text-slate-400">Coimbatore, Resident</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-white dark:bg-[#0A1128] border border-slate-200/60 dark:border-slate-800 text-left">
-            <p className="text-xs text-slate-500 dark:text-slate-400 italic leading-relaxed">
-              "First graduate certificate issued under 7 days! Helped me complete university registration concession quickly. Verified QR seal is genuinely accepted everywhere."
-            </p>
-            <div className="mt-4 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs uppercase">
-                P
-              </div>
-              <div>
-                <span className="font-bold text-xs text-slate-800 dark:text-white block">Priya Soundar</span>
-                <span className="text-[10px] text-slate-400">Trichy, Student</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-white dark:bg-[#0A1128] border border-slate-200/60 dark:border-slate-800 text-left">
-            <p className="text-xs text-slate-500 dark:text-slate-400 italic leading-relaxed">
-              "My grandfather's pension approval was very transparent here. Admin checked original Aadhaar upload, validated verification within weeks. Immensely thankful."
-            </p>
-            <div className="mt-4 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs uppercase">
-                V
-              </div>
-              <div>
-                <span className="font-bold text-xs text-slate-800 dark:text-white block">Vijay Anand</span>
-                <span className="text-[10px] text-slate-400">Madurai, Citizen</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. FAQ SECTIONS (Accordion) */}
-      <section className="py-16 bg-slate-100 dark:bg-[#0A1128]/40 border-t border-slate-200/40 dark:border-slate-800 transition-colors">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-10">
-            <h3 className="font-display font-extrabold text-2xl text-slate-900 dark:text-white">
-              {t('faq')}
-            </h3>
-            <p className="text-xs text-slate-500 mt-2">
-              Got queries? Read our simple procedural help manual below.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            {FAQS.map((faq, idx) => (
-              <div 
-                key={idx}
-                className="bg-white dark:bg-[#0A1128] border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden transition-all"
-              >
+            <div className="flex flex-wrap gap-2 mb-8">
+              {categories.map((cat) => (
                 <button
-                  onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
-                  className="w-full p-4 text-left font-display font-bold text-xs md:text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/50 flex justify-between items-center transition-colors cursor-pointer"
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-5 py-2.5 rounded-sm text-xs font-bold tracking-wider transition-all ${
+                    selectedCategory === cat
+                      ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-lg'
+                      : 'bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 text-slate-600 dark:text-slate-300'
+                  }`}
                 >
-                  <span className="flex items-center space-x-2">
-                    <HelpCircle className="w-4 h-4 text-blue-600 shrink-0" />
-                    <span>{faq.q}</span>
-                  </span>
-                  <span className="font-mono text-xs text-slate-400">{activeFaq === idx ? '−' : '+'}</span>
+                  {cat === 'All' ? (language === 'en' ? 'All Departments' : 'அனைத்து துறைகள்') : cat}
                 </button>
-                
-                {activeFaq === idx && (
-                  <div className="px-4 pb-4 pt-1 text-xs text-slate-500 dark:text-slate-400 leading-relaxed border-t border-slate-50 dark:border-slate-800/40">
-                    {faq.a}
+              ))}
+            </div>
+
+            {filteredServices.length === 0 ? (
+              <div className="text-center py-12 text-slate-500">No services found for your search.</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredServices.map(svc => (
+                  <div key={svc.id} className="p-5 rounded-sm bg-slate-50 dark:bg-[#0c0a09] border-2 border-slate-200 dark:border-slate-800 group hover:border-slate-300 dark:hover:border-slate-700 transition-colors flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-between items-start mb-3">
+                        <span className="px-2.5 py-1 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-md text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-widest">
+                          {svc.category}
+                        </span>
+                        <span className="font-mono text-xs font-bold text-slate-900 dark:text-white">₹{svc.price}</span>
+                      </div>
+                      <h4 className="font-display font-bold text-base text-slate-900 dark:text-white mb-2 leading-tight">
+                        {svc.name}
+                      </h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed mb-4">
+                        {svc.description}
+                      </p>
+                    </div>
+                    
+                    <button
+                      onClick={() => handleApplyClick(svc.id)}
+                      className="w-full py-3 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 hover:border-slate-900 dark:hover:border-white text-slate-900 dark:text-white font-bold text-xs rounded-sm transition-all flex items-center justify-center space-x-2"
+                    >
+                      <span>{t('applyBtn')}</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
                   </div>
-                )}
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* BENTO ITEM: Metrics */}
+          <div className="md:col-span-3 lg:col-span-4 grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { label: language === 'en' ? 'Families Served' : 'பயன்பெற்ற குடிமக்கள்', value: '48,290+', icon: Users, color: 'text-blue-600' },
+              { label: language === 'en' ? 'Audit Success' : 'வெற்றி வீதம்', value: '99.8%', icon: BadgeCheck, color: 'text-amber-500' },
+              { label: language === 'en' ? 'Processing Speed' : 'சராசரி நேரம்', value: '2-7 Days', icon: Clock, color: 'text-purple-500' },
+              { label: language === 'en' ? 'Secure Validation' : 'பாதுகாப்பான அப்லோடு', value: '256-bit', icon: ShieldCheck, color: 'text-emerald-500' }
+            ].map((stat, idx) => (
+              <div key={idx} className="bg-white dark:bg-[#1c1917]  border-2 border-slate-200 dark:border-slate-800 rounded-sm p-6 text-center shadow-sm">
+                <stat.icon className={`w-8 h-8 mx-auto mb-3 ${stat.color} opacity-80`} />
+                <span className={`font-display font-black text-2xl md:text-3xl block mb-1 text-slate-900 dark:text-white`}>
+                  {stat.value}
+                </span>
+                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500">
+                  {stat.label}
+                </span>
               </div>
             ))}
           </div>
+
         </div>
-      </section>
-
-
-
+      </div>
     </div>
   );
 };
