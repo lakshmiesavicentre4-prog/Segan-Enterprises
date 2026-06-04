@@ -289,6 +289,14 @@ function initDatabase(): DbState {
         if (!parsed.settings.supportPhone) parsed.settings.supportPhone = DEFAULT_SETTINGS.supportPhone;
         if (!parsed.settings.supportEmail) parsed.settings.supportEmail = DEFAULT_SETTINGS.supportEmail;
 
+        if (parsed.applications.length === 0) {
+          parsed.applications = DEFAULT_APPLICATIONS;
+        }
+
+        if (parsed.applicationDocuments.length === 0) {
+          parsed.applicationDocuments = DEFAULT_DOCUMENTS;
+        }
+
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(parsed));
         return parsed;
       }
@@ -640,6 +648,7 @@ export const applicationService = {
       amount: service.price,
       paymentStatus: 'Paid', // Pre-payment status simulation
       createdAt: new Date().toISOString(),
+      citizenAadhaar: customFields?.aadhaar,
       serviceName: service.name,
       serviceCategory: service.category,
       userFullName: curUser.fullName,

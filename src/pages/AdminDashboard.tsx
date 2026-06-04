@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../contexts/AppContext';
 import { 
   BarChart, 
@@ -26,7 +26,8 @@ import {
   FileSpreadsheet, 
   Filter, 
   DollarSign,
-  UserPlus
+  UserPlus,
+  User
 } from 'lucide-react';
 import { 
   serviceService, 
@@ -51,11 +52,13 @@ export const AdminDashboard: React.FC = () => {
     settings, 
     updateGlobalSettings,
     language,
-    addUser
+    addUser,
+    updateUserProfile,
+    refreshNotifications
   } = useApp();
 
   // Active admin menu state
-  const [adminMenu, setAdminMenu] = useState<'analytics' | 'files' | 'services' | 'citizens' | 'reports' | 'logs' | 'config'>('analytics');
+  const [adminMenu, setAdminMenu] = useState<'analytics' | 'files' | 'services' | 'citizens' | 'reports' | 'logs' | 'config' | 'profile'>('analytics');
 
   // Application verification sub-flow state
   const [selectedReviewApp, setSelectedReviewApp] = useState<any>(null);
@@ -68,7 +71,7 @@ export const AdminDashboard: React.FC = () => {
   const [newSvcDocs, setNewSvcDocs] = useState<string[]>(['Aadhaar Card', 'Ration Card']);
 
   // Filters state
-  const [fileFilterStatus, setFileFilterStatus] = useState('All');
+  const [fileFilterStatus, setFileFilterStatus] = useState('Active');
   const [fileFilterCategory, setFileFilterCategory] = useState('All');
   const [citizenQuery, setCitizenQuery] = useState('');
 
@@ -79,6 +82,35 @@ export const AdminDashboard: React.FC = () => {
   // System reports generators helper
   const [reprOption, setReprOption] = useState<'daily' | 'weekly' | 'monthly' | 'revenue'>('daily');
   const [exportTriggered, setExportTriggered] = useState<string | null>(null);
+
+  // Admin Profile Edit State
+  const [isAdminEditingProfile, setIsAdminEditingProfile] = useState(false);
+  const [adminProfileFormData, setAdminProfileFormData] = useState({
+    fullName: currentUser?.fullName || '',
+    avatarUrl: currentUser?.avatarUrl || '',
+    dateOfBirth: currentUser?.dateOfBirth || '',
+  });
+
+  // Sync profile form state if user changes
+  useEffect(() => {
+    if (currentUser) {
+      setAdminProfileFormData({
+        fullName: currentUser.fullName || '',
+        avatarUrl: currentUser.avatarUrl || '',
+        dateOfBirth: currentUser.dateOfBirth || '',
+      });
+    }
+  }, [currentUser]);
+
+  const handleSaveAdminProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await updateUserProfile(adminProfileFormData);
+      setIsAdminEditingProfile(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // Citizens listing fetch
   const profilesList = authService.getAllUsers();
@@ -91,7 +123,11 @@ export const AdminDashboard: React.FC = () => {
   const metricsCompleted = applications.filter(a => a.status === 'Completed' || a.status === 'Approved').length;
 
   const filteredApplications = applications.filter(app => {
-    const sMatch = fileFilterStatus === 'All' || app.status === fileFilterStatus;
+    let sMatch = false;
+    if (fileFilterStatus === 'All') sMatch = true;
+    else if (fileFilterStatus === 'Active') sMatch = app.status !== 'Rejected' && app.status !== 'Completed';
+    else sMatch = app.status === fileFilterStatus;
+
     const cMatch = fileFilterCategory === 'All' || app.serviceCategory === fileFilterCategory;
     return sMatch && cMatch;
   });
@@ -171,9 +207,11 @@ export const AdminDashboard: React.FC = () => {
     );
     
     setSelectedReviewApp(null);
+    setRejectionComment('');
+    setRejectFormVisible(false);
     refreshApplications();
+    refreshNotifications();
     refreshLogs();
-    alert(`File token status advanced to: ${status}`);
   };
 
   // Broadcast messages
@@ -197,19 +235,41 @@ export const AdminDashboard: React.FC = () => {
   };
 
   // Export reports triggers mockers
-  const handleExportTrigger = (type: 'csv' | 'excel' | 'pdf') => {
+  const handleExportTrigger = (type: string) => {
     setExportTriggered(type);
     
-    // Simulate simple client side text files attachments downloads
-    let content = `Segan Enterprises - Analytical Reports Summary\n`;
-    content += `Period: June-2026 Monthly Summary\n`;
-    content += `Total Volume: ${metricsVolume} files\n`;
+    let content = `Application Token,Application Name,User's Name,Service Applied For,Gmail Address,Phone Number,Aadhaar Number,Status,Rejection Reason\n`;
     
-    const blob = new Blob([content], { type: 'text/plain' });
+    let exportData = applications;
+    const now = new Date();
+    
+    if (type === 'submitted') {
+      exportData = applications.filter(a => a.status === 'Submitted' || a.status === 'Document Verification' || a.status === 'Processing' || a.status === 'Under Review');
+    } else if (type === 'rejected') {
+      exportData = applications.filter(a => a.status === 'Rejected');
+    } else if (type === 'monthly') {
+      // Last 30 days
+      exportData = applications.filter(a => {
+        const diff = now.getTime() - new Date(a.createdAt).getTime();
+        return diff <= 30 * 24 * 60 * 60 * 1000;
+      });
+    }
+
+    exportData.forEach(app => {
+      const user = profilesList.find(p => p.id === app.userId);
+      const phone = user?.phone || 'N/A';
+      const aadhaar = app.citizenAadhaar || 'N/A';
+      const reason = app.rejectionReason ? app.rejectionReason.replace(/"/g, '""') : 'N/A';
+      content += `"${app.tokenNumber}","${app.serviceName}","${app.userFullName}","${app.serviceName}","${app.userEmail}","${phone}","${aadhaar}","${app.status}","${reason}"\n`;
+    });
+    
+    // In practice, we use CSV which Excel supports natively via .csv extension, or you can supply .xlsx via sheetjs. 
+    // Here we provide CSV mapped with Excel MIME type.
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `Segan_Analytical_Report_2026.${type === 'csv' ? 'csv' : type === 'excel' ? 'xlsx' : 'pdf'}`;
+    link.download = `Segan_Data_${type}_2026.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -218,19 +278,18 @@ export const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] pb-12 w-full animate-fade-in bg-slate-50/50 dark:bg-[#0c0a09]">
-      <div className="absolute inset-0 bg-gradient-to-br from-amber-50/40 via-transparent to-blue-50/40 dark:from-purple-900/5 dark:via-transparent dark:to-blue-900/5 pointer-events-none"></div>
+    <div className="relative min-h-[calc(100vh-5rem)] pb-12 w-full animate-fade-in bg-[#f4f7f6] dark:bg-[#0c0a09]">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-8 text-left relative z-10">
       
       {/* LEFT ACCORD MOOD NAVIGATOR */}
-      <aside className="w-full lg:w-72 shrink-0 flex flex-col gap-2 bg-white/70 dark:bg-[#1c1917]/70 backdrop-blur-xl border-2 border-slate-200/60 dark:border-slate-800/80 p-5 rounded-sm h-fit shadow-[0_4px_20px_rgb(0,0,0,0.02)] dark:shadow-[0_4px_20px_rgb(0,0,0,0.1)] text-slate-700 dark:text-slate-300">
-        <div className="border-b border-slate-100 dark:border-slate-800/80 pb-4 mb-4 text-center lg:text-left">
-          <span className="text-[10px] uppercase font-black tracking-widest text-slate-400">ADMIN CONTROL PANEL</span>
-          <h3 className="font-display font-black text-base text-slate-950 dark:text-white mt-1 uppercase max-w-[210px] truncate">
+      <aside className="w-full lg:w-72 shrink-0 flex flex-col gap-2 bg-white dark:bg-[#1a2b56] border border-slate-300 dark:border-slate-700 p-5 rounded-sm h-fit shadow-md text-slate-700 dark:text-slate-300 border-t-4 border-t-[#FFAE00]">
+        <div className="border-b border-slate-200 dark:border-slate-700 pb-4 mb-4 text-center lg:text-left">
+          <span className="text-[10px] uppercase font-bold tracking-widest text-[#1a2b56] dark:text-[#FFAE00]">ADMIN PANEL</span>
+          <h3 className="font-display font-black text-xl text-slate-900 dark:text-white mt-1 uppercase max-w-[210px] truncate">
             {currentUser?.fullName}
           </h3>
-          <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 mt-2 mb-1 rounded-md bg-emerald-50 dark:bg-purple-900/20 border-2 border-emerald-200 dark:border-purple-800/40 text-[10px] font-bold text-emerald-700 dark:text-purple-300 uppercase shadow-sm">
+          <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 mt-2 mb-1 rounded bg-[#1a2b56]/10 dark:bg-blue-900/20 text-[10px] font-bold text-[#1a2b56] dark:text-blue-300 uppercase shadow-sm">
             <Sparkles className="w-3 h-3" />
             <span>Center Agent Admin</span>
           </span>
@@ -240,8 +299,8 @@ export const AdminDashboard: React.FC = () => {
           onClick={() => setAdminMenu('analytics')}
           className={`flex items-center space-x-2.5 px-4 py-3 rounded-sm text-xs font-bold transition-all active:scale-[0.98] ${
             adminMenu === 'analytics' 
-              ? 'bg-blue-600 text-white font-black shadow-lg shadow-blue-600/20 ring-1 ring-blue-600/50' 
-              : 'hover:bg-slate-100/50 dark:hover:bg-slate-800/50 text-slate-600 dark:text-slate-400'
+              ? 'bg-[#1a2b56] text-white shadow-md border border-[#1a2b56]' 
+              : 'border border-transparent hover:border-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
           }`}
         >
           <BarChart className="w-4 h-4" />
@@ -250,10 +309,10 @@ export const AdminDashboard: React.FC = () => {
 
         <button
           onClick={() => setAdminMenu('files')}
-          className={`flex items-center space-x-2 px-3 py-2.5 rounded-sm text-xs font-bold transition-all ${
+          className={`flex items-center space-x-2 px-4 py-3 rounded-sm text-xs font-bold transition-all active:scale-[0.98] ${
             adminMenu === 'files' 
-              ? 'bg-blue-600 text-white font-black shadow-md' 
-              : 'hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350'
+              ? 'bg-[#1a2b56] text-white shadow-md border border-[#1a2b56]' 
+              : 'border border-transparent hover:border-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
           }`}
         >
           <FileCheck className="w-4 h-4" />
@@ -262,10 +321,10 @@ export const AdminDashboard: React.FC = () => {
 
         <button
           onClick={() => setAdminMenu('services')}
-          className={`flex items-center space-x-2 px-3 py-2.5 rounded-sm text-xs font-bold transition-all ${
+          className={`flex items-center space-x-2 px-4 py-3 rounded-sm text-xs font-bold transition-all active:scale-[0.98] ${
             adminMenu === 'services' 
-              ? 'bg-blue-600 text-white font-black shadow-md' 
-              : 'hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350'
+              ? 'bg-[#1a2b56] text-white shadow-md border border-[#1a2b56]' 
+              : 'border border-transparent hover:border-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
           }`}
         >
           <Plus className="w-4 h-4" />
@@ -274,10 +333,10 @@ export const AdminDashboard: React.FC = () => {
 
         <button
           onClick={() => setAdminMenu('citizens')}
-          className={`flex items-center space-x-2 px-3 py-2.5 rounded-sm text-xs font-bold transition-all ${
+          className={`flex items-center space-x-2 px-4 py-3 rounded-sm text-xs font-bold transition-all active:scale-[0.98] ${
             adminMenu === 'citizens' 
-              ? 'bg-blue-600 text-white font-black shadow-md' 
-              : 'hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350'
+              ? 'bg-[#1a2b56] text-white shadow-md border border-[#1a2b56]' 
+              : 'border border-transparent hover:border-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
           }`}
         >
           <Users className="w-4 h-4" />
@@ -286,10 +345,10 @@ export const AdminDashboard: React.FC = () => {
 
         <button
           onClick={() => setAdminMenu('reports')}
-          className={`flex items-center space-x-2 px-3 py-2.5 rounded-sm text-xs font-bold transition-all ${
+          className={`flex items-center space-x-2 px-4 py-3 rounded-sm text-xs font-bold transition-all active:scale-[0.98] ${
             adminMenu === 'reports' 
-              ? 'bg-blue-600 text-white font-black shadow-md' 
-              : 'hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350'
+              ? 'bg-[#1a2b56] text-white shadow-md border border-[#1a2b56]' 
+              : 'border border-transparent hover:border-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
           }`}
         >
           <FileSpreadsheet className="w-4 h-4" />
@@ -298,10 +357,10 @@ export const AdminDashboard: React.FC = () => {
 
         <button
           onClick={() => setAdminMenu('logs')}
-          className={`flex items-center space-x-2 px-3 py-2.5 rounded-sm text-xs font-bold transition-all ${
+          className={`flex items-center space-x-2 px-4 py-3 rounded-sm text-xs font-bold transition-all active:scale-[0.98] ${
             adminMenu === 'logs' 
-              ? 'bg-blue-600 text-white font-black shadow-md' 
-              : 'hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350'
+              ? 'bg-[#1a2b56] text-white shadow-md border border-[#1a2b56]' 
+              : 'border border-transparent hover:border-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
           }`}
         >
           <Activity className="w-4 h-4" />
@@ -320,6 +379,18 @@ export const AdminDashboard: React.FC = () => {
           <span>Global Portal Settings</span>
         </button>
 
+        <button
+          onClick={() => setAdminMenu('profile')}
+          className={`flex items-center space-x-2 px-3 py-2.5 rounded-sm text-xs font-bold transition-all ${
+            adminMenu === 'profile' 
+              ? 'bg-blue-600 text-white font-black shadow-md' 
+              : 'hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350'
+          }`}
+        >
+          <User className="w-4 h-4" />
+          <span>Admin Profile</span>
+        </button>
+
         <div className="pt-6 border-t border-slate-100 dark:border-slate-800 text-center font-mono text-[9px] text-slate-400">
           AUTHORIZED CONSOLE ACCESS
         </div>
@@ -335,62 +406,26 @@ export const AdminDashboard: React.FC = () => {
           <div className="space-y-6">
             
             {/* Bento dashboard cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-5 rounded-sm bg-white/70 dark:bg-[#1c1917]/70 backdrop-blur-xl border-2 border-slate-200/60 dark:border-slate-800/80 text-slate-700 dark:text-slate-300">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block">Total Transactions</span>
-                <p className="font-display font-black text-2xl mt-1.5 text-slate-900 dark:text-white">{metricsVolume}</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="p-6 rounded-sm bg-white dark:bg-[#1a2b56] border border-slate-300 dark:border-slate-700 shadow-sm border-t-4 border-t-[#FFAE00]">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500 dark:text-blue-200 block">Total Transactions</span>
+                <p className="font-display font-black text-3xl mt-2 text-[#1a2b56] dark:text-white">{metricsVolume}</p>
               </div>
 
-              <div className="p-5 rounded-sm bg-white/70 dark:bg-[#1c1917]/70 backdrop-blur-xl border-2 border-slate-200/60 dark:border-slate-800/80 text-slate-700 dark:text-slate-300">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block">Total Unresolved File Checks</span>
-                <p className="font-display font-black text-2xl mt-1.5 text-amber-500">{metricsPending}</p>
+              <div className="p-6 rounded-sm bg-white dark:bg-[#1a2b56] border border-slate-300 dark:border-slate-700 shadow-sm border-t-4 border-t-red-500">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500 dark:text-blue-200 block">Total Unresolved File Checks</span>
+                <p className="font-display font-black text-3xl mt-2 text-red-600 dark:text-red-400">{metricsPending}</p>
               </div>
 
-              <div className="p-5 rounded-sm bg-white/70 dark:bg-[#1c1917]/70 backdrop-blur-xl border-2 border-slate-200/60 dark:border-slate-800/80 text-slate-700 dark:text-slate-300">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block">Audit completions</span>
-                <p className="font-display font-black text-2xl mt-1.5 text-emerald-500">{metricsCompleted}</p>
-              </div>
-            </div>
-
-            {/* Custom High Quality Symmetrical SVG Line Chart for June 2026 */}
-            <div className="bg-white/70 dark:bg-[#1c1917]/70 backdrop-blur-xl border-2 border-slate-200/60 dark:border-slate-800/80 p-6 rounded-sm text-left shadow-sm">
-              <div className="border-b border-slate-50 dark:border-slate-800 pb-3 mb-5">
-                <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white uppercase tracking-wider">
-                  Applications Traffic Load & Submissions Volume
-                </h4>
-                <p className="text-xs text-slate-400 mt-0.5">Statistical traffic updates mapped over weekly intervals for audit review.</p>
-              </div>
-
-              {/* Vector canvas lines bar graph */}
-              <div className="w-full h-56 flex items-end justify-between font-mono text-[9px] text-slate-400 pt-6 px-4 bg-slate-50 dark:bg-[#0c0a09]/40 rounded-sm border-2 border-slate-100 dark:border-slate-800">
-                
-                {/* Visual bar groups block */}
-                <div className="flex flex-col items-center flex-1 h-full justify-end pr-2 space-y-1">
-                  <div className="w-8 md:w-12 bg-blue-600 rounded-t-lg transition-transform duration-500 hover:scale-105 shadow-inner" style={{ height: '35%' }}></div>
-                  <span className="font-semibold text-slate-700 dark:text-slate-300">Wk 1</span>
-                </div>
-
-                <div className="flex flex-col items-center flex-1 h-full justify-end pr-2 space-y-1">
-                  <div className="w-8 md:w-12 bg-blue-600 rounded-t-lg transition-transform duration-500 hover:scale-105 shadow-inner" style={{ height: '65%' }}></div>
-                  <span className="font-semibold text-slate-700 dark:text-slate-300">Wk 2</span>
-                </div>
-
-                <div className="flex flex-col items-center flex-1 h-full justify-end pr-2 space-y-1">
-                  <div className="w-8 md:w-12 bg-emerald-500 rounded-t-lg transition-transform duration-500 hover:scale-105 shadow-inner" style={{ height: '85%' }}></div>
-                  <span className="font-semibold text-slate-700 dark:text-slate-300 font-bold">Wk 3</span>
-                </div>
-
-                <div className="flex flex-col items-center flex-1 h-full justify-end pr-2 space-y-1">
-                  <div className="w-8 md:w-12 bg-blue-600 rounded-t-lg transition-transform duration-500 hover:scale-105 shadow-inner" style={{ height: '50%' }}></div>
-                  <span className="font-semibold text-slate-700 dark:text-slate-300">Wk 4</span>
-                </div>
-
+              <div className="p-6 rounded-sm bg-white dark:bg-[#1a2b56] border border-slate-300 dark:border-slate-700 shadow-sm border-t-4 border-t-[#21804b]">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500 dark:text-blue-200 block">Audit completions</span>
+                <p className="font-display font-black text-3xl mt-2 text-[#21804b] dark:text-emerald-400">{metricsCompleted}</p>
               </div>
             </div>
 
             {/* Quick operational activities log banner */}
-            <div className="bg-white/70 dark:bg-[#1c1917]/70 backdrop-blur-xl border-2 border-slate-200/60 dark:border-slate-800/80 p-6 rounded-sm text-left shadow-sm">
-              <h4 className="font-display font-extrabold text-xs text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
+            <div className="bg-white dark:bg-[#1a2b56] border border-slate-300 dark:border-slate-700 p-6 rounded-sm text-left shadow-sm mt-6">
+              <h4 className="font-display font-bold text-sm text-[#1a2b56] dark:text-[#FFAE00] uppercase tracking-wider mb-4 border-b border-slate-200 dark:border-slate-700 pb-2">
                 Urgent Actions Queue
               </h4>
               
@@ -440,6 +475,7 @@ export const AdminDashboard: React.FC = () => {
                   value={fileFilterStatus}
                   onChange={(e) => setFileFilterStatus(e.target.value)}
                 >
+                  <option value="Active">Active Files</option>
                   <option value="All">All Statuses</option>
                   <option value="Submitted">Submitted Queue</option>
                   <option value="Document Verification">Document Verification</option>
@@ -476,7 +512,7 @@ export const AdminDashboard: React.FC = () => {
                           <span className="text-[10px] text-slate-400 font-mono">{app.userEmail}</span>
                         </td>
                         <td className="p-3 text-slate-900 dark:text-white">{app.serviceName}</td>
-                        <td className="p-3 text-slate-400">{app.serviceCategory || 'e-Sevai'}</td>
+                        <td className="p-3 text-slate-400">{app.serviceCategory || 'A2Z Service'}</td>
                         <td className="p-3">
                           <span className="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-extrabold tracking-wide uppercase bg-slate-100 dark:bg-[#1c1917]">
                             {app.status}
@@ -957,7 +993,7 @@ export const AdminDashboard: React.FC = () => {
                   <input
                     type="text"
                     className="w-full px-3 py-2 bg-slate-55 dark:bg-[#0c0a09] border-2 border-slate-200 dark:border-slate-800 text-xs rounded-sm"
-                    placeholder="E-Sevai files are processing with delay due to general holidays..."
+                    placeholder="A2Z files are processing with delay due to general holidays..."
                     value={broadcast.message}
                     onChange={(e) => setBroadcast({ ...broadcast, message: e.target.value })}
                     required
@@ -1056,20 +1092,28 @@ export const AdminDashboard: React.FC = () => {
               {/* Action buttons triggers files downloads */}
               <div className="flex flex-wrap gap-2 pt-4 border-t border-slate-200 dark:border-slate-800 text-xs font-bold justify-end">
                 <button
-                  onClick={() => handleExportTrigger('csv')}
+                  onClick={() => handleExportTrigger('submitted')}
                   disabled={!!exportTriggered}
                   className="px-3 py-2 border-2 border-slate-200 hover:bg-slate-100 rounded-lg bg-white inline-flex items-center space-x-1.5 cursor-pointer dark:text-slate-800"
                 >
                   <Download className="w-3.5 h-3.5" />
-                  <span>{exportTriggered === 'csv' ? 'Compiling CSV...' : 'Export CSV'}</span>
+                  <span>{exportTriggered === 'submitted' ? 'Compiling...' : 'Export User Submitted'}</span>
                 </button>
                 <button
-                  onClick={() => handleExportTrigger('excel')}
+                  onClick={() => handleExportTrigger('rejected')}
                   disabled={!!exportTriggered}
                   className="px-3 py-2 border-2 border-slate-200 hover:bg-slate-100 rounded-lg bg-white inline-flex items-center space-x-1.5 cursor-pointer dark:text-slate-800"
                 >
                   <Download className="w-3.5 h-3.5" />
-                  <span>{exportTriggered === 'excel' ? 'Formatting XLS...' : 'Export Excel'}</span>
+                  <span>{exportTriggered === 'rejected' ? 'Formatting...' : 'Export Admin Rejected'}</span>
+                </button>
+                <button
+                  onClick={() => handleExportTrigger('monthly')}
+                  disabled={!!exportTriggered}
+                  className="px-3 py-2 border-2 border-emerald-200 hover:bg-emerald-50 rounded-lg bg-white inline-flex items-center space-x-1.5 cursor-pointer text-emerald-800"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>{exportTriggered === 'monthly' ? 'Formulating...' : 'Export Monthly Data (Excel/CSV)'}</span>
                 </button>
               </div>
 
@@ -1179,6 +1223,108 @@ export const AdminDashboard: React.FC = () => {
 
             </div>
 
+          </div>
+        )}
+
+        {/* =====================================================================
+            MENU 8: ADMIN PROFILE
+            ===================================================================== */}
+        {adminMenu === 'profile' && (
+          <div className="bg-white/70 dark:bg-[#1c1917]/70 backdrop-blur-xl border-2 border-slate-200/60 dark:border-slate-800/80 p-6 rounded-sm text-left shadow-sm space-y-6 text-slate-700 dark:text-slate-300">
+            <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-4">
+              <div>
+                <h4 className="font-display font-bold text-base text-slate-955 dark:text-white uppercase tracking-wider">
+                  Admin Profile Details
+                </h4>
+                <p className="text-xs text-slate-400 mt-1">Manage your administrative personal details.</p>
+              </div>
+              {!isAdminEditingProfile && currentUser && (
+                <button 
+                  onClick={() => setIsAdminEditingProfile(true)}
+                  className="px-4 py-2 border-2 border-slate-200 dark:border-slate-800 rounded-sm text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800/50 flex items-center space-x-2"
+                >
+                  <Edit3 className="w-3.5 h-3.5" />
+                  <span>Edit Profile</span>
+                </button>
+              )}
+            </div>
+
+            {currentUser ? (
+              <div className="space-y-4">
+                {isAdminEditingProfile ? (
+                  <form onSubmit={handleSaveAdminProfile} className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs font-bold text-slate-500 mb-1 block">Full Name</label>
+                        <input required type="text" value={adminProfileFormData.fullName} onChange={(e) => setAdminProfileFormData({...adminProfileFormData, fullName: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border-2 border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                      </div>
+                      <div>
+                        <label className="text-xs font-bold text-slate-500 mb-1 block">Date of Birth</label>
+                        <input type="date" value={adminProfileFormData.dateOfBirth} onChange={(e) => setAdminProfileFormData({...adminProfileFormData, dateOfBirth: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border-2 border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="text-xs font-bold text-slate-500 mb-1 block">Profile Picture (JPG only)</label>
+                        <div className="flex items-center space-x-4">
+                          {adminProfileFormData.avatarUrl && (
+                            <img src={adminProfileFormData.avatarUrl} alt="Preview" className="w-12 h-12 rounded-md object-cover border-2 border-slate-200 dark:border-slate-800" />
+                          )}
+                          <input 
+                            type="file" 
+                            accept=".jpg,.jpeg,image/jpeg"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                const reader = new FileReader();
+                                reader.onloadend = () => {
+                                  setAdminProfileFormData({...adminProfileFormData, avatarUrl: reader.result as string});
+                                };
+                                reader.readAsDataURL(file);
+                              }
+                            }} 
+                            className="w-full px-4 py-2 bg-slate-50 dark:bg-[#0c0a09] border-2 border-slate-200 dark:border-slate-800 rounded-sm text-sm" 
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-4 pt-4 justify-end">
+                      <button type="button" onClick={() => setIsAdminEditingProfile(false)} className="px-6 py-2.5 rounded-sm border-2 border-slate-200 text-xs font-bold dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50">Cancel</button>
+                      <button type="submit" className="px-6 py-2.5 rounded-sm bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md">Save Changes</button>
+                    </div>
+                  </form>
+                ) : (
+                  <div className="bg-slate-50 dark:bg-[#0c0a09] rounded-sm border-2 border-slate-200 dark:border-slate-800 p-5 font-medium space-y-4 text-sm">
+                    <div className="flex items-center space-x-6">
+                      {currentUser.avatarUrl ? (
+                         <img src={currentUser.avatarUrl} alt="Avatar" className="w-20 h-20 rounded-md border-2 border-slate-200 dark:border-slate-800 object-cover" />
+                      ) : (
+                         <div className="w-20 h-20 rounded-md bg-blue-100 dark:bg-blue-900/40 flex justify-center items-center text-blue-600 dark:text-blue-400 border-2 border-blue-200 dark:border-blue-800">
+                           <User className="w-8 h-8" />
+                         </div>
+                      )}
+                      
+                      <div className="space-y-1">
+                        <h3 className="font-display font-black text-xl text-slate-900 dark:text-white">{currentUser.fullName}</h3>
+                        <p className="text-xs text-slate-500 font-semibold">{currentUser.email}</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 pt-4 border-t border-slate-200 dark:border-slate-800">
+                      <div>
+                        <label className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Role</label>
+                        <p className="text-slate-900 dark:text-slate-200 mt-0.5 capitalize">{currentUser.role}</p>
+                      </div>
+                      <div>
+                        <label className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Date of Birth</label>
+                        <p className="text-slate-900 dark:text-slate-200 mt-0.5">{currentUser.dateOfBirth || 'Not provided'}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+               <p className="text-xs text-slate-500">Could not pull profile identity. Please log in again.</p>
+            )}
           </div>
         )}
 

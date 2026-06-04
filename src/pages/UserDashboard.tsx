@@ -206,41 +206,40 @@ export const UserDashboard: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/20 via-transparent to-amber-50/20 dark:from-blue-900/5 dark:to-purple-900/5 pointer-events-none"></div>
       
       {/* 1. Portal Segment Headings */}
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between border-b border-slate-200/60 dark:border-slate-800/80 pb-8 mb-10 text-left relative z-10">
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between border-b-4 border-[#1a2b56] pb-8 mb-10 text-left relative z-10 bg-white dark:bg-[#1a2b56] p-6 shadow-sm rounded-sm">
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-black tracking-widest text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1 rounded-md border-2 border-blue-100 dark:border-blue-800/50">
+          <span className="text-[10px] uppercase font-bold tracking-widest text-white bg-[#1a2b56] dark:bg-[#FFAE00] px-3 py-1 rounded-sm shadow-sm">
             {language === 'en' ? 'Citizen Dashboard' : 'குடிமகன் பகுதி'}
           </span>
-          <h2 className="font-display font-black text-3xl md:text-4xl text-slate-900 dark:text-white mt-3 tracking-tight">
-            {language === 'en' ? 'Welcome,' : 'வணக்கம்,'} <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-emerald-600 dark:from-blue-400 dark:to-emerald-400">{currentUser?.fullName}</span>
+          <h2 className="font-display font-black text-3xl md:text-4xl text-[#1a2b56] dark:text-blue-100 mt-3 tracking-tight">
+            {language === 'en' ? 'Welcome,' : 'வணக்கம்,'} <span className="text-[#21804b] dark:text-[#FFAE00]">{currentUser?.fullName}</span>
           </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium flex items-center mt-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+          <p className="text-sm text-slate-600 dark:text-slate-300 font-bold flex items-center mt-2">
+            <span className="w-2 h-2 rounded-full bg-[#21804b] mr-2"></span>
             <span>{language === 'en' ? 'Secure session active' : 'பாதுகாப்பான குடிமகன் பகுதி'}</span>
           </p>
         </div>
 
         {/* Dashboard inner segment tab buttons */}
-        <div className="flex p-1.5 bg-white/60 dark:bg-[#1c1917]/60 backdrop-blur-xl rounded-sm border-2 border-slate-200/80 dark:border-slate-800 shadow-[0_4px_20px_rgb(0,0,0,0.02)] dark:shadow-[0_4px_20px_rgb(0,0,0,0.1)] mt-6 md:mt-0 font-medium overflow-x-auto scroller-hide w-full md:w-auto">
+        <div className="flex p-1 bg-slate-50 border border-slate-300 dark:bg-[#151c2c] dark:border-slate-700 mt-6 md:mt-0 font-medium overflow-x-auto scroller-hide w-full md:w-auto shadow-inner rounded-sm">
           <button
             onClick={() => { setActiveTab('overview'); handleApplyReset(); }}
             className={`px-5 py-2.5 rounded-sm text-xs sm:text-sm font-bold transition-all whitespace-nowrap active:scale-95 ${
               activeTab === 'overview' 
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 ring-1 ring-blue-600/50' 
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100/50 dark:hover:bg-slate-800/50'
+                ? 'bg-[#1a2b56] text-white shadow-md' 
+                : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800'
             }`}
           >
             {language === 'en' ? 'Overview' : 'கட்டுப்பாட்டகம்'}
           </button>
           <button
             onClick={() => { setActiveTab('apply'); handleApplyReset(); }}
-            className={`px-5 py-2.5 rounded-sm text-xs sm:text-sm font-bold transition-all whitespace-nowrap active:scale-95 ${
+            className={`px-5 py-2.5 rounded-sm text-xs sm:text-sm font-bold transition-all whitespace-nowrap active:scale-95 border-l border-r border-[#1a2b56]/10 dark:border-slate-700 ${
               activeTab === 'apply' 
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 ring-1 ring-blue-600/50' 
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100/50 dark:hover:bg-slate-800/50'
+                ? 'bg-[#1a2b56] text-white shadow-md' 
+                : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800'
             }`}
           >
             {language === 'en' ? 'Apply New' : 'புதிய விண்ணப்பம்'}
@@ -325,30 +324,53 @@ export const UserDashboard: React.FC = () => {
                     <div 
                       key={app.id} 
                       onClick={() => { setSelectedReceiptApp(app); }}
-                      className="p-4 rounded-sm border-2 border-slate-200/80 dark:border-slate-800/80 bg-slate-50/40 dark:bg-[#0c0a09]/20 hover:border-blue-400 dark:hover:border-blue-700 transition cursor-pointer flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+                      className="p-4 rounded-sm border-2 border-slate-200/80 dark:border-slate-800/80 bg-slate-50/40 dark:bg-[#0c0a09]/20 hover:border-blue-400 dark:hover:border-blue-700 transition cursor-pointer flex flex-col gap-4"
                     >
-                      <div className="space-y-1">
-                        <div className="flex items-center space-x-2">
-                          <span className="font-display font-bold text-xs text-slate-900 dark:text-white">{app.serviceName}</span>
-                          <span className="text-[10px] font-mono text-slate-500 block">{app.tokenNumber}</span>
+                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 w-full">
+                        <div className="space-y-1">
+                          <div className="flex items-center space-x-2">
+                            <span className="font-display font-bold text-xs text-slate-900 dark:text-white">{app.serviceName}</span>
+                            <span className="text-[10px] font-mono text-slate-500 block">{app.tokenNumber}</span>
+                          </div>
+                          <span className="text-[10px] text-slate-400 block font-semibold">
+                            Applied: {new Date(app.createdAt).toLocaleDateString()} • Fee Paid: ₹{app.amount}
+                          </span>
                         </div>
-                        <span className="text-[10px] text-slate-400 block font-semibold">
-                          Applied: {new Date(app.createdAt).toLocaleDateString()} • Fee Paid: ₹{app.amount}
-                        </span>
+
+                        {/* Status badge and view receipt button */}
+                        <div className="flex items-center gap-2">
+                          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${getStatusBadgeClass(app.status)}`}>
+                            {app.status}
+                          </span>
+                          
+                          {/* Quick printable Receipt download */}
+                          <button className="text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center space-x-1 p-1">
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
 
-                      {/* Horizontal Step Indicator view for simple screen */}
-                      <div className="flex items-center gap-2">
-                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${getStatusBadgeClass(app.status)}`}>
-                          {app.status}
-                        </span>
-                        
-                        {/* Quick printable Receipt download */}
-                        <button className="text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center space-x-1 p-1">
-                          <Eye className="w-3.5 h-3.5" />
-                        </button>
+                      {/* Visual Progress Tracker Components */}
+                      <div className="w-full">
+                        <div className="flex justify-between text-[9px] font-semibold text-slate-400 uppercase tracking-widest mb-1">
+                          <span>Submitted</span>
+                          <span>Completed</span>
+                        </div>
+                        {app.status !== 'Rejected' ? (
+                          <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-gradient-to-r from-amber-400 to-blue-500 transition-all duration-700"
+                              style={{ 
+                                width: `${Math.max(10, ((getStageIndex(app.status) + 1) / STAGES.length) * 100)}%` 
+                              }}
+                            ></div>
+                          </div>
+                        ) : (
+                          <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                             <div className="h-full bg-red-500 w-full"></div>
+                          </div>
+                        )}
                       </div>
-
                     </div>
                   ))}
                 </div>
@@ -624,7 +646,7 @@ export const UserDashboard: React.FC = () => {
                   <div className="p-6 rounded-sm border-2 border-slate-100 dark:border-slate-800 bg-white dark:bg-[#0c0a09] max-w-sm mx-auto shadow-xl text-left space-y-4">
                     <div className="border-b border-slate-100 dark:border-slate-800 pb-3 flex justify-between items-center text-xs">
                       <div>
-                        <span className="font-display font-black text-slate-900 dark:text-white block uppercase text-[10px]">SEAGAN e-Sevai Receipt</span>
+                        <span className="font-display font-black text-slate-900 dark:text-white block uppercase text-[10px]">SEAGAN A2Z Receipt</span>
                         <span className="text-[9px] font-mono text-slate-400">{newlyCreatedApp.tokenNumber}</span>
                       </div>
                       {/* Visual Government-Inspired Authenticity Seal */}

@@ -64,8 +64,7 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200/50 dark:border-slate-800/50 bg-white/70 dark:bg-[#0c0a09]/70 backdrop-blur-2xl shadow-[0_4px_30px_rgb(0,0,0,0.02)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.1)]">
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-50/30 to-amber-50/30 dark:from-blue-900/10 dark:to-purple-900/10 pointer-events-none"></div>
+    <header className="sticky top-0 z-50 w-full border-b-4 border-[#FFAE00] bg-[#1a2b56] text-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between relative z-10">
         
         {/* Brand Header */}
@@ -74,48 +73,48 @@ export const Navbar: React.FC = () => {
           className="flex items-center space-x-3 cursor-pointer group"
         >
           {/* Emblem representing TN Golden Temple / Tower Gilt Portal */}
-          <div className="relative flex items-center justify-center w-12 h-12 md:w-14 md:h-14 group-hover:scale-105 transition-all duration-300 shrink-0 animate-fade-in bg-white dark:bg-white/5 p-1 rounded-sm shadow-sm border-2 border-slate-100 dark:border-slate-800 ring-1 ring-slate-900/5 dark:ring-white/10">
-            <img src="/logo1.png" alt="Logo" className="w-full h-full object-contain rounded-sm" />
+          <div className="relative flex items-center justify-center w-12 h-12 md:w-14 md:h-14 group-hover:scale-105 transition-all duration-300 shrink-0 animate-fade-in bg-white p-1 rounded-full shadow-md border-2 border-white ring-2 ring-[#FFAE00]">
+            <img src="/logo1.png" alt="Logo" className="w-full h-full object-contain rounded-full" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <span className="font-display font-black text-xl md:text-2xl text-slate-900 dark:text-white tracking-tight leading-none">
+              <span className="font-display font-black text-xl md:text-2xl text-white tracking-tight leading-none text-shadow-sm">
                 {t('portalName')}
               </span>
-              <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border-2 border-blue-200 dark:border-blue-800/50 whitespace-nowrap shadow-sm">
-                e-Sevai
+              <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-white text-[#1a2b56] border border-transparent whitespace-nowrap shadow-sm">
+                A2Z Service
               </span>
             </div>
-            <p className="text-[11px] md:text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-tight hidden md:block mt-0.5">
+            <p className="text-[11px] md:text-xs font-medium text-blue-100 tracking-tight hidden md:block mt-0.5">
               {t('tagline')}
             </p>
           </div>
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center space-x-2 md:space-x-4">
+        <div className="flex items-center space-x-2 md:space-x-4 pr-2">
           
           {/* Navigation links for Desktop */}
-          <nav className="hidden lg:flex items-center space-x-1 mr-2 text-sm font-bold bg-slate-100/50 dark:bg-[#1c1917]/50 p-1.5 rounded-sm border-2 border-slate-200/50 dark:border-slate-800">
+          <nav className="hidden lg:flex items-center space-x-1 mr-2 text-sm font-bold p-1 rounded-sm border-2 border-[#15234b] bg-[#111c3d]">
             <button 
               onClick={() => handleNavClick('home')}
               className={`px-4 py-2 rounded-sm transition-all duration-300 ${
                 currentView === 'home' 
-                  ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm ring-1 ring-slate-200 dark:ring-slate-700' 
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50'
+                  ? 'bg-blue-600 text-white shadow-sm ring-1 ring-blue-500' 
+                  : 'text-blue-200 hover:text-white hover:bg-[#1a2b56]'
               }`}
             >
               {t('home')}
             </button>
             <button 
               onClick={() => handleNavClick('home', 'services-grid-section')}
-              className="px-4 py-2 rounded-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-300"
+              className="px-4 py-2 rounded-sm text-blue-200 hover:text-white hover:bg-[#1a2b56] transition-all duration-300"
             >
               {t('services')}
             </button>
             <button 
               onClick={() => handleNavClick('home', 'contact-section-id')}
-              className="px-4 py-2 rounded-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-300"
+              className="px-4 py-2 rounded-sm text-blue-200 hover:text-white hover:bg-[#1a2b56] transition-all duration-300"
             >
               {t('contact')}
             </button>
@@ -125,9 +124,9 @@ export const Navbar: React.FC = () => {
           <button
             id="lang-switch-btn"
             onClick={() => setLanguage(language === 'en' ? 'ta' : 'en')}
-            className="hidden sm:flex items-center space-x-1.5 px-3 py-2 rounded-sm border-2 border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-[#1c1917]/50 backdrop-blur-md text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-200 dark:hover:border-blue-900/50 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all shadow-sm"
+            className="hidden sm:flex items-center space-x-1.5 px-3 py-2 rounded-sm border border-[#2a3f7a] bg-[#1a2b56] text-xs font-bold text-blue-200 hover:text-white hover:border-[#4a6ab5] transition-all"
           >
-            <Globe className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" />
+            <Globe className="w-4 h-4 shrink-0" />
             <span>{language === 'en' ? 'தமிழ்' : 'English'}</span>
           </button>
 
@@ -137,7 +136,7 @@ export const Navbar: React.FC = () => {
               <button
                 id="notification-bell-btn"
                 onClick={() => setNotifMenuOpen(!notifMenuOpen)}
-                className="relative p-2.5 rounded-sm border-2 border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-[#1c1917]/70 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 shadow-sm transition-all"
+                className="relative p-2.5 rounded-sm border border-[#2a3f7a] bg-[#1a2b56] text-blue-200 hover:text-white shadow-sm transition-all"
                 aria-label="View notifications"
               >
                 <Bell className="w-4 h-4" />
@@ -213,7 +212,7 @@ export const Navbar: React.FC = () => {
               <button 
                 id="navbar-dashboard-btn"
                 onClick={navigateToDashboard}
-                className="hidden lg:flex items-center space-x-1.5 px-3 py-1.5 rounded-sm text-xs font-semibold border-2 border-blue-200 dark:border-blue-900/50 bg-blue-50/50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 hover:bg-blue-100/50 dark:hover:bg-blue-950/70 shadow-sm transition-all duration-300"
+                className="hidden lg:flex items-center space-x-1.5 px-3 py-1.5 rounded-sm text-xs font-semibold border border-blue-400 bg-blue-100/10 text-white hover:bg-blue-100/20 shadow-sm transition-all duration-300"
               >
                 {currentUser.role === 'user' ? <User className="w-3.5 h-3.5" /> : <Shield className="w-3.5 h-3.5" />}
                 <span className="max-w-[100px] truncate">{currentUser.fullName}</span>
@@ -222,7 +221,7 @@ export const Navbar: React.FC = () => {
               <button
                 id="navbar-logout-btn"
                 onClick={logoutUser}
-                className="hidden lg:flex p-2.5 rounded-sm border-2 border-slate-200 dark:border-slate-800 hover:border-red-100 dark:hover:border-red-950 text-slate-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50/40 dark:hover:bg-red-950/20 shadow-sm transition-all"
+                className="hidden lg:flex p-2.5 rounded-sm border border-[#2a3f7a] bg-[#1a2b56] text-blue-200 hover:text-red-400 hover:border-red-900 hover:bg-red-900/30 shadow-sm transition-all"
                 title={t('logout')}
               >
                 <LogOut className="w-4 h-4" />
@@ -232,7 +231,7 @@ export const Navbar: React.FC = () => {
             <button
               id="navbar-login-btn"
               onClick={() => handleNavClick('auth')}
-              className="hidden lg:flex px-4 py-2 bg-gradient-to-r from-blue-700 to-blue-600 text-white rounded-sm text-xs sm:text-sm font-semibold hover:glow shadow-md hover:from-blue-600 hover:to-blue-500 transition-all"
+              className="hidden lg:flex px-4 py-2 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-sm text-xs sm:text-sm font-semibold shadow-md hover:from-green-500 hover:to-green-400 transition-all"
             >
               {t('login')}
             </button>
@@ -241,7 +240,7 @@ export const Navbar: React.FC = () => {
           {/* Mobile menu button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2.5 rounded-sm border-2 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1c1917]/50 transition-all"
+            className="lg:hidden p-2.5 rounded-sm border border-[#2a3f7a] bg-[#1a2b56] text-blue-200 hover:text-white transition-all"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>

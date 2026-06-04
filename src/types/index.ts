@@ -17,6 +17,8 @@ export interface Profile {
   address?: string;
   district?: string;
   pincode?: string;
+  avatarUrl?: string;
+  dateOfBirth?: string;
 }
 
 export interface Service {
@@ -49,6 +51,7 @@ export interface Application {
   amount: number;
   paymentStatus: 'Pending' | 'Paid' | 'Failed';
   rejectionReason?: string;
+  citizenAadhaar?: string;
   createdAt: string;
   // Included fields for convenience:
   serviceName?: string;

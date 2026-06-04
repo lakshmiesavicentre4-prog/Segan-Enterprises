@@ -27,7 +27,7 @@ export const i18n = {
     
     // Auth Labels
     welcomeBack: 'Welcome Back Resident',
-    authSubtext: 'Access Tamil Nadu Digital Service Center (e-Sevai Portal)',
+    authSubtext: 'Access Tamil Nadu Digital Service Center (A2Z Online Service)',
     emailLabel: 'Email Address',
     phoneLabel: 'Phone Number',
     passwordLabel: 'Security Password',
@@ -123,7 +123,7 @@ export const i18n = {
     
     // Auth Labels
     welcomeBack: 'வருக குடிமகன் / குடிமகள்',
-    authSubtext: 'தமிழ்நாடு டிஜிட்டல் சேவை மையத்தை அணுகவும் (இ-சேவை போர்டல்)',
+    authSubtext: 'தமிழ்நாடு டிஜிட்டல் சேவை மையத்தை அணுகவும் (ஏ2இசட் ஆன்லைன் சேவை)',
     emailLabel: 'மின்னஞ்சல் முகவரி',
     phoneLabel: 'தொலைபேசி எண்',
     passwordLabel: 'பாதுகாப்பு கடவுச்சொல்',
