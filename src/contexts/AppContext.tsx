@@ -143,6 +143,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setApplications(applicationService.getApplications());
     setNotifications(notificationService.getNotifications());
     setLogs(reportService.getActivityLogs());
+    refreshServices();
   };
 
   // Registration handler
@@ -158,6 +159,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setApplications(applicationService.getApplications());
     setNotifications(notificationService.getNotifications());
     setLogs(reportService.getActivityLogs());
+    refreshServices();
   };
 
   const updateUserProfile = async (updates: Partial<Profile>) => {
@@ -244,6 +246,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return false;
     }
   };
+
+  // Listen for cross-tab storage changes (like Admin adding a service in another tab)
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'segan_db_v1') {
+        refreshServices();
+        refreshApplications();
+        refreshNotifications();
+        refreshLogs();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   // Auto-updating simulator (Supabase Realtime emulator mock client listener)
   // Regularly, this mocks background admin worker actions, keeping the widgets "alive" for the reviewer!
