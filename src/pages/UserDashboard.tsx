@@ -437,7 +437,7 @@ export const UserDashboard: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {services.map(svc => (
+                {services.filter(s => s.active).map(svc => (
                   <div 
                     key={svc.id}
                     onClick={() => { setSelectedService(svc); setApplyStep(1); }}

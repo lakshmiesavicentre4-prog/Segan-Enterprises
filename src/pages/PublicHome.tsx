@@ -43,11 +43,14 @@ export const PublicHome: React.FC = () => {
   // FAQ states
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
+  // Filter to only active services first
+  const activeServices = services.filter(s => s.active);
+
   // Unique Categories computed from active services catalog
-  const categories = ['All', ...new Set(services.map(s => s.category))];
+  const categories = ['All', ...new Set(activeServices.map(s => s.category))];
 
   // Filtering services based on category and Search query
-  const filteredServices = services.filter(service => {
+  const filteredServices = activeServices.filter(service => {
     const matchesCategory = selectedCategory === 'All' || service.category === selectedCategory;
     const matchesQuery = 
       service.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
