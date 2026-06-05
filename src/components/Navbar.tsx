@@ -65,20 +65,6 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full shadow-lg">
-      {/* Top thin official bar */}
-      <div className="bg-[#020617] text-blue-100 text-[10px] md:text-xs py-1.5 font-semibold tracking-widest uppercase border-b border-[#F59E0B]/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <span>{language === 'en' ? 'Government of Tamil Nadu | Official Digital Portal' : 'தமிழ்நாடு அரசு | அதிகாரப்பூர்வ டிஜிட்டல் போர்ட்டல்'}</span>
-          <div className="hidden sm:flex items-center space-x-4">
-            <span className="hover:text-white cursor-pointer transition-colors">A-</span>
-            <span className="hover:text-white cursor-pointer transition-colors">A</span>
-            <span className="hover:text-white cursor-pointer transition-colors">A+</span>
-            <span className="w-px h-3 bg-blue-100/30"></span>
-            <span className="hover:text-white cursor-pointer transition-colors">Skip to Main Content</span>
-          </div>
-        </div>
-      </div>
-
       <div className="bg-[#0F172A] border-b-4 border-[#F59E0B] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between relative z-10">
           
@@ -95,9 +81,6 @@ export const Navbar: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <span className="font-display font-black text-xl md:text-2xl text-white tracking-widest leading-none text-shadow-sm uppercase">
                   {t('portalName')}
-                </span>
-                <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-sm text-[9px] font-bold uppercase tracking-widest bg-white text-[#0F172A] border border-transparent whitespace-nowrap shadow-sm">
-                  GOV
                 </span>
               </div>
               <p className="text-[10px] md:text-xs font-bold text-[#F59E0B] tracking-widest hidden md:block mt-1 uppercase">
