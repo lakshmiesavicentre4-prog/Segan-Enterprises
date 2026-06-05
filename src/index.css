@@ -1,49 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", sans-serif;
+  --font-display: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-
-  /* Terracotta (Replaces Blue) */
-  --color-blue-50: #fcf8f6;
-  --color-blue-100: #f7e6e0;
-  --color-blue-200: #eed5cc;
-  --color-blue-300: #e2b7a9;
-  --color-blue-400: #d1927e;
-  --color-blue-500: #c1725b;
-  --color-blue-600: #a7553f; /* Terracotta Primary */
-  --color-blue-700: #8b4432;
-  --color-blue-800: #713a2b;
-  --color-blue-900: #5c3227;
-  --color-blue-950: #311812;
-
-  /* Sandstone (Replaces Amber) */
-  --color-amber-50: #fbfaf8;
-  --color-amber-100: #f5f3ee;
-  --color-amber-200: #e8e2d5;
-  --color-amber-300: #d7ccb6;
-  --color-amber-400: #c1b092;
-  --color-amber-500: #af9774;
-  --color-amber-600: #9e8460; /* Sand Secondary */
-  --color-amber-700: #836a4d;
-  --color-amber-800: #6b5742;
-  --color-amber-900: #574838;
-  --color-amber-950: #2e251c;
-
-  /* Stone (Replaces Slate) */
-  --color-slate-50: #fafaf9;
-  --color-slate-100: #f5f5f4;
-  --color-slate-200: #e7e5e4;
-  --color-slate-300: #d6d3d1;
-  --color-slate-400: #a8a29e;
-  --color-slate-500: #78716c;
-  --color-slate-600: #57534e;
-  --color-slate-700: #44403c;
-  --color-slate-800: #292524;
-  --color-slate-900: #1c1917;
-  --color-slate-950: #0c0a09;
 }
 
 html, body {

@@ -208,27 +208,27 @@ export const UserDashboard: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
       
       {/* 1. Portal Segment Headings */}
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between border-b-4 border-[#1a2b56] pb-8 mb-10 text-left relative z-10 bg-white dark:bg-[#1a2b56] p-6 shadow-sm rounded-sm">
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between border-b-4 border-[#0F172A] pb-8 mb-10 text-left relative z-10 bg-white dark:bg-[#0F172A] p-6 shadow-sm rounded-sm">
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-bold tracking-widest text-white bg-[#1a2b56] dark:bg-[#FFAE00] px-3 py-1 rounded-sm shadow-sm">
+          <span className="text-[10px] uppercase font-bold tracking-widest text-white bg-[#0F172A] dark:bg-[#F59E0B] px-3 py-1 rounded-sm shadow-sm">
             {language === 'en' ? 'Citizen Dashboard' : 'குடிமகன் பகுதி'}
           </span>
-          <h2 className="font-display font-black text-3xl md:text-4xl text-[#1a2b56] dark:text-blue-100 mt-3 tracking-tight">
-            {language === 'en' ? 'Welcome,' : 'வணக்கம்,'} <span className="text-[#21804b] dark:text-[#FFAE00]">{currentUser?.fullName}</span>
+          <h2 className="font-display font-black text-3xl md:text-4xl text-[#0F172A] dark:text-blue-100 mt-3 tracking-tight">
+            {language === 'en' ? 'Welcome,' : 'வணக்கம்,'} <span className="text-[#15803D] dark:text-[#F59E0B]">{currentUser?.fullName}</span>
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300 font-bold flex items-center mt-2">
-            <span className="w-2 h-2 rounded-full bg-[#21804b] mr-2"></span>
+            <span className="w-2 h-2 rounded-full bg-[#15803D] mr-2"></span>
             <span>{language === 'en' ? 'Secure session active' : 'பாதுகாப்பான குடிமகன் பகுதி'}</span>
           </p>
         </div>
 
         {/* Dashboard inner segment tab buttons */}
-        <div className="flex p-1 bg-slate-50 border border-slate-300 dark:bg-[#151c2c] dark:border-slate-700 mt-6 md:mt-0 font-medium overflow-x-auto scroller-hide w-full md:w-auto shadow-inner rounded-sm">
+        <div className="flex p-1 bg-slate-50 border border-slate-300 dark:bg-[#1E293B] dark:border-slate-700 mt-6 md:mt-0 font-medium overflow-x-auto scroller-hide w-full md:w-auto shadow-inner rounded-sm">
           <button
             onClick={() => { setActiveTab('overview'); handleApplyReset(); }}
             className={`px-5 py-2.5 rounded-sm text-xs sm:text-sm font-bold transition-all whitespace-nowrap active:scale-95 ${
               activeTab === 'overview' 
-                ? 'bg-[#1a2b56] text-white shadow-md' 
+                ? 'bg-[#0F172A] text-white shadow-md' 
                 : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800'
             }`}
           >
@@ -236,9 +236,9 @@ export const UserDashboard: React.FC = () => {
           </button>
           <button
             onClick={() => { setActiveTab('apply'); handleApplyReset(); }}
-            className={`px-5 py-2.5 rounded-sm text-xs sm:text-sm font-bold transition-all whitespace-nowrap active:scale-95 border-l border-r border-[#1a2b56]/10 dark:border-slate-700 ${
+            className={`px-5 py-2.5 rounded-sm text-xs sm:text-sm font-bold transition-all whitespace-nowrap active:scale-95 border-l border-r border-[#0F172A]/10 dark:border-slate-700 ${
               activeTab === 'apply' 
-                ? 'bg-[#1a2b56] text-white shadow-md' 
+                ? 'bg-[#0F172A] text-white shadow-md' 
                 : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800'
             }`}
           >
@@ -248,7 +248,7 @@ export const UserDashboard: React.FC = () => {
             onClick={() => { setActiveTab('history'); handleApplyReset(); }}
             className={`px-5 py-2.5 rounded-sm text-xs sm:text-sm font-bold transition-all whitespace-nowrap active:scale-95 ${
               activeTab === 'history' 
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 ring-1 ring-blue-600/50' 
+                ? 'bg-[#0F172A] text-white shadow-lg shadow-blue-600/20 ring-1 ring-blue-600/50' 
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100/50 dark:hover:bg-slate-800/50'
             }`}
           >
@@ -281,11 +281,11 @@ export const UserDashboard: React.FC = () => {
               { label: 'Processing', val: processingApps, color: 'indigo' },
               { label: 'Completed', val: completedApps + approvedApps, color: 'emerald' },
             ].map((stat, idx) => (
-              <div key={idx} className="p-6 bg-white/70 dark:bg-[#1c1917]/70 backdrop-blur-xl border-2 border-slate-200/60 dark:border-slate-800/80 rounded-sm shadow-[0_4px_20px_rgb(0,0,0,0.02)] dark:shadow-[0_4px_20px_rgb(0,0,0,0.1)] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
-                <div className={`absolute -right-6 -bottom-6 w-24 h-24 bg-${stat.color}-500/10 rounded-full blur-2xl group-hover:bg-${stat.color}-500/20 transition-all`}></div>
+              <div key={idx} className="p-6 bg-white dark:bg-[#1c1917] border-2 border-[#0F172A]/20 dark:border-slate-800 rounded-none shadow-sm hover:shadow-md hover:border-[#0F172A] transition-all duration-300 relative overflow-hidden group">
+                <div className={`absolute -right-6 -bottom-6 w-24 h-24 bg-${stat.color}-500/10 rounded-full group-hover:bg-${stat.color}-500/20 transition-all`}></div>
                 <div className="relative z-10">
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">{stat.label}</span>
-                  <p className={`font-display font-black text-4xl text-${stat.color}-600 dark:text-${stat.color}-400 mt-2 tracking-tight`}>{stat.val}</p>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">{stat.label}</span>
+                  <p className={`font-display font-black text-4xl text-${stat.color}-700 dark:text-${stat.color}-400 mt-2 tracking-tight`}>{stat.val}</p>
                 </div>
               </div>
             ))}
@@ -294,15 +294,15 @@ export const UserDashboard: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Left Box: Quick application tracking list */}
-            <div className="lg:col-span-2 bg-white dark:bg-[#1c1917] border-2 border-slate-200 dark:border-slate-800 p-6 rounded-sm text-left shadow-sm">
-              <div className="flex items-center justify-between mb-6 border-b border-slate-50 dark:border-slate-800 pb-3">
-                <h3 className="font-display font-extrabold text-sm text-slate-950 dark:text-white uppercase tracking-wider flex items-center">
-                  <FileText className="w-4 h-4 mr-1.5 text-blue-600" />
+            <div className="lg:col-span-2 bg-white dark:bg-[#0F172A] border-2 border-slate-300 dark:border-[#334155] p-6 rounded-none text-left shadow-sm">
+              <div className="flex items-center justify-between mb-6 border-b-2 border-slate-200 dark:border-[#334155] pb-3">
+                <h3 className="font-display font-extrabold text-sm text-[#0F172A] dark:text-white uppercase tracking-wider flex items-center">
+                  <FileText className="w-4 h-4 mr-1.5 text-[#F59E0B]" />
                   <span>Ongoing Status Trackers</span>
                 </h3>
                 <button 
                   onClick={() => setActiveTab('history')} 
-                  className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                  className="text-xs font-bold text-blue-700 dark:text-blue-300 hover:text-[#0F172A] dark:hover:text-white hover:underline transition-colors uppercase tracking-wider"
                 >
                   View All Files
                 </button>
@@ -310,10 +310,10 @@ export const UserDashboard: React.FC = () => {
 
               {applications.length === 0 ? (
                 <div className="text-center py-16 space-y-3">
-                  <p className="text-xs font-semibold text-slate-400">No active applications currently active.</p>
+                  <p className="text-xs font-semibold text-slate-500">No active applications currently active.</p>
                   <button 
                     onClick={() => setActiveTab('apply')}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-sm text-xs font-bold"
+                    className="px-6 py-2 bg-[#15803D] border border-[#14532d] hover:bg-[#166534] text-white rounded-none text-xs font-bold uppercase tracking-widest shadow-sm"
                   >
                     Apply Now
                   </button>
@@ -324,7 +324,7 @@ export const UserDashboard: React.FC = () => {
                     <div 
                       key={app.id} 
                       onClick={() => { setSelectedReceiptApp(app); }}
-                      className="p-4 rounded-sm border-2 border-slate-200/80 dark:border-slate-800/80 bg-slate-50/40 dark:bg-[#0c0a09]/20 hover:border-blue-400 dark:hover:border-blue-700 transition cursor-pointer flex flex-col gap-4"
+                      className="p-4 rounded-none border border-slate-300 dark:border-[#334155] bg-slate-50 dark:bg-[#1E293B] hover:border-[#0F172A] dark:hover:border-blue-400 transition cursor-pointer flex flex-col gap-4 shadow-sm"
                     >
                       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 w-full">
                         <div className="space-y-1">
@@ -344,7 +344,7 @@ export const UserDashboard: React.FC = () => {
                           </span>
                           
                           {/* Quick printable Receipt download */}
-                          <button className="text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center space-x-1 p-1">
+                          <button className="text-[10px] font-bold text-[#020617] dark:text-blue-400 hover:underline flex items-center space-x-1 p-1">
                             <Eye className="w-3.5 h-3.5" />
                           </button>
                         </div>
@@ -352,21 +352,29 @@ export const UserDashboard: React.FC = () => {
 
                       {/* Visual Progress Tracker Components */}
                       <div className="w-full">
-                        <div className="flex justify-between text-[9px] font-semibold text-slate-400 uppercase tracking-widest mb-1">
-                          <span>Submitted</span>
-                          <span>Completed</span>
-                        </div>
                         {app.status !== 'Rejected' ? (
-                          <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                            <div 
-                              className="h-full bg-gradient-to-r from-amber-400 to-blue-500 transition-all duration-700"
-                              style={{ 
-                                width: `${Math.max(10, ((getStageIndex(app.status) + 1) / STAGES.length) * 100)}%` 
-                              }}
-                            ></div>
+                          <div className="relative pt-3 pb-1 w-full px-1">
+                              {/* Connecting Line */}
+                              <div className="absolute top-[14px] left-0 w-full h-[2px] bg-slate-200 dark:bg-slate-700/50 rounded-full"></div>
+                              <div className="absolute top-[14px] left-0 h-[2px] bg-[#15803D] transition-all duration-700 rounded-full" 
+                                   style={{ width: `${(getStageIndex(app.status) / (STAGES.length - 1)) * 100}%` }}>
+                              </div>
+                              
+                              {/* Milestone Points Mini */}
+                              <div className="relative flex justify-between items-start w-full">
+                                 {STAGES.map((stage, index) => {
+                                     const isCompleted = getStageIndex(app.status) >= index;
+                                     const isCurrent = getStageIndex(app.status) === index;
+                                     return (
+                                         <div key={stage} className="flex flex-col items-center">
+                                             <div className={`w-2 h-2 rounded-full z-10 transition-all duration-300 ${isCompleted ? 'bg-[#15803D]' : 'bg-slate-300 dark:bg-slate-700'} ${isCurrent ? 'ring-2 ring-[#15803D]/30 scale-125' : ''}`}></div>
+                                         </div>
+                                     )
+                                 })}
+                              </div>
                           </div>
                         ) : (
-                          <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                          <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mt-1">
                              <div className="h-full bg-red-500 w-full"></div>
                           </div>
                         )}
@@ -425,7 +433,7 @@ export const UserDashboard: React.FC = () => {
                   <div 
                     key={svc.id}
                     onClick={() => { setSelectedService(svc); setApplyStep(1); }}
-                    className="p-5 rounded-sm border-2 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-[#0c0a09]/20 hover:border-blue-500 hover:shadow-sm cursor-pointer transition flex flex-col justify-between"
+                    className="p-5 rounded-sm border-2 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-[#020617]/20 hover:border-blue-500 hover:shadow-sm cursor-pointer transition flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-2">
@@ -496,7 +504,7 @@ export const UserDashboard: React.FC = () => {
                     <input
                       type="text"
                       maxLength={12}
-                      className="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#0c0a09] border-2 border-slate-200 dark:border-slate-800 rounded-sm text-xs font-mono text-slate-900 dark:text-white"
+                      className="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#020617] border-2 border-slate-200 dark:border-slate-800 rounded-sm text-xs font-mono text-slate-900 dark:text-white"
                       placeholder="123412341234"
                       value={formData.citizenAadhaar || ''}
                       onChange={(e) => setFormData({ ...formData, citizenAadhaar: e.target.value.replace(/\D/g, '') })}
@@ -510,7 +518,7 @@ export const UserDashboard: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      className="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#0c0a09] border-2 border-slate-200 dark:border-slate-800 rounded-sm text-xs text-slate-900 dark:text-white font-medium"
+                      className="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#020617] border-2 border-slate-200 dark:border-slate-800 rounded-sm text-xs text-slate-900 dark:text-white font-medium"
                       placeholder="Annual income approx ₹2,40,000 / Priority card citizen"
                       value={formData.categoryDetails || ''}
                       onChange={(e) => setFormData({ ...formData, categoryDetails: e.target.value })}
@@ -523,7 +531,7 @@ export const UserDashboard: React.FC = () => {
                     </label>
                     <textarea
                       rows={3}
-                      className="w-full px-3 py-2 bg-slate-50 dark:bg-[#0c0a09] border-2 border-slate-200 dark:border-slate-800 rounded-sm text-xs text-slate-900 dark:text-white font-medium focus:outline-none"
+                      className="w-full px-3 py-2 bg-slate-50 dark:bg-[#020617] border-2 border-slate-200 dark:border-slate-800 rounded-sm text-xs text-slate-900 dark:text-white font-medium focus:outline-none"
                       placeholder="Need priority certificate because of immediate engineering admission"
                       value={formData.extraRemarks || ''}
                       onChange={(e) => setFormData({ ...formData, extraRemarks: e.target.value })}
@@ -533,7 +541,7 @@ export const UserDashboard: React.FC = () => {
                   <button
                     onClick={() => { if (isFormValidStep1()) setApplyStep(2); }}
                     disabled={!isFormValidStep1()}
-                    className="px-5 py-2.5 bg-blue-600 disabled:opacity-40 hover:bg-blue-700 text-white rounded-sm text-xs font-bold shadow-md cursor-pointer inline-flex items-center space-x-1.5 transition-all text-center"
+                    className="px-5 py-2.5 bg-blue-600 disabled:opacity-40 hover:bg-slate-800 text-white rounded-sm text-xs font-bold shadow-md cursor-pointer inline-flex items-center space-x-1.5 transition-all text-center"
                   >
                     <span>Proceed to Document Vault</span>
                     <ArrowLeft className="w-3.5 h-3.5 rotate-180" />
@@ -562,7 +570,7 @@ export const UserDashboard: React.FC = () => {
                           className={`p-4 rounded-sm border text-left flex justify-between items-center transition ${
                             hasUploaded 
                               ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/40' 
-                              : 'bg-slate-50 dark:bg-[#0c0a09] border-slate-200 dark:border-slate-800'
+                              : 'bg-slate-50 dark:bg-[#020617] border-slate-200 dark:border-slate-800'
                           }`}
                         >
                           <div className="space-y-1 pr-4">
@@ -643,7 +651,7 @@ export const UserDashboard: React.FC = () => {
                   </div>
 
                   {/* Interactive digital receipt render */}
-                  <div className="p-6 rounded-sm border-2 border-slate-100 dark:border-slate-800 bg-white dark:bg-[#0c0a09] max-w-sm mx-auto shadow-xl text-left space-y-4">
+                  <div className="p-6 rounded-sm border-2 border-slate-100 dark:border-slate-800 bg-white dark:bg-[#020617] max-w-sm mx-auto shadow-xl text-left space-y-4">
                     <div className="border-b border-slate-100 dark:border-slate-800 pb-3 flex justify-between items-center text-xs">
                       <div>
                         <span className="font-display font-black text-slate-900 dark:text-white block uppercase text-[10px]">SEAGAN A2Z Receipt</span>
@@ -734,7 +742,7 @@ export const UserDashboard: React.FC = () => {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-semibold whitespace-nowrap">
-                <thead className="bg-slate-50 dark:bg-[#0c0a09] font-display font-bold uppercase tracking-wider text-slate-400 text-[10px] border-b border-slate-200 dark:border-slate-805">
+                <thead className="bg-slate-50 dark:bg-[#020617] font-display font-bold uppercase tracking-wider text-slate-400 text-[10px] border-b border-slate-200 dark:border-slate-805">
                   <tr>
                     <th className="p-4">Digital Scheme</th>
                     <th className="p-4">Ref token</th>
@@ -749,7 +757,7 @@ export const UserDashboard: React.FC = () => {
                     <tr 
                       key={app.id}
                       onClick={() => { setSelectedReceiptApp(app); }}
-                      className="hover:bg-slate-50/50 dark:hover:bg-[#0c0a09]/20 cursor-pointer transition"
+                      className="hover:bg-slate-50/50 dark:hover:bg-[#020617]/20 cursor-pointer transition"
                     >
                       <td className="p-4">
                         <span className="text-slate-950 dark:text-white font-bold">{app.serviceName}</span>
@@ -829,31 +837,31 @@ export const UserDashboard: React.FC = () => {
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                      <div>
                         <label className="text-xs font-bold text-slate-500 mb-1 block">Full Name</label>
-                        <input required type="text" value={profileFormData.fullName} onChange={(e) => setProfileFormData({...profileFormData, fullName: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                        <input required type="text" value={profileFormData.fullName} onChange={(e) => setProfileFormData({...profileFormData, fullName: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
                      </div>
                      <div>
                         <label className="text-xs font-bold text-slate-500 mb-1 block">Phone Number</label>
-                        <input required type="text" value={profileFormData.phone} onChange={(e) => setProfileFormData({...profileFormData, phone: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                        <input required type="text" value={profileFormData.phone} onChange={(e) => setProfileFormData({...profileFormData, phone: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
                      </div>
                      <div>
                         <label className="text-xs font-bold text-slate-500 mb-1 block">Aadhaar Number</label>
-                        <input type="text" value={profileFormData.aadhaarNumber} onChange={(e) => setProfileFormData({...profileFormData, aadhaarNumber: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                        <input type="text" value={profileFormData.aadhaarNumber} onChange={(e) => setProfileFormData({...profileFormData, aadhaarNumber: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
                      </div>
                      <div>
                         <label className="text-xs font-bold text-slate-500 mb-1 block">PAN Number</label>
-                        <input type="text" value={profileFormData.panNumber} onChange={(e) => setProfileFormData({...profileFormData, panNumber: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                        <input type="text" value={profileFormData.panNumber} onChange={(e) => setProfileFormData({...profileFormData, panNumber: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
                      </div>
                      <div className="md:col-span-2">
                         <label className="text-xs font-bold text-slate-500 mb-1 block">Address</label>
-                        <input type="text" value={profileFormData.address} onChange={(e) => setProfileFormData({...profileFormData, address: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                        <input type="text" value={profileFormData.address} onChange={(e) => setProfileFormData({...profileFormData, address: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
                      </div>
                      <div>
                         <label className="text-xs font-bold text-slate-500 mb-1 block">District</label>
-                        <input type="text" value={profileFormData.district} onChange={(e) => setProfileFormData({...profileFormData, district: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                        <input type="text" value={profileFormData.district} onChange={(e) => setProfileFormData({...profileFormData, district: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
                      </div>
                      <div>
                         <label className="text-xs font-bold text-slate-500 mb-1 block">Pincode</label>
-                        <input type="text" value={profileFormData.pincode} onChange={(e) => setProfileFormData({...profileFormData, pincode: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#0c0a09] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                        <input type="text" value={profileFormData.pincode} onChange={(e) => setProfileFormData({...profileFormData, pincode: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
                      </div>
                    </div>
                    
@@ -864,7 +872,7 @@ export const UserDashboard: React.FC = () => {
                  </form>
               ) : (
 
-              <div className="bg-slate-50 dark:bg-[#0c0a09] rounded-sm border-2 border-slate-200 dark:border-slate-800 p-5 space-y-4 text-sm font-medium">
+              <div className="bg-slate-50 dark:bg-[#020617] rounded-sm border-2 border-slate-200 dark:border-slate-800 p-5 space-y-4 text-sm font-medium">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
                   <div className="flex items-center space-x-4">
                     <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
@@ -945,7 +953,7 @@ export const UserDashboard: React.FC = () => {
           APP MODAL: DIGITAL SMART RECEIPT DIALOG PRINT
           ===================================================================== */}
       {selectedReceiptApp && (
-        <div className="fixed inset-0 z-50 bg-[#0c0a09]/60 flex items-center justify-center p-4 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 bg-[#020617]/60 flex items-center justify-center p-4 backdrop-blur-xs">
           <div className="bg-white dark:bg-[#1c1917] max-w-md w-full rounded-sm border-2 border-slate-200 dark:border-slate-800 shadow-2xl p-6 text-left relative overflow-hidden animate-scale-up">
             
             {/* Stamp-like visual header badge */}
@@ -974,7 +982,7 @@ export const UserDashboard: React.FC = () => {
             <div className="space-y-4">
               
               {/* Process parameters lists */}
-              <div className="p-4 bg-slate-50 dark:bg-[#0c0a09] rounded-sm border-2 border-slate-200 dark:border-slate-800 space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400 leading-relaxed font-mono">
+              <div className="p-4 bg-slate-50 dark:bg-[#020617] rounded-sm border-2 border-slate-200 dark:border-slate-800 space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400 leading-relaxed font-mono">
                 <div className="flex justify-between">
                   <span>Resident Name:</span>
                   <span className="text-slate-950 dark:text-white font-bold">{selectedReceiptApp.userFullName || currentUser?.fullName}</span>
@@ -998,36 +1006,51 @@ export const UserDashboard: React.FC = () => {
               </div>
 
               {/* Live file tracker progress visualization bars */}
-              <div className="space-y-3 p-4 border-2 border-slate-100 dark:border-slate-800 rounded-sm text-xs">
-                <h5 className="font-display font-extrabold text-[10px] text-slate-400 uppercase tracking-widest">
-                  Live Action Tracker
-                </h5>
+              <div className="space-y-4 p-4 border-2 border-slate-100 dark:border-slate-800 rounded-sm text-xs">
+                <div className="flex justify-between items-center mb-2">
+                  <h5 className="font-display font-extrabold text-[10px] text-slate-400 uppercase tracking-widest">
+                    Live Action Tracker
+                  </h5>
+                  <span className="font-bold text-[#F59E0B] uppercase tracking-wider text-[10px] bg-[#F59E0B]/10 px-2 py-0.5 rounded-sm">{selectedReceiptApp.status}</span>
+                </div>
+                
                 <div className="space-y-2">
-                  <div className="flex justify-between text-[10px] text-slate-400">
-                    <span className="font-semibold text-slate-800 dark:text-slate-200">File verification:</span>
-                    <span className="font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">{selectedReceiptApp.status}</span>
-                  </div>
-                  
                   {selectedReceiptApp.status !== 'Rejected' ? (
-                    <div className="w-full h-1.5 bg-slate-100 dark:bg-[#0c0a09] rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-gradient-to-r from-amber-400 to-blue-500 transition-all duration-700"
-                        style={{ 
-                          width: `${Math.max(10, ((getStageIndex(selectedReceiptApp.status) + 1) / STAGES.length) * 100)}%` 
-                        }}
-                      ></div>
+                    <div className="relative pt-4 pb-2 w-full px-2">
+                        {/* Connecting Line */}
+                        <div className="absolute top-5 left-0 w-full h-[3px] bg-slate-200 dark:bg-slate-700/50 rounded-full"></div>
+                        <div className="absolute top-5 left-0 h-[3px] bg-[#15803D] border border-[#14532d] transition-all duration-700 rounded-full" 
+                             style={{ width: `${(getStageIndex(selectedReceiptApp.status) / (STAGES.length - 1)) * 100}%` }}>
+                        </div>
+                        
+                        {/* Milestone Points */}
+                        <div className="relative flex justify-between items-start w-full">
+                           {STAGES.map((stage, index) => {
+                               const isCompleted = getStageIndex(selectedReceiptApp.status) >= index;
+                               const isCurrent = getStageIndex(selectedReceiptApp.status) === index;
+                               return (
+                                   <div key={stage} className="flex flex-col items-center group w-16 -ml-8 first:ml-0 last:-mr-8">
+                                       <div className={`w-3.5 h-3.5 rounded-full z-10 mb-2.5 outline outline-2 outline-offset-2 transition-all duration-300 ${isCompleted ? 'bg-[#15803D] outline-[#15803D] shadow-[0_0_8px_rgba(21,128,61,0.6)]' : 'bg-slate-300 dark:bg-slate-700 outline-transparent'} ${isCurrent ? 'ring-4 ring-[#15803D]/30 scale-125' : ''}`}></div>
+                                       <span className={`text-[8px] uppercase tracking-widest text-center transition-colors leading-tight ${isCurrent ? 'text-slate-900 dark:text-white font-extrabold' : (isCompleted ? 'text-[#15803D] font-bold' : 'text-slate-400 font-semibold')}`}>{stage}</span>
+                                   </div>
+                               )
+                           })}
+                        </div>
                     </div>
                   ) : (
-                    <div className="p-2 bg-red-100/50 dark:bg-red-955/35 rounded-sm border-2 border-red-200/40 text-[11px] text-red-600">
-                      <h4 className="font-extrabold">Rejected Feedback:</h4>
-                      <p className="mt-0.5 text-slate-500 dark:text-slate-350">{selectedReceiptApp.rejectionReason || 'Submitted original document lacks a clear digital stamp.'}</p>
+                    <div className="p-3 bg-red-50 dark:bg-red-950/20 shadow-inner rounded-sm border-2 border-red-200 dark:border-red-900/40 text-[11px] text-red-700 dark:text-red-400">
+                      <h4 className="font-extrabold flex items-center gap-1.5 uppercase tracking-widest text-[10px]">
+                         <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                         System Rejection Notice
+                      </h4>
+                      <p className="mt-1.5 text-slate-700 dark:text-slate-300 font-semibold leading-relaxed border-l-2 border-red-500 pl-2">{selectedReceiptApp.rejectionReason || 'Submitted original document lacks a clear digital stamp. Manual review required by the administrative desk.'}</p>
                     </div>
                   )}
                 </div>
               </div>
 
               {/* Symmetrical cryptographic QR Validation vectors */}
-              <div className="flex flex-col items-center justify-center p-4 bg-slate-50 dark:bg-[#0c0a09] rounded-sm border-2 border-slate-200 dark:border-slate-800 text-center gap-2">
+              <div className="flex flex-col items-center justify-center p-4 bg-slate-50 dark:bg-[#020617] rounded-sm border-2 border-slate-200 dark:border-slate-800 text-center gap-2">
                 <QRCodeGenerator 
                   value={`SEAGAN-SMART-RECEIPT: TOKEN:${selectedReceiptApp.tokenNumber} VALUE:₹${selectedReceiptApp.amount} CITIZEN:${selectedReceiptApp.userFullName} DATE:${selectedReceiptApp.createdAt}`} 
                   size={120} 

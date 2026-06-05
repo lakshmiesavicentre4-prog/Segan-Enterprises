@@ -64,67 +64,82 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b-4 border-[#FFAE00] bg-[#1a2b56] text-white shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between relative z-10">
-        
-        {/* Brand Header */}
-        <div 
-          onClick={() => handleNavClick('home')} 
-          className="flex items-center space-x-3 cursor-pointer group"
-        >
-          {/* Emblem representing TN Golden Temple / Tower Gilt Portal */}
-          <div className="relative flex items-center justify-center w-12 h-12 md:w-14 md:h-14 group-hover:scale-105 transition-all duration-300 shrink-0 animate-fade-in bg-white p-1 rounded-full shadow-md border-2 border-white ring-2 ring-[#FFAE00]">
-            <img src="/logo1.png" alt="Logo" className="w-full h-full object-contain rounded-full" />
-          </div>
-          <div>
-            <div className="flex items-center space-x-2">
-              <span className="font-display font-black text-xl md:text-2xl text-white tracking-tight leading-none text-shadow-sm">
-                {t('portalName')}
-              </span>
-              <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-white text-[#1a2b56] border border-transparent whitespace-nowrap shadow-sm">
-                A2Z Service
-              </span>
-            </div>
-            <p className="text-[11px] md:text-xs font-medium text-blue-100 tracking-tight hidden md:block mt-0.5">
-              {t('tagline')}
-            </p>
+    <header className="sticky top-0 z-50 w-full shadow-lg">
+      {/* Top thin official bar */}
+      <div className="bg-[#020617] text-blue-100 text-[10px] md:text-xs py-1.5 font-semibold tracking-widest uppercase border-b border-[#F59E0B]/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+          <span>{language === 'en' ? 'Government of Tamil Nadu | Official Digital Portal' : 'தமிழ்நாடு அரசு | அதிகாரப்பூர்வ டிஜிட்டல் போர்ட்டல்'}</span>
+          <div className="hidden sm:flex items-center space-x-4">
+            <span className="hover:text-white cursor-pointer transition-colors">A-</span>
+            <span className="hover:text-white cursor-pointer transition-colors">A</span>
+            <span className="hover:text-white cursor-pointer transition-colors">A+</span>
+            <span className="w-px h-3 bg-blue-100/30"></span>
+            <span className="hover:text-white cursor-pointer transition-colors">Skip to Main Content</span>
           </div>
         </div>
+      </div>
 
-        {/* Action Controls */}
-        <div className="flex items-center space-x-2 md:space-x-4 pr-2">
+      <div className="bg-[#0F172A] border-b-4 border-[#F59E0B] text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between relative z-10">
           
-          {/* Navigation links for Desktop */}
-          <nav className="hidden lg:flex items-center space-x-1 mr-2 text-sm font-bold p-1 rounded-sm border-2 border-[#15234b] bg-[#111c3d]">
-            <button 
-              onClick={() => handleNavClick('home')}
-              className={`px-4 py-2 rounded-sm transition-all duration-300 ${
-                currentView === 'home' 
-                  ? 'bg-blue-600 text-white shadow-sm ring-1 ring-blue-500' 
-                  : 'text-blue-200 hover:text-white hover:bg-[#1a2b56]'
-              }`}
-            >
-              {t('home')}
-            </button>
-            <button 
-              onClick={() => handleNavClick('home', 'services-grid-section')}
-              className="px-4 py-2 rounded-sm text-blue-200 hover:text-white hover:bg-[#1a2b56] transition-all duration-300"
-            >
-              {t('services')}
-            </button>
-            <button 
-              onClick={() => handleNavClick('home', 'contact-section-id')}
-              className="px-4 py-2 rounded-sm text-blue-200 hover:text-white hover:bg-[#1a2b56] transition-all duration-300"
-            >
-              {t('contact')}
-            </button>
-          </nav>
+          {/* Brand Header */}
+          <div 
+            onClick={() => handleNavClick('home')} 
+            className="flex items-center space-x-4 cursor-pointer group"
+          >
+            {/* Emblem representing TN Golden Temple / Tower Gilt Portal */}
+            <div className="relative flex items-center justify-center w-12 h-12 md:w-16 md:h-16 group-hover:scale-105 transition-all duration-300 shrink-0 animate-fade-in bg-white p-1 rounded-full shadow-md border-2 border-white ring-2 ring-[#F59E0B]">
+              <img src="/logo1.png" alt="Logo" className="w-full h-full object-contain rounded-full" />
+            </div>
+            <div>
+              <div className="flex items-center space-x-3">
+                <span className="font-display font-black text-xl md:text-2xl text-white tracking-widest leading-none text-shadow-sm uppercase">
+                  {t('portalName')}
+                </span>
+                <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-sm text-[9px] font-bold uppercase tracking-widest bg-white text-[#0F172A] border border-transparent whitespace-nowrap shadow-sm">
+                  GOV
+                </span>
+              </div>
+              <p className="text-[10px] md:text-xs font-bold text-[#F59E0B] tracking-widest hidden md:block mt-1 uppercase">
+                {language === 'en' ? 'A2Z Online Service | TN Digital' : 'ஏ2இசட் ஆன்லைன் சேவை'}
+              </p>
+            </div>
+          </div>
+
+          {/* Action Controls */}
+          <div className="flex items-center space-x-2 md:space-x-4 pr-2">
+            
+            {/* Navigation links for Desktop */}
+            <nav className="hidden lg:flex items-center space-x-1 mr-2 text-sm font-bold p-1 rounded-sm">
+              <button 
+                onClick={() => handleNavClick('home')}
+                className={`px-4 py-2 font-bold text-xs uppercase tracking-wider transition-all duration-300 border-b-2 ${
+                  currentView === 'home' 
+                    ? 'border-[#F59E0B] text-[#F59E0B]' 
+                    : 'border-transparent text-white hover:text-[#F59E0B]'
+                }`}
+              >
+                {t('home')}
+              </button>
+              <button 
+                onClick={() => handleNavClick('home', 'services-grid-section')}
+                className={`px-4 py-2 font-bold text-xs uppercase tracking-wider transition-all duration-300 border-b-2 border-transparent hover:text-[#F59E0B]`}
+              >
+                {t('services')}
+              </button>
+              <button 
+                onClick={() => handleNavClick('home', 'contact-section-id')}
+                className={`px-4 py-2 font-bold text-xs uppercase tracking-wider transition-all duration-300 border-b-2 border-transparent hover:text-[#F59E0B]`}
+              >
+                {t('contact')}
+              </button>
+            </nav>
 
           {/* Language Selector */}
           <button
             id="lang-switch-btn"
             onClick={() => setLanguage(language === 'en' ? 'ta' : 'en')}
-            className="hidden sm:flex items-center space-x-1.5 px-3 py-2 rounded-sm border border-[#2a3f7a] bg-[#1a2b56] text-xs font-bold text-blue-200 hover:text-white hover:border-[#4a6ab5] transition-all"
+            className="hidden sm:flex items-center space-x-1.5 px-3 py-2 rounded-sm border border-[#2a3f7a] bg-[#0F172A] text-xs font-bold text-blue-200 hover:text-white hover:border-[#4a6ab5] transition-all"
           >
             <Globe className="w-4 h-4 shrink-0" />
             <span>{language === 'en' ? 'தமிழ்' : 'English'}</span>
@@ -136,12 +151,12 @@ export const Navbar: React.FC = () => {
               <button
                 id="notification-bell-btn"
                 onClick={() => setNotifMenuOpen(!notifMenuOpen)}
-                className="relative p-2.5 rounded-sm border border-[#2a3f7a] bg-[#1a2b56] text-blue-200 hover:text-white shadow-sm transition-all"
+                className="relative p-2.5 rounded-sm border border-[#2a3f7a] bg-[#0F172A] text-blue-200 hover:text-white shadow-sm transition-all"
                 aria-label="View notifications"
               >
                 <Bell className="w-4 h-4" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[9px] font-bold text-white ring-2 ring-white dark:ring-slate-950 animate-pulse">
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[9px] font-bold text-white ring-2 ring-white animate-pulse">
                     {unreadCount}
                   </span>
                 )}
@@ -152,7 +167,7 @@ export const Navbar: React.FC = () => {
                 <div className="absolute right-0 mt-3 w-72 md:w-96 rounded-sm border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c1917] shadow-2xl p-4 z-50 text-slate-700 dark:text-slate-300">
                   <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-2">
                     <div className="flex items-center space-x-2">
-                      <Bell className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      <Bell className="w-4 h-4 text-[#020617] dark:text-blue-400" />
                       <h4 className="font-semibold text-xs md:text-sm">Notifications ({unreadCount} new)</h4>
                     </div>
                     {unreadCount > 0 && (
@@ -221,7 +236,7 @@ export const Navbar: React.FC = () => {
               <button
                 id="navbar-logout-btn"
                 onClick={logoutUser}
-                className="hidden lg:flex p-2.5 rounded-sm border border-[#2a3f7a] bg-[#1a2b56] text-blue-200 hover:text-red-400 hover:border-red-900 hover:bg-red-900/30 shadow-sm transition-all"
+                className="hidden lg:flex p-2.5 rounded-sm border border-[#2a3f7a] bg-[#0F172A] text-blue-200 hover:text-red-400 hover:border-red-900 hover:bg-red-900/30 shadow-sm transition-all"
                 title={t('logout')}
               >
                 <LogOut className="w-4 h-4" />
@@ -240,16 +255,17 @@ export const Navbar: React.FC = () => {
           {/* Mobile menu button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2.5 rounded-sm border border-[#2a3f7a] bg-[#1a2b56] text-blue-200 hover:text-white transition-all"
+            className="lg:hidden p-2.5 rounded-sm border border-[#2a3f7a] bg-[#0F172A] text-blue-200 hover:text-white transition-all"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
+    </div>
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0c0a09] animate-fade-in shadow-xl absolute w-full left-0 origin-top">
+        <div className="lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#020617] animate-fade-in shadow-xl absolute w-full left-0 origin-top">
           <div className="px-4 py-6 flex flex-col space-y-4">
             <button 
               onClick={() => handleNavClick('home')}
@@ -307,7 +323,7 @@ export const Navbar: React.FC = () => {
               <div className="pt-2">
                 <button
                   onClick={() => handleNavClick('auth')}
-                  className="w-full py-3.5 bg-gradient-to-r from-blue-700 to-blue-600 text-white rounded-sm text-lg font-bold shadow-md"
+                  className="w-full py-3.5 bg-gradient-to-r from-[#020617] to-blue-600 text-white rounded-sm text-lg font-bold shadow-md"
                 >
                   {t('login')}
                 </button>
