@@ -11,6 +11,7 @@ import { PublicHome } from './pages/PublicHome';
 import { AuthPage } from './pages/AuthPage';
 import { UserDashboard } from './pages/UserDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { PolicyPage } from './pages/PolicyPage';
 
 
 // Sub App orchestrator inside Context
@@ -28,6 +29,14 @@ const AppContent: React.FC = () => {
         return currentUser ? <UserDashboard /> : <AuthPage />;
       case 'admin-dashboard':
         return currentUser && currentUser.role !== 'user' ? <AdminDashboard /> : <AuthPage />;
+      case 'contact':
+        return <PolicyPage type="contact" />;
+      case 'terms':
+        return <PolicyPage type="terms" />;
+      case 'refunds':
+        return <PolicyPage type="refunds" />;
+      case 'privacy':
+        return <PolicyPage type="privacy" />;
       default:
         return <PublicHome />;
     }

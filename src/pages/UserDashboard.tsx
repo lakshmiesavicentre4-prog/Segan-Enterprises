@@ -144,12 +144,20 @@ export const UserDashboard: React.FC = () => {
     });
   };
 
-  // Submit application without payment step
+  // Submit application with Cashfree payment step
   const handleSubmitApplication = async () => {
     if (!selectedService) return;
     setIsSubmitting(true);
 
     try {
+      // Launch Cashfree Mock UI
+      const paymentSuccess = await initiatePaymentGateways(`CF_${Date.now()}`, selectedService.price);
+      
+      if (!paymentSuccess) {
+        setIsSubmitting(false);
+        return; // Payment was cancelled or failed
+      }
+
       // Document packing
       const docPayload = selectedService.requiredDocuments.map((docName: string) => ({
         documentName: docName,
@@ -626,9 +634,9 @@ export const UserDashboard: React.FC = () => {
                       type="button"
                       onClick={handleSubmitApplication}
                       disabled={isSubmitting}
-                      className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-sm text-xs font-bold shadow-md cursor-pointer flex items-center space-x-2"
+                      className="px-5 py-2 bg-[#0F172A] hover:bg-[#1E293B] text-white rounded-sm text-xs font-bold shadow-md cursor-pointer flex items-center space-x-2"
                     >
-                      <span>{isSubmitting ? 'Submitting...' : 'Submit Application'}</span>
+                      <span>{isSubmitting ? 'Processing Payment...' : `Pay ₹${selectedService?.price || 0} via Cashfree`}</span>
                     </button>
                   </div>
                 </div>

@@ -23,7 +23,6 @@ import {
   reportService
 } from '../supabase/supabaseClient';
 import { i18n } from '../utils/i18n';
-import { CashfreeMockModal } from '../components/CashfreeMockModal';
 
 interface AppContextType {
   language: Language;
@@ -32,8 +31,8 @@ interface AppContextType {
   setTheme: (theme: Theme) => void;
   currentUser: Profile | null;
   setCurrentUser: (user: Profile | null) => void;
-  currentView: 'home' | 'auth' | 'user-dashboard' | 'admin-dashboard';
-  setView: (view: 'home' | 'auth' | 'user-dashboard' | 'admin-dashboard') => void;
+  currentView: 'home' | 'auth' | 'user-dashboard' | 'admin-dashboard' | 'contact' | 'terms' | 'refunds' | 'privacy';
+  setView: (view: 'home' | 'auth' | 'user-dashboard' | 'admin-dashboard' | 'contact' | 'terms' | 'refunds' | 'privacy') => void;
   
   // Dynamic e-services catalogs
   services: Service[];
@@ -78,7 +77,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return authService.getSession();
   });
 
-  const [currentView, setViewState] = useState<'home' | 'auth' | 'user-dashboard' | 'admin-dashboard'>(() => {
+  const [currentView, setViewState] = useState<'home' | 'auth' | 'user-dashboard' | 'admin-dashboard' | 'contact' | 'terms' | 'refunds' | 'privacy'>(() => {
     const cachedUser = authService.getSession();
     if (!cachedUser) return 'home';
     return cachedUser.role === 'user' ? 'user-dashboard' : 'admin-dashboard';
@@ -89,7 +88,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [notifications, setNotifications] = useState<Notification[]>(() => notificationService.getNotifications());
   const [settings, setSettings] = useState<AppSettings>(() => settingsService.getSettings());
   const [logs, setLogs] = useState<ActivityLog[]>(() => reportService.getActivityLogs());
-  const [cashfreePayment, setCashfreePayment] = useState<{appId: string, amount: number, resolve: (v: boolean) => void} | null>(null);
 
   // Localization translator helper
   const t = (key: keyof typeof i18n['en']): string => {
@@ -181,18 +179,70 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   // Set active routing view
-  const setView = (view: 'home' | 'auth' | 'user-dashboard' | 'admin-dashboard') => {
+  const setView = (view: 'home' | 'auth' | 'user-dashboard' | 'admin-dashboard' | 'contact' | 'terms' | 'refunds' | 'privacy') => {
     setViewState(view);
   };
 
   // Abstract Payment Gateways (Cashfree) Simulator and abstraction logic
   const initiatePaymentGateways = async (appId: string, amount: number): Promise<boolean> => {
-    console.log(`Cashfree Payment Gateway initialized for application ${appId} (₹${amount})`);
+    console.log(`Cashfree Payment Gateway real init for application ${appId} (₹${amount})`);
     
-    // Instead of resolving immediately, we'll open the Cashfree UI and return a promise
-    return new Promise((resolve) => {
-      setCashfreePayment({ appId, amount, resolve });
-    });
+    try {
+      // Import dynamically to avoid loading issues
+      const { load } = await import('@cashfreepayments/cashfree-js');
+      const cashfree = await load({ mode: "production" });
+
+      // Call our backend to get the payment session ID
+      const response = await fetch('/api/create-cashfree-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          orderId: appId,
+          amount: amount,
+          customerName: currentUser?.fullName || 'Customer',
+          customerEmail: currentUser?.email || 'customer@example.com',
+          customerPhone: '9999999999'
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Backend error creating order:", errorText);
+        alert(`Payment error: ${errorText}`);
+        return false;
+      }
+
+      const data = await response.json();
+      
+      return new Promise((resolve) => {
+        cashfree.checkout({
+          paymentSessionId: data.payment_session_id,
+          redirectTarget: "_modal",
+        }).then((result: any) => {
+          if (result.error){
+            console.error(result.error);
+            resolve(false);
+          }
+          if (result.redirect){
+            // It redirectted... handled by parent window if returnUrl is set
+            resolve(true); // Assuming they will pay there
+          }
+          if (result.paymentDetails) {
+            console.log("Payment completed successfully:", result.paymentDetails.paymentMessage);
+            resolve(true);
+          }
+        }).catch((err: any) => {
+          console.error("Checkout modal error", err);
+          resolve(false);
+        });
+      });
+    } catch (e: any) {
+      console.error("Payment exception", e);
+      alert(`Payment Exception: ${e.message}`);
+      return false;
+    }
   };
 
   // Auto-updating simulator (Supabase Realtime emulator mock client listener)
@@ -250,20 +300,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       initiatePaymentGateways
     }}>
       {children}
-      {cashfreePayment && (
-        <CashfreeMockModal 
-          appId={cashfreePayment.appId} 
-          amount={cashfreePayment.amount} 
-          onSuccess={() => {
-            cashfreePayment.resolve(true);
-            setCashfreePayment(null);
-          }}
-          onCancel={() => {
-            cashfreePayment.resolve(false);
-            setCashfreePayment(null);
-          }}
-        />
-      )}
     </AppContext.Provider>
   );
 };

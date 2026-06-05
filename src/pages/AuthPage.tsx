@@ -113,9 +113,6 @@ export const AuthPage: React.FC = () => {
           <h2 className="font-display font-black text-2xl md:text-3xl text-[#0F172A] dark:text-blue-200 tracking-tight mt-6 uppercase">
             {t('welcomeBack') || 'General Authentication'}
           </h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400 font-bold border-b-2 border-slate-200 dark:border-slate-800 pb-4 inline-block px-8">
-            Government Gateway Secure Login
-          </p>
         </div>
 
         {/* Auth Block */}
