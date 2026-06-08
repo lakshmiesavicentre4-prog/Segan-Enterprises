@@ -23,7 +23,7 @@ export const QRCodeGenerator: React.FC<QRCodeProps> = ({
   value,
   size = 128,
   className = '',
-  fgColor = '#0F172A',
+  fgColor = '#1A0B2E',
   bgColor = '#FFFFFF',
 }) => {
   // We simulate a Version 3 QR grid (29x29 matrix)
@@ -138,7 +138,7 @@ export const QRCodeGenerator: React.FC<QRCodeProps> = ({
 
   return (
     <div 
-      className={`relative inline-block border-4 border-slate-100 dark:border-slate-800 rounded-lg overflow-hidden p-2 bg-white ${className}`}
+      className={`relative inline-block border-4 border-slate-100 dark:border-slate-800 rounded-lg overflow-hidden p-2 bg-metro-periwinkle ${className}`}
       style={{ width: size + 20, height: size + 20 }}
     >
       <svg

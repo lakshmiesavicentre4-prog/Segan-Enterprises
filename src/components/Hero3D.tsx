@@ -1,65 +1,52 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, Stars, TorusKnot, Icosahedron, Sparkles, MeshDistortMaterial, Environment, ContactShadows, Sphere, MeshTransmissionMaterial } from '@react-three/drei';
+import { Float, Sparkles, MeshDistortMaterial, Environment, ContactShadows, Sphere } from '@react-three/drei';
 import * as THREE from 'three';
 
-const UltimateAnimatedShapes = () => {
-  const mainRef = useRef<THREE.Mesh>(null);
-  const coreRef = useRef<THREE.Mesh>(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+const HolographicFluid = () => {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  const mainScale = isMobile ? 1.0 : 2.0;
+  const mainScale = isMobile ? 1.5 : 2.5;
   
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
-    if (mainRef.current) {
-      mainRef.current.rotation.x = time * 0.05;
-      mainRef.current.rotation.y = time * 0.08;
-    }
-    if (coreRef.current) {
-      coreRef.current.rotation.y = -time * 0.05;
+    if (meshRef.current) {
+      meshRef.current.rotation.x = time * 0.1;
+      meshRef.current.rotation.y = time * 0.15;
     }
   });
 
   return (
     <>
-      <Float speed={1} rotationIntensity={0.2} floatIntensity={0.5} position={[0, -0.5, 0]}>
-        {/* Outer Elegant Ring */}
-        <mesh ref={mainRef}>
-          <torusGeometry args={[mainScale, 0.04, 64, 128]} />
-          <meshStandardMaterial
-            color="#F59E0B"
-            roughness={0.1}
-            metalness={1}
-            envMapIntensity={2.0}
-          />
-        </mesh>
-        
-        {/* Core Glass Sphere */}
-        <Sphere ref={coreRef} args={[mainScale * 0.8, 64, 64]}>
-          <MeshTransmissionMaterial 
-            samples={12}
-            resolution={1024}
-            transmission={0.97}
-            roughness={0.06}
-            thickness={2}
-            ior={1.4}
-            chromaticAberration={0.05}
-            anisotropy={0.1}
-            color="#ffffff"
+      <Float speed={1.5} rotationIntensity={0.5} floatIntensity={1} position={[0, -0.5, 0]}>
+        {/* Deep Holographic Fluid Sphere */}
+        <Sphere ref={meshRef} args={[mainScale, 128, 128]}>
+          <MeshDistortMaterial
+            color="#E8F0FE" // Metro Teal base
+            attach="material"
+            distort={0.4}
+            speed={2}
+            roughness={0}
+            metalness={0.9}
             clearcoat={1}
+            clearcoatRoughness={0.1}
+            envMapIntensity={3}
+            iridescence={1}
+            iridescenceIOR={1.3}
+            iridescenceThicknessRange={[100, 400]}
           />
         </Sphere>
         
-        <Sparkles count={30} scale={4} size={1.5} color="#F59E0B" speed={0.1} opacity={0.6} />
+        <Sparkles count={40} scale={mainScale * 2.5} size={2.5} color="#FF007A" speed={0.4} opacity={0.6} />
+        <Sparkles count={40} scale={mainScale * 2.5} size={2} color="#7A00FF" speed={0.3} opacity={0.5} />
       </Float>
     </>
   );
@@ -91,15 +78,17 @@ export const Hero3D = () => {
           dpr={[1, 2]} 
         >
           <ambientLight intensity={0.4} />
-          <directionalLight position={[10, 10, 10]} intensity={1.5} color="#ffffff" />
-          <spotLight position={[-10, 20, 10]} angle={0.15} penumbra={1} intensity={3} color="#F59E0B" />
-          <directionalLight position={[-5, -10, -5]} intensity={1} color="#0F172A" />
+          {/* Neon lights illuminating the fluid */}
+          <directionalLight position={[10, 10, 10]} intensity={2} color="#ffffff" />
+          <spotLight position={[-10, 20, 10]} angle={0.3} penumbra={1} intensity={4} color="#FF007A" />
+          <spotLight position={[10, -20, -10]} angle={0.3} penumbra={1} intensity={4} color="#7A00FF" />
+          <directionalLight position={[-5, -10, -5]} intensity={2} color="#1A0B2E" />
           
-          <Environment preset="studio" environmentIntensity={1.5} />
+          <Environment preset="city" environmentIntensity={1.5} />
           
-          <UltimateAnimatedShapes />
+          <HolographicFluid />
           
-          <ContactShadows position={[0, -3.5, 0]} opacity={0.6} scale={20} blur={2.5} far={4.5} color="#0F172A" />
+          <ContactShadows position={[0, -3.5, 0]} opacity={0.6} scale={20} blur={2.5} far={4.5} color="#1A0B2E" />
         </Canvas>
       </ErrorBoundary>
     </div>

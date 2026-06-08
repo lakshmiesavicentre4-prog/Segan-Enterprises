@@ -13,7 +13,7 @@ export const PolicyPage: React.FC<PolicyPageProps> = ({ type }) => {
     contact: {
       en: {
         title: "Contact Us",
-        icon: <Mail className="w-8 h-8 text-[#F59E0B]" />,
+        icon: <Mail className="w-8 h-8 text-[#FF007A]" />,
         sections: [
           {
             heading: "Get in Touch",
@@ -27,7 +27,7 @@ export const PolicyPage: React.FC<PolicyPageProps> = ({ type }) => {
       },
       ta: {
         title: "தொடர்பு கொள்ள",
-        icon: <Mail className="w-8 h-8 text-[#F59E0B]" />,
+        icon: <Mail className="w-8 h-8 text-[#FF007A]" />,
         sections: [
           {
             heading: "தொடர்பு கொள்ள",
@@ -43,7 +43,7 @@ export const PolicyPage: React.FC<PolicyPageProps> = ({ type }) => {
     terms: {
       en: {
         title: "Terms & Conditions",
-        icon: <FileText className="w-8 h-8 text-[#F59E0B]" />,
+        icon: <FileText className="w-8 h-8 text-[#FF007A]" />,
         sections: [
           {
             heading: "1. Acceptance of Terms",
@@ -67,7 +67,7 @@ export const PolicyPage: React.FC<PolicyPageProps> = ({ type }) => {
       },
       ta: {
         title: "விதிமுறைகள் மற்றும் நிபந்தனைகள்",
-        icon: <FileText className="w-8 h-8 text-[#F59E0B]" />,
+        icon: <FileText className="w-8 h-8 text-[#FF007A]" />,
         sections: [
           {
             heading: "1. விதிமுறைகளை ஏற்றுக்கொள்தல்",
@@ -93,7 +93,7 @@ export const PolicyPage: React.FC<PolicyPageProps> = ({ type }) => {
     refunds: {
       en: {
         title: "Refunds & Cancellations",
-        icon: <RefreshCw className="w-8 h-8 text-[#F59E0B]" />,
+        icon: <RefreshCw className="w-8 h-8 text-[#FF007A]" />,
         sections: [
           {
             heading: "1. Cancellation Policy",
@@ -117,7 +117,7 @@ export const PolicyPage: React.FC<PolicyPageProps> = ({ type }) => {
       },
       ta: {
         title: "ரத்து மற்றும் பணம் திரும்ப வழங்கும் கொள்கை",
-        icon: <RefreshCw className="w-8 h-8 text-[#F59E0B]" />,
+        icon: <RefreshCw className="w-8 h-8 text-[#FF007A]" />,
         sections: [
           {
             heading: "1. ரத்து செய்யும் கொள்கை",
@@ -143,7 +143,7 @@ export const PolicyPage: React.FC<PolicyPageProps> = ({ type }) => {
     privacy: {
       en: {
         title: "Privacy Policy",
-        icon: <Shield className="w-8 h-8 text-[#F59E0B]" />,
+        icon: <Shield className="w-8 h-8 text-[#FF007A]" />,
         sections: [
           {
             heading: "Data Protection",
@@ -161,7 +161,7 @@ export const PolicyPage: React.FC<PolicyPageProps> = ({ type }) => {
       },
       ta: {
         title: "தனியுரிமை கொள்கை",
-        icon: <Shield className="w-8 h-8 text-[#F59E0B]" />,
+        icon: <Shield className="w-8 h-8 text-[#FF007A]" />,
         sections: [
           {
             heading: "தரவு பாதுகாப்பு",
@@ -183,13 +183,13 @@ export const PolicyPage: React.FC<PolicyPageProps> = ({ type }) => {
   const currentContent = content[type][language];
 
   return (
-    <div className="flex flex-col flex-1 w-full p-4 lg:p-8 bg-slate-50 dark:bg-[#020617]">
+    <div className="flex flex-col flex-1 w-full p-4 lg:p-8 bg-metro-periwinkle dark:bg-[#050505]">
       <div className="w-full max-w-4xl mx-auto py-8">
-        <div className="bg-white dark:bg-[#0F172A] border-t-4 border-[#F59E0B] shadow-sm rounded-none p-8 md:p-12">
+        <div className="bg-metro-periwinkle dark:bg-[#1A0B2E] border-t-4 border-[#FF007A] shadow-sm rounded-none p-8 md:p-12">
           
           <div className="flex items-center space-x-4 mb-8 pb-6 border-b-2 border-slate-100 dark:border-slate-800">
             {currentContent.icon}
-            <h1 className="font-display font-black text-3xl uppercase tracking-widest text-[#0F172A] dark:text-white">
+            <h1 className="font-display font-black text-3xl uppercase tracking-widest text-[#1A0B2E] dark:text-white">
               {currentContent.title}
             </h1>
           </div>
@@ -197,7 +197,7 @@ export const PolicyPage: React.FC<PolicyPageProps> = ({ type }) => {
           <div className="space-y-8">
             {currentContent.sections.map((section, idx) => (
               <section key={idx}>
-                <h2 className="text-xl font-bold text-slate-800 dark:text-blue-100 mb-4 border-l-4 border-[#F59E0B] pl-3 uppercase tracking-wide">
+                <h2 className="text-xl font-bold text-metro-slate dark:text-blue-100 mb-4 border-l-4 border-[#FF007A] pl-3 uppercase tracking-wide">
                   {section.heading}
                 </h2>
                 <div className="space-y-3">

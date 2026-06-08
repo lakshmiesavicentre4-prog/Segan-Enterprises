@@ -39,8 +39,7 @@ export const UserDashboard: React.FC = () => {
     services, 
     refreshServices,
     applications, 
-    refreshApplications, 
-    initiatePaymentGateways,
+    refreshApplications,
     language,
     updateUserProfile
   } = useApp();
@@ -53,7 +52,7 @@ export const UserDashboard: React.FC = () => {
 
   // Dynamic application form wizard flow states
   const [selectedService, setSelectedService] = useState<any>(null);
-  const [applyStep, setApplyStep] = useState<1 | 2 | 3 | 4>(1); // 1:Form details, 2:Uploads, 3:Payment summary, 4:Token output
+  const [applyStep, setApplyStep] = useState<1 | 2 | 3>(1); // 1:Form details, 2:Uploads, 3:Success Screen
   const [formData, setFormData] = useState({ citizenAadhaar: '', categoryDetails: '', extraRemarks: '' });
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, string>>({}); // docTitle: base64Data
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -153,20 +152,12 @@ export const UserDashboard: React.FC = () => {
     });
   };
 
-  // Submit application with Cashfree payment step
+  // Submit application
   const handleSubmitApplication = async () => {
     if (!selectedService) return;
     setIsSubmitting(true);
 
     try {
-      // Launch Cashfree Mock UI
-      const paymentSuccess = await initiatePaymentGateways(`CF_${Date.now()}`, selectedService.price);
-      
-      if (!paymentSuccess) {
-        setIsSubmitting(false);
-        return; // Payment was cancelled or failed
-      }
-
       // Document packing
       const docPayload = selectedService.requiredDocuments.map((docName: string) => ({
         documentName: docName,
@@ -203,7 +194,7 @@ export const UserDashboard: React.FC = () => {
       case 'Completed': return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400 border-2 border-emerald-200 dark:border-emerald-900/40';
       case 'Approved': return 'bg-blue-100 text-blue-800 dark:bg-blue-950/50 dark:text-blue-400 border-2 border-blue-200 dark:border-blue-900/40';
       case 'Rejected': return 'bg-red-100 text-red-850 dark:bg-red-955/50 dark:text-red-400 border-2 border-red-200 dark:border-red-900/40';
-      case 'Submitted': return 'bg-slate-100 text-slate-800 dark:bg-[#1c1917] dark:text-slate-400 border-2 border-slate-200 dark:border-slate-800';
+      case 'Submitted': return 'bg-metro-teal text-metro-slate dark:bg-[#1A0B2E] dark:text-slate-400 border-2 border-metro-mauve dark:border-slate-800';
       default: return 'bg-amber-100 text-amber-805 dark:bg-amber-955/50 dark:text-amber-400 border-2 border-amber-200 dark:border-amber-900/40';
     }
   };
@@ -225,38 +216,38 @@ export const UserDashboard: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
       
       {/* 1. Portal Segment Headings */}
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between border-b-4 border-[#0F172A] pb-8 mb-10 text-left relative z-10 bg-white dark:bg-[#0F172A] p-6 shadow-sm rounded-sm">
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between border-b-4 border-[#1A0B2E] pb-8 mb-10 text-left relative z-10 bg-metro-periwinkle dark:bg-[#1A0B2E] p-6 shadow-sm rounded-sm">
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-bold tracking-widest text-white bg-[#0F172A] dark:bg-[#F59E0B] px-3 py-1 rounded-sm shadow-sm">
+          <span className="text-[10px] uppercase font-bold tracking-widest text-white bg-[#1A0B2E] dark:bg-[#FF007A] px-3 py-1 rounded-sm shadow-sm">
             {language === 'en' ? 'Citizen Dashboard' : 'குடிமகன் பகுதி'}
           </span>
-          <h2 className="font-display font-black text-3xl md:text-4xl text-[#0F172A] dark:text-blue-100 mt-3 tracking-tight">
-            {language === 'en' ? 'Welcome,' : 'வணக்கம்,'} <span className="text-[#15803D] dark:text-[#F59E0B]">{currentUser?.fullName}</span>
+          <h2 className="font-display font-black text-3xl md:text-4xl text-[#1A0B2E] dark:text-blue-100 mt-3 tracking-tight">
+            {language === 'en' ? 'Welcome,' : 'வணக்கம்,'} <span className="text-[#FF007A] dark:text-[#FF007A]">{currentUser?.fullName}</span>
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300 font-bold flex items-center mt-2">
-            <span className="w-2 h-2 rounded-full bg-[#15803D] mr-2"></span>
+            <span className="w-2 h-2 rounded-full bg-[#FF007A] mr-2"></span>
             <span>{language === 'en' ? 'Secure session active' : 'பாதுகாப்பான குடிமகன் பகுதி'}</span>
           </p>
         </div>
 
         {/* Dashboard inner segment tab buttons */}
-        <div className="flex p-1 bg-slate-50 border border-slate-300 dark:bg-[#1E293B] dark:border-slate-700 mt-6 md:mt-0 font-medium overflow-x-auto scroller-hide w-full md:w-auto shadow-inner rounded-sm">
+        <div className="flex p-1 bg-metro-periwinkle border border-metro-mauve dark:bg-[#7A00FF] dark:border-slate-700 mt-6 md:mt-0 font-medium overflow-x-auto scroller-hide w-full md:w-auto shadow-inner rounded-sm">
           <button
             onClick={() => { setActiveTab('overview'); handleApplyReset(); }}
             className={`px-5 py-2.5 rounded-sm text-xs sm:text-sm font-bold transition-all whitespace-nowrap active:scale-95 ${
               activeTab === 'overview' 
-                ? 'bg-[#0F172A] text-white shadow-md' 
-                : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800'
+                ? 'bg-[#1A0B2E] text-white shadow-md' 
+                : 'text-metro-slate dark:text-slate-300 hover:text-slate-900 hover:bg-metro-mauve dark:hover:bg-slate-800'
             }`}
           >
             {language === 'en' ? 'Overview' : 'கட்டுப்பாட்டகம்'}
           </button>
           <button
             onClick={() => { setActiveTab('apply'); handleApplyReset(); }}
-            className={`px-5 py-2.5 rounded-sm text-xs sm:text-sm font-bold transition-all whitespace-nowrap active:scale-95 border-l border-r border-[#0F172A]/10 dark:border-slate-700 ${
+            className={`px-5 py-2.5 rounded-sm text-xs sm:text-sm font-bold transition-all whitespace-nowrap active:scale-95 border-l border-r border-[#1A0B2E]/10 dark:border-slate-700 ${
               activeTab === 'apply' 
-                ? 'bg-[#0F172A] text-white shadow-md' 
-                : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800'
+                ? 'bg-[#1A0B2E] text-white shadow-md' 
+                : 'text-metro-slate dark:text-slate-300 hover:text-slate-900 hover:bg-metro-mauve dark:hover:bg-slate-800'
             }`}
           >
             {language === 'en' ? 'Apply New' : 'புதிய விண்ணப்பம்'}
@@ -265,8 +256,8 @@ export const UserDashboard: React.FC = () => {
             onClick={() => { setActiveTab('history'); handleApplyReset(); }}
             className={`px-5 py-2.5 rounded-sm text-xs sm:text-sm font-bold transition-all whitespace-nowrap active:scale-95 ${
               activeTab === 'history' 
-                ? 'bg-[#0F172A] text-white shadow-lg shadow-blue-600/20 ring-1 ring-blue-600/50' 
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100/50 dark:hover:bg-slate-800/50'
+                ? 'bg-[#1A0B2E] text-white shadow-lg shadow-blue-600/20 ring-1 ring-blue-600/50' 
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-metro-teal/50 dark:hover:bg-slate-800/50'
             }`}
           >
             {language === 'en' ? 'History' : 'விண்ணப்ப வரலாறு'}
@@ -276,7 +267,7 @@ export const UserDashboard: React.FC = () => {
             className={`px-5 py-2.5 rounded-sm text-xs sm:text-sm font-bold transition-all whitespace-nowrap active:scale-95 ${
               activeTab === 'queries' 
                 ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/20 ring-1 ring-amber-600/50' 
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100/50 dark:hover:bg-slate-800/50'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-metro-teal/50 dark:hover:bg-slate-800/50'
             }`}
           >
             {language === 'en' ? 'Support Queries' : 'உதவி கேள்விகள்'}
@@ -285,8 +276,8 @@ export const UserDashboard: React.FC = () => {
             onClick={() => { setActiveTab('profile'); handleApplyReset(); }}
             className={`px-5 py-2.5 rounded-sm text-xs sm:text-sm font-bold transition-all whitespace-nowrap active:scale-95 ${
               activeTab === 'profile' 
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 ring-1 ring-blue-600/50' 
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100/50 dark:hover:bg-slate-800/50'
+                ? 'bg-metro-cobalt text-white shadow-lg shadow-blue-600/20 ring-1 ring-blue-600/50' 
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-metro-teal/50 dark:hover:bg-slate-800/50'
             }`}
           >
             {language === 'en' ? 'Profile' : 'என் சுயவிவரம்'}
@@ -308,7 +299,7 @@ export const UserDashboard: React.FC = () => {
               { label: 'Processing', val: processingApps, color: 'indigo' },
               { label: 'Completed', val: completedApps + approvedApps, color: 'emerald' },
             ].map((stat, idx) => (
-              <div key={idx} className="p-6 bg-white dark:bg-[#1c1917] border-2 border-[#0F172A]/20 dark:border-slate-800 rounded-none shadow-sm hover:shadow-md hover:border-[#0F172A] transition-all duration-300 relative overflow-hidden group">
+              <div key={idx} className="p-6 bg-metro-periwinkle dark:bg-[#1A0B2E] border-2 border-[#1A0B2E]/20 dark:border-slate-800 rounded-none shadow-sm hover:shadow-md hover:border-[#1A0B2E] transition-all duration-300 relative overflow-hidden group">
                 <div className={`absolute -right-6 -bottom-6 w-24 h-24 bg-${stat.color}-500/10 rounded-full group-hover:bg-${stat.color}-500/20 transition-all`}></div>
                 <div className="relative z-10">
                   <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest">{stat.label}</span>
@@ -321,15 +312,15 @@ export const UserDashboard: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Left Box: Quick application tracking list */}
-            <div className="lg:col-span-2 bg-white dark:bg-[#0F172A] border-2 border-slate-300 dark:border-[#334155] p-6 rounded-none text-left shadow-sm">
-              <div className="flex items-center justify-between mb-6 border-b-2 border-slate-200 dark:border-[#334155] pb-3">
-                <h3 className="font-display font-extrabold text-sm text-[#0F172A] dark:text-white uppercase tracking-wider flex items-center">
-                  <FileText className="w-4 h-4 mr-1.5 text-[#F59E0B]" />
+            <div className="lg:col-span-2 bg-metro-periwinkle dark:bg-[#1A0B2E] border-2 border-metro-mauve dark:border-[#334155] p-6 rounded-none text-left shadow-sm">
+              <div className="flex items-center justify-between mb-6 border-b-2 border-metro-mauve dark:border-[#334155] pb-3">
+                <h3 className="font-display font-extrabold text-sm text-[#1A0B2E] dark:text-white uppercase tracking-wider flex items-center">
+                  <FileText className="w-4 h-4 mr-1.5 text-[#FF007A]" />
                   <span>Ongoing Status Trackers</span>
                 </h3>
                 <button 
                   onClick={() => setActiveTab('history')} 
-                  className="text-xs font-bold text-blue-700 dark:text-blue-300 hover:text-[#0F172A] dark:hover:text-white hover:underline transition-colors uppercase tracking-wider"
+                  className="text-xs font-bold text-blue-700 dark:text-blue-300 hover:text-[#1A0B2E] dark:hover:text-white hover:underline transition-colors uppercase tracking-wider"
                 >
                   View All Files
                 </button>
@@ -340,7 +331,7 @@ export const UserDashboard: React.FC = () => {
                   <p className="text-xs font-semibold text-slate-500">No active applications currently active.</p>
                   <button 
                     onClick={() => setActiveTab('apply')}
-                    className="px-6 py-2 bg-[#15803D] border border-[#14532d] hover:bg-[#166534] text-white rounded-none text-xs font-bold uppercase tracking-widest shadow-sm"
+                    className="px-6 py-2 bg-[#FF007A] border border-[#14532d] hover:bg-[#166534] text-white rounded-none text-xs font-bold uppercase tracking-widest shadow-sm"
                   >
                     Apply Now
                   </button>
@@ -351,7 +342,7 @@ export const UserDashboard: React.FC = () => {
                     <div 
                       key={app.id} 
                       onClick={() => { setSelectedReceiptApp(app); }}
-                      className="p-4 rounded-none border border-slate-300 dark:border-[#334155] bg-slate-50 dark:bg-[#1E293B] hover:border-[#0F172A] dark:hover:border-blue-400 transition cursor-pointer flex flex-col gap-4 shadow-sm"
+                      className="p-4 rounded-none border border-metro-mauve dark:border-[#334155] bg-metro-periwinkle dark:bg-[#7A00FF] hover:border-[#1A0B2E] dark:hover:border-blue-400 transition cursor-pointer flex flex-col gap-4 shadow-sm"
                     >
                       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 w-full">
                         <div className="space-y-1">
@@ -371,7 +362,7 @@ export const UserDashboard: React.FC = () => {
                           </span>
                           
                           {/* Quick printable Receipt download */}
-                          <button className="text-[10px] font-bold text-[#020617] dark:text-blue-400 hover:underline flex items-center space-x-1 p-1">
+                          <button className="text-[10px] font-bold text-[#050505] dark:text-blue-400 hover:underline flex items-center space-x-1 p-1">
                             <Eye className="w-3.5 h-3.5" />
                           </button>
                         </div>
@@ -382,8 +373,8 @@ export const UserDashboard: React.FC = () => {
                         {app.status !== 'Rejected' ? (
                           <div className="relative pt-3 pb-1 w-full px-1">
                               {/* Connecting Line */}
-                              <div className="absolute top-[14px] left-0 w-full h-[2px] bg-slate-200 dark:bg-slate-700/50 rounded-full"></div>
-                              <div className="absolute top-[14px] left-0 h-[2px] bg-[#15803D] transition-all duration-700 rounded-full" 
+                              <div className="absolute top-[14px] left-0 w-full h-[2px] bg-metro-mauve dark:bg-slate-700/50 rounded-full"></div>
+                              <div className="absolute top-[14px] left-0 h-[2px] bg-[#FF007A] transition-all duration-700 rounded-full" 
                                    style={{ width: `${(getStageIndex(app.status) / (STAGES.length - 1)) * 100}%` }}>
                               </div>
                               
@@ -394,14 +385,14 @@ export const UserDashboard: React.FC = () => {
                                      const isCurrent = getStageIndex(app.status) === index;
                                      return (
                                          <div key={stage} className="flex flex-col items-center">
-                                             <div className={`w-2 h-2 rounded-full z-10 transition-all duration-300 ${isCompleted ? 'bg-[#15803D]' : 'bg-slate-300 dark:bg-slate-700'} ${isCurrent ? 'ring-2 ring-[#15803D]/30 scale-125' : ''}`}></div>
+                                             <div className={`w-2 h-2 rounded-full z-10 transition-all duration-300 ${isCompleted ? 'bg-[#FF007A]' : 'bg-slate-300 dark:bg-slate-700'} ${isCurrent ? 'ring-2 ring-[#FF007A]/30 scale-125' : ''}`}></div>
                                          </div>
                                      )
                                  })}
                               </div>
                           </div>
                         ) : (
-                          <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mt-1">
+                          <div className="w-full h-1.5 bg-metro-mauve dark:bg-slate-800 rounded-full overflow-hidden mt-1">
                              <div className="h-full bg-red-500 w-full"></div>
                           </div>
                         )}
@@ -413,11 +404,11 @@ export const UserDashboard: React.FC = () => {
             </div>
 
             {/* Right Box: Department details & information */}
-            <div className="bg-white dark:bg-[#1c1917] border-2 border-slate-200 dark:border-slate-800 p-6 rounded-sm text-left shadow-sm space-y-6">
+            <div className="bg-metro-periwinkle dark:bg-[#1A0B2E] border-2 border-metro-mauve dark:border-slate-800 p-6 rounded-sm text-left shadow-sm space-y-6">
               <h4 className="font-display font-extrabold text-xs text-slate-400 uppercase tracking-wider block border-b border-slate-100 dark:border-slate-800 pb-3">
                 Important Directives
               </h4>
-              <div className="space-y-4 text-xs font-semibold text-slate-700 dark:text-slate-300">
+              <div className="space-y-4 text-xs font-semibold text-metro-slate dark:text-slate-300">
                 <div className="flex items-start space-x-2.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
                   <p className="leading-relaxed">Verify document formatting. PDF/PNG files must be original and fully legible before verifying.</p>
@@ -441,14 +432,14 @@ export const UserDashboard: React.FC = () => {
           TAB 2: APPLY FOR NEW SERVICE (DYNAMIC GENERATOR)
           ===================================================================== */}
       {activeTab === 'apply' && (
-        <div className="bg-white dark:bg-[#1c1917] border-2 border-slate-200 dark:border-slate-800 p-6 md:p-8 rounded-sm text-left shadow-sm">
+        <div className="bg-metro-periwinkle dark:bg-[#1A0B2E] border-2 border-metro-mauve dark:border-slate-800 p-6 md:p-8 rounded-sm text-left shadow-sm">
           
           {!selectedService ? (
             // Select Service screen catalog
             <div>
               <div className="mb-6 flex justify-between items-start gap-4">
                 <div>
-                  <h3 className="font-display font-extrabold text-sm uppercase tracking-wider text-slate-800 dark:text-white">
+                  <h3 className="font-display font-extrabold text-sm uppercase tracking-wider text-metro-slate dark:text-white">
                     {language === 'en' ? 'Select Service Catalog to Apply' : 'விண்ணப்பிக்க தேவையான சேவையைத் தேர்ந்தெடு'}
                   </h3>
                   <p className="text-xs text-slate-500 mt-1">
@@ -470,7 +461,7 @@ export const UserDashboard: React.FC = () => {
                   <div 
                     key={svc.id}
                     onClick={() => { setSelectedService(svc); setApplyStep(1); }}
-                    className="p-5 rounded-sm border-2 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-[#020617]/20 hover:border-blue-500 hover:shadow-sm cursor-pointer transition flex flex-col justify-between"
+                    className="p-5 rounded-sm border-2 border-metro-mauve dark:border-slate-800 bg-metro-periwinkle/50 dark:bg-[#050505]/20 hover:border-blue-500 hover:shadow-sm cursor-pointer transition flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-2">
@@ -481,7 +472,7 @@ export const UserDashboard: React.FC = () => {
                           ₹{svc.price}
                         </span>
                       </div>
-                      <h4 className="font-display font-bold text-sm text-slate-950 dark:text-white leading-snug">
+                      <h4 className="font-display font-bold text-sm text-metro-eggplant dark:text-white leading-snug">
                         {svc.name}
                       </h4>
                       <p className="text-xs text-slate-400 mt-1 line-clamp-2">
@@ -507,7 +498,7 @@ export const UserDashboard: React.FC = () => {
                   <button 
                     type="button"
                     onClick={handleApplyReset}
-                    className="p-1 px-2 border-2 border-slate-200 dark:border-slate-800 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-405 hover:bg-slate-100 flex items-center gap-1 cursor-pointer"
+                    className="p-1 px-2 border-2 border-metro-mauve dark:border-slate-800 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-405 hover:bg-metro-teal flex items-center gap-1 cursor-pointer"
                   >
                     <ArrowLeft className="w-3 h-3" />
                     <span>Back</span>
@@ -519,9 +510,9 @@ export const UserDashboard: React.FC = () => {
 
                 {/* Progress Indicators steps */}
                 <div className="flex items-center space-x-1.5 md:space-x-3 text-xs font-bold text-slate-400 font-mono">
-                  <span className={applyStep >= 1 ? 'text-blue-600 dark:text-blue-400' : ''}>1. Info</span>
+                  <span className={applyStep >= 1 ? 'text-metro-cobalt dark:text-blue-400' : ''}>1. Info</span>
                   <span>➔</span>
-                  <span className={applyStep >= 2 ? 'text-blue-600 dark:text-blue-400' : ''}>2. Documents</span>
+                  <span className={applyStep >= 2 ? 'text-metro-cobalt dark:text-blue-400' : ''}>2. Documents</span>
                   <span>➔</span>
                   <span className={applyStep >= 3 ? 'text-emerald-500' : ''}>3. Receipt</span>
                 </div>
@@ -541,7 +532,7 @@ export const UserDashboard: React.FC = () => {
                     <input
                       type="text"
                       maxLength={12}
-                      className="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#020617] border-2 border-slate-200 dark:border-slate-800 rounded-sm text-xs font-mono text-slate-900 dark:text-white"
+                      className="w-full px-3 py-2.5 bg-metro-periwinkle dark:bg-[#050505] border-2 border-metro-mauve dark:border-slate-800 rounded-sm text-xs font-mono text-slate-900 dark:text-white"
                       placeholder="123412341234"
                       value={formData.citizenAadhaar || ''}
                       onChange={(e) => setFormData({ ...formData, citizenAadhaar: e.target.value.replace(/\D/g, '') })}
@@ -555,7 +546,7 @@ export const UserDashboard: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      className="w-full px-3 py-2.5 bg-slate-50 dark:bg-[#020617] border-2 border-slate-200 dark:border-slate-800 rounded-sm text-xs text-slate-900 dark:text-white font-medium"
+                      className="w-full px-3 py-2.5 bg-metro-periwinkle dark:bg-[#050505] border-2 border-metro-mauve dark:border-slate-800 rounded-sm text-xs text-slate-900 dark:text-white font-medium"
                       placeholder="Annual income approx ₹2,40,000 / Priority card citizen"
                       value={formData.categoryDetails || ''}
                       onChange={(e) => setFormData({ ...formData, categoryDetails: e.target.value })}
@@ -568,7 +559,7 @@ export const UserDashboard: React.FC = () => {
                     </label>
                     <textarea
                       rows={3}
-                      className="w-full px-3 py-2 bg-slate-50 dark:bg-[#020617] border-2 border-slate-200 dark:border-slate-800 rounded-sm text-xs text-slate-900 dark:text-white font-medium focus:outline-none"
+                      className="w-full px-3 py-2 bg-metro-periwinkle dark:bg-[#050505] border-2 border-metro-mauve dark:border-slate-800 rounded-sm text-xs text-slate-900 dark:text-white font-medium focus:outline-none"
                       placeholder="Need priority certificate because of immediate engineering admission"
                       value={formData.extraRemarks || ''}
                       onChange={(e) => setFormData({ ...formData, extraRemarks: e.target.value })}
@@ -578,7 +569,7 @@ export const UserDashboard: React.FC = () => {
                   <button
                     onClick={() => { if (isFormValidStep1()) setApplyStep(2); }}
                     disabled={!isFormValidStep1()}
-                    className="px-5 py-2.5 bg-blue-600 disabled:opacity-40 hover:bg-slate-800 text-white rounded-sm text-xs font-bold shadow-md cursor-pointer inline-flex items-center space-x-1.5 transition-all text-center"
+                    className="px-5 py-2.5 bg-metro-cobalt disabled:opacity-40 hover:bg-slate-800 text-white rounded-sm text-xs font-bold shadow-md cursor-pointer inline-flex items-center space-x-1.5 transition-all text-center"
                   >
                     <span>Proceed to Document Vault</span>
                     <ArrowLeft className="w-3.5 h-3.5 rotate-180" />
@@ -607,11 +598,11 @@ export const UserDashboard: React.FC = () => {
                           className={`p-4 rounded-sm border text-left flex justify-between items-center transition ${
                             hasUploaded 
                               ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/40' 
-                              : 'bg-slate-50 dark:bg-[#020617] border-slate-200 dark:border-slate-800'
+                              : 'bg-metro-periwinkle dark:bg-[#050505] border-metro-mauve dark:border-slate-800'
                           }`}
                         >
                           <div className="space-y-1 pr-4">
-                            <span className="font-display font-medium text-xs text-slate-800 dark:text-slate-200 block">
+                            <span className="font-display font-medium text-xs text-metro-slate dark:text-slate-200 block">
                               {docName}
                             </span>
                             <span className="text-[10px] text-slate-400 font-semibold block">
@@ -623,7 +614,7 @@ export const UserDashboard: React.FC = () => {
                             {hasUploaded ? (
                               <div className="flex items-center space-x-2">
                                 {/* Small visual preview thumbnail */}
-                                <div className="w-9 h-9 rounded-lg border-2 border-slate-200 bg-white dark:bg-[#1c1917] overflow-hidden shrink-0">
+                                <div className="w-9 h-9 rounded-lg border-2 border-metro-mauve bg-metro-periwinkle dark:bg-[#1A0B2E] overflow-hidden shrink-0">
                                   <img referrerPolicy="no-referrer" src={uploadedFiles[docName]} className="w-full h-full object-cover" alt="Preview" />
                                 </div>
                                 <button 
@@ -634,7 +625,7 @@ export const UserDashboard: React.FC = () => {
                                 </button>
                               </div>
                             ) : (
-                              <label className="p-2 px-3 border-2 border-slate-200 dark:border-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-400 bg-white dark:bg-[#1c1917] hover:border-blue-400 rounded-sm cursor-pointer inline-flex items-center gap-1 shadow-sm uppercase">
+                              <label className="p-2 px-3 border-2 border-metro-mauve dark:border-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-400 bg-metro-periwinkle dark:bg-[#1A0B2E] hover:border-blue-400 rounded-sm cursor-pointer inline-flex items-center gap-1 shadow-sm uppercase">
                                 <Upload className="w-3.5 h-3.5" />
                                 <span>Attach</span>
                                 <input
@@ -655,7 +646,7 @@ export const UserDashboard: React.FC = () => {
                     <button 
                       type="button"
                       onClick={() => setApplyStep(1)}
-                      className="px-4 py-2 border-2 border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-500 rounded-sm hover:bg-slate-50 cursor-pointer"
+                      className="px-4 py-2 border-2 border-metro-mauve dark:border-slate-800 text-xs font-semibold text-slate-500 rounded-sm hover:bg-metro-periwinkle cursor-pointer"
                     >
                       Back
                     </button>
@@ -663,9 +654,9 @@ export const UserDashboard: React.FC = () => {
                       type="button"
                       onClick={handleSubmitApplication}
                       disabled={isSubmitting}
-                      className="px-5 py-2 bg-[#0F172A] hover:bg-[#1E293B] text-white rounded-sm text-xs font-bold shadow-md cursor-pointer flex items-center space-x-2"
+                      className="px-5 py-2 bg-[#1A0B2E] hover:bg-[#7A00FF] text-white rounded-sm text-xs font-bold shadow-md cursor-pointer flex items-center space-x-2"
                     >
-                      <span>{isSubmitting ? 'Processing Payment...' : `Pay ₹${selectedService?.price || 0} via Cashfree`}</span>
+                      <span>{isSubmitting ? 'Submitting Application...' : 'Submit Application'}</span>
                     </button>
                   </div>
                 </div>
@@ -688,7 +679,7 @@ export const UserDashboard: React.FC = () => {
                   </div>
 
                   {/* Interactive digital receipt render */}
-                  <div className="p-6 rounded-sm border-2 border-slate-100 dark:border-slate-800 bg-white dark:bg-[#020617] max-w-sm mx-auto shadow-xl text-left space-y-4">
+                  <div className="p-6 rounded-sm border-2 border-slate-100 dark:border-slate-800 bg-metro-periwinkle dark:bg-[#050505] max-w-sm mx-auto shadow-xl text-left space-y-4">
                     <div className="border-b border-slate-100 dark:border-slate-800 pb-3 flex justify-between items-center text-xs">
                       <div>
                         <span className="font-display font-black text-slate-900 dark:text-white block uppercase text-[10px]">SEAGAN A2Z Receipt</span>
@@ -715,12 +706,12 @@ export const UserDashboard: React.FC = () => {
                       </div>
                       <div className="flex justify-between">
                         <span>Expected Response:</span>
-                        <span className="text-slate-950 dark:text-slate-350 text-right">{selectedService.processingDays} Working Days</span>
+                        <span className="text-metro-eggplant dark:text-slate-350 text-right">{selectedService.processingDays} Working Days</span>
                       </div>
                     </div>
 
                     {/* Vector local QR render */}
-                    <div className="flex justify-center p-2.5 bg-slate-50 dark:bg-[#1c1917] rounded-sm border-2 border-slate-100 dark:border-slate-800">
+                    <div className="flex justify-center p-2.5 bg-metro-periwinkle dark:bg-[#1A0B2E] rounded-sm border-2 border-slate-100 dark:border-slate-800">
                       <QRCodeGenerator 
                         value={`SEAGAN-TICKET-2026-VAL: TOKENREF:${newlyCreatedApp.tokenNumber} STATUS:${newlyCreatedApp.status}`} 
                         size={110} 
@@ -735,13 +726,13 @@ export const UserDashboard: React.FC = () => {
                   <div className="flex justify-center gap-2">
                     <button
                       onClick={handleApplyReset}
-                      className="px-4 py-2 border-2 border-slate-200 dark:border-slate-800 text-xs font-semibold rounded-sm text-slate-500 hover:text-slate-800 bg-white"
+                      className="px-4 py-2 border-2 border-metro-mauve dark:border-slate-800 text-xs font-semibold rounded-sm text-slate-500 hover:text-metro-slate bg-metro-periwinkle"
                     >
                       Apply for other schemes
                     </button>
                     <button
                       onClick={() => setActiveTab('history')}
-                      className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-sm text-xs font-bold"
+                      className="px-5 py-2 bg-metro-cobalt hover:bg-metro-plum text-white rounded-sm text-xs font-bold"
                     >
                       Track Active Files
                     </button>
@@ -760,7 +751,7 @@ export const UserDashboard: React.FC = () => {
           TAB 3: APPLICATIONS HISTORY (TRACK STATUS & PRINT COMPLETED FILE)
           ===================================================================== */}
       {activeTab === 'history' && (
-        <div className="bg-white dark:bg-[#1c1917] border-2 border-slate-200 dark:border-slate-800 p-6 rounded-sm text-left shadow-sm">
+        <div className="bg-metro-periwinkle dark:bg-[#1A0B2E] border-2 border-metro-mauve dark:border-slate-800 p-6 rounded-sm text-left shadow-sm">
           <div className="mb-6 flex justify-between items-center border-b border-slate-50 dark:border-slate-800 pb-3">
             <div>
               <h3 className="font-display font-extrabold text-sm uppercase tracking-wider text-slate-900 dark:text-white">
@@ -779,7 +770,7 @@ export const UserDashboard: React.FC = () => {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-semibold whitespace-nowrap">
-                <thead className="bg-slate-50 dark:bg-[#020617] font-display font-bold uppercase tracking-wider text-slate-400 text-[10px] border-b border-slate-200 dark:border-slate-805">
+                <thead className="bg-metro-periwinkle dark:bg-[#050505] font-display font-bold uppercase tracking-wider text-slate-400 text-[10px] border-b border-metro-mauve dark:border-slate-805">
                   <tr>
                     <th className="p-4">Digital Scheme</th>
                     <th className="p-4">Ref token</th>
@@ -794,13 +785,13 @@ export const UserDashboard: React.FC = () => {
                     <tr 
                       key={app.id}
                       onClick={() => { setSelectedReceiptApp(app); }}
-                      className="hover:bg-slate-50/50 dark:hover:bg-[#020617]/20 cursor-pointer transition"
+                      className="hover:bg-metro-periwinkle/50 dark:hover:bg-[#050505]/20 cursor-pointer transition"
                     >
                       <td className="p-4">
-                        <span className="text-slate-950 dark:text-white font-bold">{app.serviceName}</span>
+                        <span className="text-metro-eggplant dark:text-white font-bold">{app.serviceName}</span>
                       </td>
                       <td className="p-4">
-                        <span className="font-mono text-xs p-1 px-1.5 rounded bg-slate-100 dark:bg-[#131f24] text-slate-600 dark:text-slate-350">{app.tokenNumber}</span>
+                        <span className="font-mono text-xs p-1 px-1.5 rounded bg-metro-teal dark:bg-[#131f24] text-slate-600 dark:text-slate-350">{app.tokenNumber}</span>
                       </td>
                       <td className="p-4 text-slate-900 dark:text-white">
                         ₹{app.amount}
@@ -814,7 +805,7 @@ export const UserDashboard: React.FC = () => {
                         </span>
                       </td>
                       <td className="p-4 text-center">
-                        <button className="inline-flex items-center space-x-1 p-1 text-[11px] text-blue-600 dark:text-blue-400 font-bold hover:underline">
+                        <button className="inline-flex items-center space-x-1 p-1 text-[11px] text-metro-cobalt dark:text-blue-400 font-bold hover:underline">
                           <Eye className="w-3.5 h-3.5 mr-1" />
                           <span>View Receipt</span>
                         </button>
@@ -834,9 +825,9 @@ export const UserDashboard: React.FC = () => {
           ===================================================================== */}
       {activeTab === 'queries' && (
         <div className="space-y-6 animate-fade-in text-left">
-          <div className="bg-white dark:bg-[#1c1917] p-6 border-2 border-slate-100 dark:border-slate-800 rounded-sm shadow-sm">
-            <h4 className="font-display font-extrabold text-lg flex items-center mb-6 border-b pb-4 border-slate-100 dark:border-slate-800 text-slate-800 dark:text-blue-100">
-              <MessageSquare className="w-5 h-5 mr-2 text-[#F59E0B]" />
+          <div className="bg-metro-periwinkle dark:bg-[#1A0B2E] p-6 border-2 border-slate-100 dark:border-slate-800 rounded-sm shadow-sm">
+            <h4 className="font-display font-extrabold text-lg flex items-center mb-6 border-b pb-4 border-slate-100 dark:border-slate-800 text-metro-slate dark:text-blue-100">
+              <MessageSquare className="w-5 h-5 mr-2 text-[#FF007A]" />
               Support Queries
             </h4>
 
@@ -851,25 +842,25 @@ export const UserDashboard: React.FC = () => {
             }}>
               <div>
                 <label className="text-xs font-bold text-slate-500 mb-1 block">Subject</label>
-                <input required type="text" value={queryForm.subject} onChange={(e) => setQueryForm({...queryForm, subject: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" placeholder="e.g., Problem with document upload" />
+                <input required type="text" value={queryForm.subject} onChange={(e) => setQueryForm({...queryForm, subject: e.target.value})} className="w-full px-4 py-3 bg-metro-periwinkle dark:bg-[#050505] border border-metro-mauve dark:border-slate-800 rounded-sm text-sm" placeholder="e.g., Problem with document upload" />
               </div>
               <div>
                 <label className="text-xs font-bold text-slate-500 mb-1 block">Message</label>
-                <textarea required rows={4} value={queryForm.message} onChange={(e) => setQueryForm({...queryForm, message: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" placeholder="Describe your issue..." />
+                <textarea required rows={4} value={queryForm.message} onChange={(e) => setQueryForm({...queryForm, message: e.target.value})} className="w-full px-4 py-3 bg-metro-periwinkle dark:bg-[#050505] border border-metro-mauve dark:border-slate-800 rounded-sm text-sm" placeholder="Describe your issue..." />
               </div>
-              <button type="submit" className="px-6 py-2.5 rounded-sm bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md">Submit Query</button>
+              <button type="submit" className="px-6 py-2.5 rounded-sm bg-metro-cobalt hover:bg-metro-plum text-white text-xs font-bold shadow-md">Submit Query</button>
             </form>
 
-            <h5 className="font-bold text-sm text-slate-700 dark:text-slate-300 mb-4">Your Past Queries</h5>
+            <h5 className="font-bold text-sm text-metro-slate dark:text-slate-300 mb-4">Your Past Queries</h5>
             {queries.length === 0 ? (
               <div className="text-slate-500 text-sm">No support queries found.</div>
             ) : (
               <div className="space-y-4">
                 {queries.map(q => (
-                  <div key={q.id} className="p-4 border-2 border-slate-100 dark:border-slate-800 rounded-sm bg-slate-50 dark:bg-[#020617]/20">
+                  <div key={q.id} className="p-4 border-2 border-slate-100 dark:border-slate-800 rounded-sm bg-metro-periwinkle dark:bg-[#050505]/20">
                     <div className="flex justify-between items-start mb-2">
                        <h6 className="font-bold text-sm text-slate-900 dark:text-amber-400">{q.subject}</h6>
-                       <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded ${q.status === 'Resolved' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300'}`}>{q.status}</span>
+                       <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded ${q.status === 'Resolved' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-metro-mauve text-metro-slate dark:bg-slate-800 dark:text-slate-300'}`}>{q.status}</span>
                     </div>
                     <p className="text-xs text-slate-600 dark:text-slate-400 mb-3">{q.message}</p>
                     {q.adminResponse && (
@@ -890,7 +881,7 @@ export const UserDashboard: React.FC = () => {
           TAB 5: MY PROFILE
           ===================================================================== */}
       {activeTab === 'profile' && (
-        <div className="bg-white dark:bg-[#1c1917] border-2 border-slate-200 dark:border-slate-800 p-6 rounded-sm text-left shadow-sm max-w-3xl mx-auto space-y-6">
+        <div className="bg-metro-periwinkle dark:bg-[#1A0B2E] border-2 border-metro-mauve dark:border-slate-800 p-6 rounded-sm text-left shadow-sm max-w-3xl mx-auto space-y-6">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
             <div>
               <h3 className="font-display font-extrabold text-sm uppercase tracking-wider text-slate-900 dark:text-white">
@@ -903,7 +894,7 @@ export const UserDashboard: React.FC = () => {
             {!isEditingProfile && currentUser && (
               <button 
                 onClick={() => setIsEditingProfile(true)}
-                className="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-sm text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800/50 flex flex-row items-center gap-2"
+                className="px-4 py-2 border border-metro-mauve dark:border-slate-800 rounded-sm text-xs font-bold hover:bg-metro-periwinkle dark:hover:bg-slate-800/50 flex flex-row items-center gap-2"
               >
                 <span>Edit Profile</span>
               </button>
@@ -913,60 +904,60 @@ export const UserDashboard: React.FC = () => {
           {currentUser ? (
             <div className="space-y-6">
               <div className="flex items-center space-x-6">
-                <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/40 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 font-display font-black text-2xl border-4 border-slate-50 dark:border-slate-800">
+                <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/40 rounded-full flex items-center justify-center text-metro-cobalt dark:text-blue-300 font-display font-black text-2xl border-4 border-slate-50 dark:border-slate-800">
                   {currentUser.fullName.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <h4 className="font-display font-black text-xl text-slate-950 dark:text-white">
+                  <h4 className="font-display font-black text-xl text-metro-eggplant dark:text-white">
                     {currentUser.fullName}
                   </h4>
-                  <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-widest uppercase bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border-2 border-slate-200 dark:border-slate-700">
+                  <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-widest uppercase bg-metro-teal text-slate-600 dark:bg-slate-800 dark:text-slate-400 border-2 border-metro-mauve dark:border-slate-700">
                     {currentUser.role} Account
                   </span>
                 </div>
               </div>
 
               {isEditingProfile ? (
-                 <form onSubmit={handleSaveProfile} className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+                 <form onSubmit={handleSaveProfile} className="space-y-4 pt-4 border-t border-metro-mauve dark:border-slate-800">
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                      <div>
                         <label className="text-xs font-bold text-slate-500 mb-1 block">Full Name</label>
-                        <input required type="text" value={profileFormData.fullName} onChange={(e) => setProfileFormData({...profileFormData, fullName: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                        <input required type="text" value={profileFormData.fullName} onChange={(e) => setProfileFormData({...profileFormData, fullName: e.target.value})} className="w-full px-4 py-3 bg-metro-periwinkle dark:bg-[#050505] border border-metro-mauve dark:border-slate-800 rounded-sm text-sm" />
                      </div>
                      <div>
                         <label className="text-xs font-bold text-slate-500 mb-1 block">Phone Number</label>
-                        <input required type="text" value={profileFormData.phone} onChange={(e) => setProfileFormData({...profileFormData, phone: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                        <input required type="text" value={profileFormData.phone} onChange={(e) => setProfileFormData({...profileFormData, phone: e.target.value})} className="w-full px-4 py-3 bg-metro-periwinkle dark:bg-[#050505] border border-metro-mauve dark:border-slate-800 rounded-sm text-sm" />
                      </div>
                      <div>
                         <label className="text-xs font-bold text-slate-500 mb-1 block">Aadhaar Number</label>
-                        <input type="text" value={profileFormData.aadhaarNumber} onChange={(e) => setProfileFormData({...profileFormData, aadhaarNumber: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                        <input type="text" value={profileFormData.aadhaarNumber} onChange={(e) => setProfileFormData({...profileFormData, aadhaarNumber: e.target.value})} className="w-full px-4 py-3 bg-metro-periwinkle dark:bg-[#050505] border border-metro-mauve dark:border-slate-800 rounded-sm text-sm" />
                      </div>
                      <div>
                         <label className="text-xs font-bold text-slate-500 mb-1 block">PAN Number</label>
-                        <input type="text" value={profileFormData.panNumber} onChange={(e) => setProfileFormData({...profileFormData, panNumber: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                        <input type="text" value={profileFormData.panNumber} onChange={(e) => setProfileFormData({...profileFormData, panNumber: e.target.value})} className="w-full px-4 py-3 bg-metro-periwinkle dark:bg-[#050505] border border-metro-mauve dark:border-slate-800 rounded-sm text-sm" />
                      </div>
                      <div className="md:col-span-2">
                         <label className="text-xs font-bold text-slate-500 mb-1 block">Address</label>
-                        <input type="text" value={profileFormData.address} onChange={(e) => setProfileFormData({...profileFormData, address: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                        <input type="text" value={profileFormData.address} onChange={(e) => setProfileFormData({...profileFormData, address: e.target.value})} className="w-full px-4 py-3 bg-metro-periwinkle dark:bg-[#050505] border border-metro-mauve dark:border-slate-800 rounded-sm text-sm" />
                      </div>
                      <div>
                         <label className="text-xs font-bold text-slate-500 mb-1 block">District</label>
-                        <input type="text" value={profileFormData.district} onChange={(e) => setProfileFormData({...profileFormData, district: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                        <input type="text" value={profileFormData.district} onChange={(e) => setProfileFormData({...profileFormData, district: e.target.value})} className="w-full px-4 py-3 bg-metro-periwinkle dark:bg-[#050505] border border-metro-mauve dark:border-slate-800 rounded-sm text-sm" />
                      </div>
                      <div>
                         <label className="text-xs font-bold text-slate-500 mb-1 block">Pincode</label>
-                        <input type="text" value={profileFormData.pincode} onChange={(e) => setProfileFormData({...profileFormData, pincode: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" />
+                        <input type="text" value={profileFormData.pincode} onChange={(e) => setProfileFormData({...profileFormData, pincode: e.target.value})} className="w-full px-4 py-3 bg-metro-periwinkle dark:bg-[#050505] border border-metro-mauve dark:border-slate-800 rounded-sm text-sm" />
                      </div>
                    </div>
                    
                    <div className="flex gap-4 pt-4 justify-end">
-                     <button type="button" onClick={() => setIsEditingProfile(false)} className="px-6 py-2.5 rounded-sm border-2 border-slate-200 text-xs font-bold dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50">Cancel</button>
-                     <button type="submit" className="px-6 py-2.5 rounded-sm bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md">Save Changes</button>
+                     <button type="button" onClick={() => setIsEditingProfile(false)} className="px-6 py-2.5 rounded-sm border-2 border-metro-mauve text-xs font-bold dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-metro-periwinkle dark:hover:bg-slate-800/50">Cancel</button>
+                     <button type="submit" className="px-6 py-2.5 rounded-sm bg-metro-cobalt hover:bg-metro-plum text-white text-xs font-bold shadow-md">Save Changes</button>
                    </div>
                  </form>
               ) : (
 
-              <div className="bg-slate-50 dark:bg-[#020617] rounded-sm border-2 border-slate-200 dark:border-slate-800 p-5 space-y-4 text-sm font-medium">
+              <div className="bg-metro-periwinkle dark:bg-[#050505] rounded-sm border-2 border-metro-mauve dark:border-slate-800 p-5 space-y-4 text-sm font-medium">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
                   <div className="flex items-center space-x-4">
                     <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
@@ -1009,7 +1000,7 @@ export const UserDashboard: React.FC = () => {
                   </div>
 
                   <div className="flex items-start space-x-4 md:col-span-2 mt-2">
-                    <div className="w-8 h-8 rounded-sm bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 shrink-0">
+                    <div className="w-8 h-8 rounded-sm bg-metro-mauve dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 shrink-0">
                       <MapPin className="w-4 h-4" />
                     </div>
                     <div>
@@ -1022,8 +1013,8 @@ export const UserDashboard: React.FC = () => {
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-4 pt-4 border-t border-slate-200 dark:border-slate-800 md:col-span-2">
-                    <div className="w-8 h-8 rounded-sm bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                  <div className="flex items-center space-x-4 pt-4 border-t border-metro-mauve dark:border-slate-800 md:col-span-2">
+                    <div className="w-8 h-8 rounded-sm bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-metro-cobalt dark:text-blue-400 shrink-0">
                       <Calendar className="w-4 h-4" />
                     </div>
                     <div>
@@ -1047,27 +1038,27 @@ export const UserDashboard: React.FC = () => {
           APP MODAL: DIGITAL SMART RECEIPT DIALOG PRINT
           ===================================================================== */}
       {selectedReceiptApp && (
-        <div className="fixed inset-0 z-50 bg-[#020617]/60 flex items-center justify-center p-4 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#1c1917] max-w-md w-full rounded-sm border-2 border-slate-200 dark:border-slate-800 shadow-2xl p-6 text-left relative overflow-hidden animate-scale-up">
+        <div className="fixed inset-0 z-50 bg-[#050505]/60 flex items-center justify-center p-4 backdrop-blur-xs">
+          <div className="bg-metro-periwinkle dark:bg-[#1A0B2E] max-w-md w-full rounded-sm border-2 border-metro-mauve dark:border-slate-800 shadow-2xl p-6 text-left relative overflow-hidden animate-scale-up">
             
             {/* Stamp-like visual header badge */}
-            <div className="absolute -top-3 -right-3 w-20 h-20 bg-blue-600/5 dark:bg-blue-500/5 rounded-full shrink-0"></div>
+            <div className="absolute -top-3 -right-3 w-20 h-20 bg-metro-cobalt/5 dark:bg-blue-500/5 rounded-full shrink-0"></div>
 
             <div className="flex justify-between items-start border-b border-slate-100 dark:border-slate-800 pb-4 mb-4">
               <div className="flex items-center space-x-3">
-                <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 animate-fade-in bg-white p-1 rounded-sm shadow-md border-2 border-slate-100">
+                <div className="w-14 h-14 md:w-16 md:h-16 shrink-0 animate-fade-in bg-metro-periwinkle p-1 rounded-sm shadow-md border-2 border-slate-100">
                   <img src="/logo1.png" alt="Logo" className="w-full h-full object-contain rounded-lg" />
                 </div>
                 <div>
-                  <span className="text-[9px] uppercase tracking-widest font-extrabold text-blue-600 dark:text-blue-450">SEAGAN ENTERPRISES</span>
-                  <h4 className="font-display font-extrabold text-sm text-slate-950 dark:text-white mt-0.5">Digital Service Smart Receipt</h4>
+                  <span className="text-[9px] uppercase tracking-widest font-extrabold text-metro-cobalt dark:text-blue-450">SEAGAN ENTERPRISES</span>
+                  <h4 className="font-display font-extrabold text-sm text-metro-eggplant dark:text-white mt-0.5">Digital Service Smart Receipt</h4>
                   <p className="text-[10px] text-slate-400 mt-0.5 font-mono">{selectedReceiptApp.tokenNumber}</p>
                 </div>
               </div>
               <button 
                 type="button"
                 onClick={() => setSelectedReceiptApp(null)}
-                className="p-1 px-2 text-xs font-bold border-2 border-slate-200 dark:border-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white rounded-lg"
+                className="p-1 px-2 text-xs font-bold border-2 border-metro-mauve dark:border-slate-800 text-slate-500 hover:text-metro-slate dark:hover:text-white rounded-lg"
               >
                 ✕ Close
               </button>
@@ -1076,24 +1067,24 @@ export const UserDashboard: React.FC = () => {
             <div className="space-y-4">
               
               {/* Process parameters lists */}
-              <div className="p-4 bg-slate-50 dark:bg-[#020617] rounded-sm border-2 border-slate-200 dark:border-slate-800 space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400 leading-relaxed font-mono">
+              <div className="p-4 bg-metro-periwinkle dark:bg-[#050505] rounded-sm border-2 border-metro-mauve dark:border-slate-800 space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400 leading-relaxed font-mono">
                 <div className="flex justify-between">
                   <span>Resident Name:</span>
-                  <span className="text-slate-950 dark:text-white font-bold">{selectedReceiptApp.userFullName || currentUser?.fullName}</span>
+                  <span className="text-metro-eggplant dark:text-white font-bold">{selectedReceiptApp.userFullName || currentUser?.fullName}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Resident Email:</span>
-                  <span className="text-slate-950 dark:text-white truncate max-w-[160px]">{selectedReceiptApp.userEmail || currentUser?.email}</span>
+                  <span className="text-metro-eggplant dark:text-white truncate max-w-[160px]">{selectedReceiptApp.userEmail || currentUser?.email}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Scheme requested:</span>
-                  <span className="text-slate-950 dark:text-white font-bold max-w-[160px] text-right truncate">{selectedReceiptApp.serviceName}</span>
+                  <span className="text-metro-eggplant dark:text-white font-bold max-w-[160px] text-right truncate">{selectedReceiptApp.serviceName}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Transaction ID:</span>
-                  <span className="text-slate-950 dark:text-white font-mono">TN_SIM_82049_2026</span>
+                  <span className="text-metro-eggplant dark:text-white font-mono">TN_SIM_82049_2026</span>
                 </div>
-                <div className="flex justify-between border-t border-dashed border-slate-200 dark:border-slate-800 pt-2 text-slate-900 dark:text-white font-bold font-sans">
+                <div className="flex justify-between border-t border-dashed border-metro-mauve dark:border-slate-800 pt-2 text-slate-900 dark:text-white font-bold font-sans">
                   <span>Portal Billing Fee:</span>
                   <span className="font-mono">₹{selectedReceiptApp.amount}.00 (Paid)</span>
                 </div>
@@ -1105,15 +1096,15 @@ export const UserDashboard: React.FC = () => {
                   <h5 className="font-display font-extrabold text-[10px] text-slate-400 uppercase tracking-widest">
                     Live Action Tracker
                   </h5>
-                  <span className="font-bold text-[#F59E0B] uppercase tracking-wider text-[10px] bg-[#F59E0B]/10 px-2 py-0.5 rounded-sm">{selectedReceiptApp.status}</span>
+                  <span className="font-bold text-[#FF007A] uppercase tracking-wider text-[10px] bg-[#FF007A]/10 px-2 py-0.5 rounded-sm">{selectedReceiptApp.status}</span>
                 </div>
                 
                 <div className="space-y-2">
                   {selectedReceiptApp.status !== 'Rejected' ? (
                     <div className="relative pt-4 pb-2 w-full px-2">
                         {/* Connecting Line */}
-                        <div className="absolute top-5 left-0 w-full h-[3px] bg-slate-200 dark:bg-slate-700/50 rounded-full"></div>
-                        <div className="absolute top-5 left-0 h-[3px] bg-[#15803D] border border-[#14532d] transition-all duration-700 rounded-full" 
+                        <div className="absolute top-5 left-0 w-full h-[3px] bg-metro-mauve dark:bg-slate-700/50 rounded-full"></div>
+                        <div className="absolute top-5 left-0 h-[3px] bg-[#FF007A] border border-[#14532d] transition-all duration-700 rounded-full" 
                              style={{ width: `${(getStageIndex(selectedReceiptApp.status) / (STAGES.length - 1)) * 100}%` }}>
                         </div>
                         
@@ -1124,8 +1115,8 @@ export const UserDashboard: React.FC = () => {
                                const isCurrent = getStageIndex(selectedReceiptApp.status) === index;
                                return (
                                    <div key={stage} className="flex flex-col items-center group w-16 -ml-8 first:ml-0 last:-mr-8">
-                                       <div className={`w-3.5 h-3.5 rounded-full z-10 mb-2.5 outline outline-2 outline-offset-2 transition-all duration-300 ${isCompleted ? 'bg-[#15803D] outline-[#15803D] shadow-[0_0_8px_rgba(21,128,61,0.6)]' : 'bg-slate-300 dark:bg-slate-700 outline-transparent'} ${isCurrent ? 'ring-4 ring-[#15803D]/30 scale-125' : ''}`}></div>
-                                       <span className={`text-[8px] uppercase tracking-widest text-center transition-colors leading-tight ${isCurrent ? 'text-slate-900 dark:text-white font-extrabold' : (isCompleted ? 'text-[#15803D] font-bold' : 'text-slate-400 font-semibold')}`}>{stage}</span>
+                                       <div className={`w-3.5 h-3.5 rounded-full z-10 mb-2.5 outline outline-2 outline-offset-2 transition-all duration-300 ${isCompleted ? 'bg-[#FF007A] outline-[#FF007A] shadow-[0_0_8px_rgba(21,128,61,0.6)]' : 'bg-slate-300 dark:bg-slate-700 outline-transparent'} ${isCurrent ? 'ring-4 ring-[#FF007A]/30 scale-125' : ''}`}></div>
+                                       <span className={`text-[8px] uppercase tracking-widest text-center transition-colors leading-tight ${isCurrent ? 'text-slate-900 dark:text-white font-extrabold' : (isCompleted ? 'text-[#FF007A] font-bold' : 'text-slate-400 font-semibold')}`}>{stage}</span>
                                    </div>
                                )
                            })}
@@ -1137,14 +1128,14 @@ export const UserDashboard: React.FC = () => {
                          <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
                          System Rejection Notice
                       </h4>
-                      <p className="mt-1.5 text-slate-700 dark:text-slate-300 font-semibold leading-relaxed border-l-2 border-red-500 pl-2">{selectedReceiptApp.rejectionReason || 'Submitted original document lacks a clear digital stamp. Manual review required by the administrative desk.'}</p>
+                      <p className="mt-1.5 text-metro-slate dark:text-slate-300 font-semibold leading-relaxed border-l-2 border-red-500 pl-2">{selectedReceiptApp.rejectionReason || 'Submitted original document lacks a clear digital stamp. Manual review required by the administrative desk.'}</p>
                     </div>
                   )}
                 </div>
               </div>
 
               {/* Symmetrical cryptographic QR Validation vectors */}
-              <div className="flex flex-col items-center justify-center p-4 bg-slate-50 dark:bg-[#020617] rounded-sm border-2 border-slate-200 dark:border-slate-800 text-center gap-2">
+              <div className="flex flex-col items-center justify-center p-4 bg-metro-periwinkle dark:bg-[#050505] rounded-sm border-2 border-metro-mauve dark:border-slate-800 text-center gap-2">
                 <QRCodeGenerator 
                   value={`SEAGAN-SMART-RECEIPT: TOKEN:${selectedReceiptApp.tokenNumber} VALUE:₹${selectedReceiptApp.amount} CITIZEN:${selectedReceiptApp.userFullName} DATE:${selectedReceiptApp.createdAt}`} 
                   size={120} 

@@ -58,9 +58,6 @@ interface AppContextType {
   updateUserProfile: (updates: Partial<Profile>) => Promise<void>;
   addUser: (name: string, email: string, phone: string, role: 'user' | 'admin') => Promise<void>;
   logoutUser: () => void;
-  
-  // Abstraction payment ready engine
-  initiatePaymentGateways: (appId: string, amount: number) => Promise<boolean>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -185,68 +182,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setViewState(view);
   };
 
-  // Abstract Payment Gateways (Cashfree) Simulator and abstraction logic
-  const initiatePaymentGateways = async (appId: string, amount: number): Promise<boolean> => {
-    console.log(`Cashfree Payment Gateway real init for application ${appId} (₹${amount})`);
-    
-    try {
-      // Import dynamically to avoid loading issues
-      const { load } = await import('@cashfreepayments/cashfree-js');
-      const cashfree = await load({ mode: "production" });
-
-      // Call our backend to get the payment session ID
-      const response = await fetch('/api/create-cashfree-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          orderId: appId,
-          amount: amount,
-          customerName: currentUser?.fullName || 'Customer',
-          customerEmail: currentUser?.email || 'customer@example.com',
-          customerPhone: '9999999999'
-        })
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Backend error creating order:", errorText);
-        alert(`Payment error: ${errorText}`);
-        return false;
-      }
-
-      const data = await response.json();
-      
-      return new Promise((resolve) => {
-        cashfree.checkout({
-          paymentSessionId: data.payment_session_id,
-          redirectTarget: "_modal",
-        }).then((result: any) => {
-          if (result.error){
-            console.error(result.error);
-            resolve(false);
-          }
-          if (result.redirect){
-            // It redirectted... handled by parent window if returnUrl is set
-            resolve(true); // Assuming they will pay there
-          }
-          if (result.paymentDetails) {
-            console.log("Payment completed successfully:", result.paymentDetails.paymentMessage);
-            resolve(true);
-          }
-        }).catch((err: any) => {
-          console.error("Checkout modal error", err);
-          resolve(false);
-        });
-      });
-    } catch (e: any) {
-      console.error("Payment exception", e);
-      alert(`Payment Exception: ${e.message}`);
-      return false;
-    }
-  };
-
   // Listen for cross-tab storage changes (like Admin adding a service in another tab)
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
@@ -313,8 +248,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       registerUser,
       updateUserProfile,
       addUser,
-      logoutUser,
-      initiatePaymentGateways
+      logoutUser
     }}>
       {children}
     </AppContext.Provider>

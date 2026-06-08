@@ -65,7 +65,7 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full shadow-lg">
-      <div className="bg-[#0F172A] border-b-4 border-[#F59E0B] text-white">
+      <div className="bg-[#1A0B2E] border-b-4 border-[#FF007A] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between relative z-10">
           
           {/* Brand Header */}
@@ -74,7 +74,7 @@ export const Navbar: React.FC = () => {
             className="flex items-center space-x-4 cursor-pointer group"
           >
             {/* Emblem representing TN Golden Temple / Tower Gilt Portal */}
-            <div className="relative flex items-center justify-center w-12 h-12 md:w-16 md:h-16 group-hover:scale-105 transition-all duration-300 shrink-0 animate-fade-in bg-white p-1 rounded-full shadow-md border-2 border-white ring-2 ring-[#F59E0B]">
+            <div className="relative flex items-center justify-center w-12 h-12 md:w-16 md:h-16 group-hover:scale-105 transition-all duration-300 shrink-0 animate-fade-in bg-metro-periwinkle p-1 rounded-full shadow-md border-2 border-white ring-2 ring-[#FF007A]">
               <img src="/logo1.png" alt="Logo" className="w-full h-full object-contain rounded-full" />
             </div>
             <div>
@@ -83,7 +83,7 @@ export const Navbar: React.FC = () => {
                   {t('portalName')}
                 </span>
               </div>
-              <p className="text-[10px] md:text-xs font-bold text-[#F59E0B] tracking-widest hidden md:block mt-1 uppercase">
+              <p className="text-[10px] md:text-xs font-bold text-[#FF007A] tracking-widest hidden md:block mt-1 uppercase">
                 {language === 'en' ? 'A2Z Online Service | TN Digital' : 'ஏ2இசட் ஆன்லைன் சேவை'}
               </p>
             </div>
@@ -98,21 +98,21 @@ export const Navbar: React.FC = () => {
                 onClick={() => handleNavClick('home')}
                 className={`px-4 py-2 font-bold text-xs uppercase tracking-wider transition-all duration-300 border-b-2 ${
                   currentView === 'home' 
-                    ? 'border-[#F59E0B] text-[#F59E0B]' 
-                    : 'border-transparent text-white hover:text-[#F59E0B]'
+                    ? 'border-[#FF007A] text-[#FF007A]' 
+                    : 'border-transparent text-white hover:text-[#FF007A]'
                 }`}
               >
                 {t('home')}
               </button>
               <button 
                 onClick={() => handleNavClick('home', 'services-grid-section')}
-                className={`px-4 py-2 font-bold text-xs uppercase tracking-wider transition-all duration-300 border-b-2 border-transparent hover:text-[#F59E0B]`}
+                className={`px-4 py-2 font-bold text-xs uppercase tracking-wider transition-all duration-300 border-b-2 border-transparent hover:text-[#FF007A]`}
               >
                 {t('services')}
               </button>
               <button 
                 onClick={() => handleNavClick('home', 'contact-section-id')}
-                className={`px-4 py-2 font-bold text-xs uppercase tracking-wider transition-all duration-300 border-b-2 border-transparent hover:text-[#F59E0B]`}
+                className={`px-4 py-2 font-bold text-xs uppercase tracking-wider transition-all duration-300 border-b-2 border-transparent hover:text-[#FF007A]`}
               >
                 {t('contact')}
               </button>
@@ -122,7 +122,7 @@ export const Navbar: React.FC = () => {
           <button
             id="lang-switch-btn"
             onClick={() => setLanguage(language === 'en' ? 'ta' : 'en')}
-            className="hidden sm:flex items-center space-x-1.5 px-3 py-2 rounded-sm border border-[#2a3f7a] bg-[#0F172A] text-xs font-bold text-blue-200 hover:text-white hover:border-[#4a6ab5] transition-all"
+            className="hidden sm:flex items-center space-x-1.5 px-3 py-2 rounded-sm border border-[#2a3f7a] bg-[#1A0B2E] text-xs font-bold text-blue-200 hover:text-white hover:border-[#4a6ab5] transition-all"
           >
             <Globe className="w-4 h-4 shrink-0" />
             <span>{language === 'en' ? 'தமிழ்' : 'English'}</span>
@@ -134,7 +134,7 @@ export const Navbar: React.FC = () => {
               <button
                 id="notification-bell-btn"
                 onClick={() => setNotifMenuOpen(!notifMenuOpen)}
-                className="relative p-2.5 rounded-sm border border-[#2a3f7a] bg-[#0F172A] text-blue-200 hover:text-white shadow-sm transition-all"
+                className="relative p-2.5 rounded-sm border border-[#2a3f7a] bg-[#1A0B2E] text-blue-200 hover:text-white shadow-sm transition-all"
                 aria-label="View notifications"
               >
                 <Bell className="w-4 h-4" />
@@ -147,16 +147,16 @@ export const Navbar: React.FC = () => {
 
               {/* Notification Droplist Slide Panel */}
               {notifMenuOpen && (
-                <div className="absolute right-0 mt-3 w-72 md:w-96 rounded-sm border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1c1917] shadow-2xl p-4 z-50 text-slate-700 dark:text-slate-300">
+                <div className="absolute right-0 mt-3 w-72 md:w-96 rounded-sm border-2 border-metro-mauve dark:border-slate-800 bg-metro-periwinkle dark:bg-[#1A0B2E] shadow-2xl p-4 z-50 text-metro-slate dark:text-slate-300">
                   <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-2">
                     <div className="flex items-center space-x-2">
-                      <Bell className="w-4 h-4 text-[#020617] dark:text-blue-400" />
+                      <Bell className="w-4 h-4 text-[#050505] dark:text-blue-400" />
                       <h4 className="font-semibold text-xs md:text-sm">Notifications ({unreadCount} new)</h4>
                     </div>
                     {unreadCount > 0 && (
                       <button 
                         onClick={handleMarkAllAsRead}
-                        className="text-[11px] font-medium text-blue-600 dark:text-blue-400 hover:underline flex items-center space-x-1"
+                        className="text-[11px] font-medium text-metro-cobalt dark:text-blue-400 hover:underline flex items-center space-x-1"
                       >
                         <CheckSquare className="w-3 h-3" />
                         <span className="hidden sm:inline">Mark all read</span>
@@ -177,7 +177,7 @@ export const Navbar: React.FC = () => {
                           }}
                           className={`p-2.5 rounded-sm text-left border text-xs transition-colors cursor-pointer ${
                             notif.isRead 
-                              ? 'bg-slate-50 dark:bg-[#1c1917]/40 border-slate-100 dark:border-slate-900' 
+                              ? 'bg-metro-periwinkle dark:bg-[#1A0B2E]/40 border-slate-100 dark:border-slate-900' 
                               : 'bg-blue-50/50 dark:bg-blue-950/20 border-blue-100/50 dark:border-blue-900/30'
                           }`}
                         >
@@ -186,7 +186,7 @@ export const Navbar: React.FC = () => {
                             {!notif.isRead && (
                               <button 
                                 onClick={(e) => handleMarkAsRead(notif.id, e)}
-                                className="text-slate-400 hover:text-blue-600 p-0.5 rounded-md"
+                                className="text-slate-400 hover:text-metro-cobalt p-0.5 rounded-md"
                                 title="Mark read"
                               >
                                 <Check className="w-3.5 h-3.5" />
@@ -219,7 +219,7 @@ export const Navbar: React.FC = () => {
               <button
                 id="navbar-logout-btn"
                 onClick={logoutUser}
-                className="hidden lg:flex p-2.5 rounded-sm border border-[#2a3f7a] bg-[#0F172A] text-blue-200 hover:text-red-400 hover:border-red-900 hover:bg-red-900/30 shadow-sm transition-all"
+                className="hidden lg:flex p-2.5 rounded-sm border border-[#2a3f7a] bg-[#1A0B2E] text-blue-200 hover:text-red-400 hover:border-red-900 hover:bg-red-900/30 shadow-sm transition-all"
                 title={t('logout')}
               >
                 <LogOut className="w-4 h-4" />
@@ -238,7 +238,7 @@ export const Navbar: React.FC = () => {
           {/* Mobile menu button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2.5 rounded-sm border border-[#2a3f7a] bg-[#0F172A] text-blue-200 hover:text-white transition-all"
+            className="lg:hidden p-2.5 rounded-sm border border-[#2a3f7a] bg-[#1A0B2E] text-blue-200 hover:text-white transition-all"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -248,30 +248,30 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#020617] animate-fade-in shadow-xl absolute w-full left-0 origin-top">
+        <div className="lg:hidden border-t border-metro-mauve dark:border-slate-800 bg-metro-periwinkle dark:bg-[#050505] animate-fade-in shadow-xl absolute w-full left-0 origin-top">
           <div className="px-4 py-6 flex flex-col space-y-4">
             <button 
               onClick={() => handleNavClick('home')}
-              className="w-full text-left font-semibold text-lg py-2 border-b border-slate-100 dark:border-slate-900 text-slate-800 dark:text-white"
+              className="w-full text-left font-semibold text-lg py-2 border-b border-slate-100 dark:border-slate-900 text-metro-slate dark:text-white"
             >
               {t('home')}
             </button>
             <button 
               onClick={() => handleNavClick('home', 'services-grid-section')}
-              className="w-full text-left font-semibold text-lg py-2 border-b border-slate-100 dark:border-slate-900 text-slate-800 dark:text-white"
+              className="w-full text-left font-semibold text-lg py-2 border-b border-slate-100 dark:border-slate-900 text-metro-slate dark:text-white"
             >
               {t('services')}
             </button>
             <button 
               onClick={() => handleNavClick('home', 'contact-section-id')}
-              className="w-full text-left font-semibold text-lg py-2 border-b border-slate-100 dark:border-slate-900 text-slate-800 dark:text-white"
+              className="w-full text-left font-semibold text-lg py-2 border-b border-slate-100 dark:border-slate-900 text-metro-slate dark:text-white"
             >
               {t('contact')}
             </button>
 
             {/* Language Selection in mobile menu */}
             <div className="py-2 border-b border-slate-100 dark:border-slate-900 flex justify-between items-center">
-              <span className="font-semibold text-lg text-slate-800 dark:text-white">Language</span>
+              <span className="font-semibold text-lg text-metro-slate dark:text-white">Language</span>
               <button
                 onClick={() => setLanguage(language === 'en' ? 'ta' : 'en')}
                 className="flex items-center justify-center space-x-1.5 px-4 py-2 rounded-sm border-2 border-blue-200 dark:border-blue-900/50 bg-blue-50/50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 shadow-sm"
@@ -286,7 +286,7 @@ export const Navbar: React.FC = () => {
               <div className="pt-2 space-y-3">
                 <button 
                   onClick={navigateToDashboard}
-                  className="w-full flex items-center justify-center space-x-2 py-3 rounded-sm bg-slate-100 dark:bg-[#1c1917] text-slate-800 dark:text-white font-semibold"
+                  className="w-full flex items-center justify-center space-x-2 py-3 rounded-sm bg-metro-teal dark:bg-[#1A0B2E] text-metro-slate dark:text-white font-semibold"
                 >
                   {currentUser.role === 'user' ? <User className="w-5 h-5" /> : <Shield className="w-5 h-5" />}
                   <span>{currentUser.role === 'user' ? 'User Dashboard' : 'Admin Dashboard'}</span>
@@ -306,7 +306,7 @@ export const Navbar: React.FC = () => {
               <div className="pt-2">
                 <button
                   onClick={() => handleNavClick('auth')}
-                  className="w-full py-3.5 bg-gradient-to-r from-[#020617] to-blue-600 text-white rounded-sm text-lg font-bold shadow-md"
+                  className="w-full py-3.5 bg-gradient-to-r from-[#050505] to-blue-600 text-white rounded-sm text-lg font-bold shadow-md"
                 >
                   {t('login')}
                 </button>
