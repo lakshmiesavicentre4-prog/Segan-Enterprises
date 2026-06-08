@@ -27,7 +27,8 @@ import {
   Filter, 
   DollarSign,
   UserPlus,
-  User
+  User,
+  MessageSquare
 } from 'lucide-react';
 import { 
   serviceService, 
@@ -35,7 +36,8 @@ import {
   authService, 
   notificationService, 
   settingsService,
-  reportService
+  reportService,
+  queryService
 } from '../supabase/supabaseClient';
 
 export const AdminDashboard: React.FC = () => {
@@ -58,7 +60,10 @@ export const AdminDashboard: React.FC = () => {
   } = useApp();
 
   // Active admin menu state
-  const [adminMenu, setAdminMenu] = useState<'analytics' | 'files' | 'services' | 'citizens' | 'reports' | 'logs' | 'config' | 'profile'>('analytics');
+  const [adminMenu, setAdminMenu] = useState<'analytics' | 'files' | 'services' | 'citizens' | 'reports' | 'logs' | 'config' | 'queries' | 'profile'>('analytics');
+
+  const [supportQueries, setSupportQueries] = useState<any[]>(() => queryService.getQueries());
+  const [queryResponseData, setQueryResponseData] = useState<{ id: string, message: string }>({ id: '', message: '' });
 
   // Application verification sub-flow state
   const [selectedReviewApp, setSelectedReviewApp] = useState<any>(null);
@@ -377,6 +382,23 @@ export const AdminDashboard: React.FC = () => {
         >
           <Settings className="w-4 h-4" />
           <span>Global Portal Settings</span>
+        </button>
+
+        <button
+          onClick={() => setAdminMenu('queries')}
+          className={`flex items-center justify-between px-3 py-2.5 rounded-sm text-xs font-bold transition-all ${
+            adminMenu === 'queries' 
+              ? 'bg-amber-600 text-white font-black shadow-md' 
+              : 'hover:bg-amber-50 dark:hover:bg-amber-900/20 text-slate-600 dark:text-slate-350'
+          }`}
+        >
+          <div className="flex items-center space-x-2">
+            <MessageSquare className="w-4 h-4" />
+            <span>Support Queries</span>
+          </div>
+          {(supportQueries || []).filter(q => q.status === 'Open').length > 0 && (
+            <span className="bg-amber-100 text-amber-800 py-0.5 px-1.5 rounded text-[9px] font-black">{(supportQueries || []).filter(q => q.status === 'Open').length}</span>
+          )}
         </button>
 
         <button
@@ -1227,7 +1249,73 @@ export const AdminDashboard: React.FC = () => {
         )}
 
         {/* =====================================================================
-            MENU 8: ADMIN PROFILE
+            MENU 8: SUPPORT QUERIES
+            ===================================================================== */}
+        {adminMenu === 'queries' && (
+          <div className="bg-white/70 dark:bg-[#1c1917]/70 backdrop-blur-xl border-2 border-slate-200/60 dark:border-slate-800/80 p-6 rounded-sm text-left shadow-sm space-y-6 text-slate-700 dark:text-slate-300">
+            <div>
+              <h4 className="font-display font-bold text-base text-slate-955 dark:text-white uppercase tracking-wider mb-2">
+                Citizen Support Queries
+              </h4>
+              <p className="text-xs text-slate-500">Review and resolve user problems. Resolutions automatically notify users.</p>
+            </div>
+
+            {supportQueries.length === 0 ? (
+              <div className="p-8 text-center text-slate-500 text-sm border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-sm">
+                No queries found.
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {supportQueries.map(query => (
+                  <div key={query.id} className="p-4 rounded-sm border-2 border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-[#020617]/20 flex flex-col gap-3">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h5 className="font-bold text-sm text-slate-900 dark:text-white mb-1">{query.subject}</h5>
+                        <span className="text-[10px] text-slate-500 font-bold block mb-2">{query.userFullName} &bull; {new Date(query.createdAt).toLocaleDateString()}</span>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{query.message}</p>
+                      </div>
+                      <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded shrink-0 ${query.status === 'Resolved' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'}`}>
+                        {query.status}
+                      </span>
+                    </div>
+
+                    {query.status === 'Resolved' ? (
+                      <div className="mt-2 text-xs bg-slate-100 dark:bg-slate-800 p-3 rounded-sm border-l-4 border-green-500">
+                        <span className="font-bold text-slate-800 dark:text-slate-200 block mb-1">Response sent:</span>
+                        <p className="text-slate-600 dark:text-slate-400">{query.adminResponse}</p>
+                      </div>
+                    ) : (
+                      <form className="mt-2 space-y-2 border-t pt-3 border-slate-200 dark:border-slate-800" onSubmit={(e) => {
+                        e.preventDefault();
+                        if (queryResponseData.id === query.id && queryResponseData.message.trim()) {
+                          queryService.respondToQuery(query.id, queryResponseData.message.trim());
+                          setSupportQueries(queryService.getQueries());
+                          setQueryResponseData({ id: '', message: '' });
+                          alert('Response sent!');
+                        }
+                      }}>
+                        <textarea
+                          required
+                          className="w-full px-3 py-2 text-xs border border-slate-300 dark:border-slate-700 rounded-sm bg-white dark:bg-[#0F172A]"
+                          placeholder="Write a response..."
+                          rows={2}
+                          value={queryResponseData.id === query.id ? queryResponseData.message : ''}
+                          onChange={(e) => setQueryResponseData({ id: query.id, message: e.target.value })}
+                        />
+                        <button type="submit" className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[10px] uppercase tracking-wider font-bold rounded-sm shadow-sm">
+                          Send Response & Resolve
+                        </button>
+                      </form>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* =====================================================================
+            MENU 9: ADMIN PROFILE
             ===================================================================== */}
         {adminMenu === 'profile' && (
           <div className="bg-white/70 dark:bg-[#1c1917]/70 backdrop-blur-xl border-2 border-slate-200/60 dark:border-slate-800/80 p-6 rounded-sm text-left shadow-sm space-y-6 text-slate-700 dark:text-slate-300">

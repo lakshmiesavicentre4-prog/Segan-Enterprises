@@ -88,6 +88,17 @@ export interface Payment {
   createdAt: string;
 }
 
+export interface SupportQuery {
+  id: string;
+  userId: string;
+  userFullName: string;
+  subject: string;
+  message: string;
+  status: 'Open' | 'Resolved';
+  adminResponse?: string;
+  createdAt: string;
+}
+
 export interface ActivityLog {
   id: string;
   userId: string;

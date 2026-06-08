@@ -25,9 +25,11 @@ import {
   Printer,
   Mail,
   Phone,
-  MapPin
+  MapPin,
+  RefreshCw,
+  MessageSquare
 } from 'lucide-react';
-import { applicationService, serviceService } from '../supabase/supabaseClient';
+import { applicationService, serviceService, queryService } from '../supabase/supabaseClient';
 import { QRCodeGenerator } from '../components/QRCodeGenerator';
 
 export const UserDashboard: React.FC = () => {
@@ -35,6 +37,7 @@ export const UserDashboard: React.FC = () => {
     t, 
     currentUser, 
     services, 
+    refreshServices,
     applications, 
     refreshApplications, 
     initiatePaymentGateways,
@@ -43,7 +46,7 @@ export const UserDashboard: React.FC = () => {
   } = useApp();
 
   // Active dashboard view state inside user panel
-  const [activeTab, setActiveTab] = useState<'overview' | 'apply' | 'history' | 'profile'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'apply' | 'history' | 'queries' | 'profile'>('overview');
   
   // Selected application details state for visual receipt view modal
   const [selectedReceiptApp, setSelectedReceiptApp] = useState<any>(null);
@@ -67,6 +70,12 @@ export const UserDashboard: React.FC = () => {
     district: currentUser?.district || '',
     pincode: currentUser?.pincode || '',
   });
+
+  const [queryForm, setQueryForm] = useState({ subject: '', message: '' });
+  const [queries, setQueries] = useState<any[]>(() => (queryService.getQueries() || []).filter((q: any) => q.userId === currentUser?.id));
+  const refreshQueries = () => {
+    setQueries((queryService.getQueries() || []).filter((q: any) => q.userId === currentUser?.id));
+  };
 
   // Sync profile form state if user changes
   useEffect(() => {
@@ -263,6 +272,16 @@ export const UserDashboard: React.FC = () => {
             {language === 'en' ? 'History' : 'விண்ணப்ப வரலாறு'}
           </button>
           <button
+            onClick={() => { setActiveTab('queries'); handleApplyReset(); }}
+            className={`px-5 py-2.5 rounded-sm text-xs sm:text-sm font-bold transition-all whitespace-nowrap active:scale-95 ${
+              activeTab === 'queries' 
+                ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/20 ring-1 ring-amber-600/50' 
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100/50 dark:hover:bg-slate-800/50'
+            }`}
+          >
+            {language === 'en' ? 'Support Queries' : 'உதவி கேள்விகள்'}
+          </button>
+          <button
             onClick={() => { setActiveTab('profile'); handleApplyReset(); }}
             className={`px-5 py-2.5 rounded-sm text-xs sm:text-sm font-bold transition-all whitespace-nowrap active:scale-95 ${
               activeTab === 'profile' 
@@ -427,13 +446,23 @@ export const UserDashboard: React.FC = () => {
           {!selectedService ? (
             // Select Service screen catalog
             <div>
-              <div className="mb-6">
-                <h3 className="font-display font-extrabold text-sm uppercase tracking-wider text-slate-800 dark:text-white">
-                  {language === 'en' ? 'Select Service Catalog to Apply' : 'விண்ணப்பிக்க தேவையான சேவையைத் தேர்ந்தெடு'}
-                </h3>
-                <p className="text-xs text-slate-500 mt-1">
-                  Forms inputs, documents upload criteria, and billing fees are automatically compiled and generated natively based on your selection.
-                </p>
+              <div className="mb-6 flex justify-between items-start gap-4">
+                <div>
+                  <h3 className="font-display font-extrabold text-sm uppercase tracking-wider text-slate-800 dark:text-white">
+                    {language === 'en' ? 'Select Service Catalog to Apply' : 'விண்ணப்பிக்க தேவையான சேவையைத் தேர்ந்தெடு'}
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Forms inputs, documents upload criteria, and billing fees are automatically compiled and generated natively based on your selection.
+                  </p>
+                </div>
+                <button 
+                  onClick={() => refreshServices()}
+                  className="px-3 py-1.5 flex flex-row items-center gap-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800 rounded-sm hover:bg-blue-100 transition shadow-sm text-xs font-bold shrink-0"
+                  title="Force synchronize latest services from Database"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>Refresh Services</span>
+                </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -801,7 +830,64 @@ export const UserDashboard: React.FC = () => {
       )}
 
       {/* =====================================================================
-          TAB 4: MY PROFILE
+          TAB 4: SUPPORT QUERIES
+          ===================================================================== */}
+      {activeTab === 'queries' && (
+        <div className="space-y-6 animate-fade-in text-left">
+          <div className="bg-white dark:bg-[#1c1917] p-6 border-2 border-slate-100 dark:border-slate-800 rounded-sm shadow-sm">
+            <h4 className="font-display font-extrabold text-lg flex items-center mb-6 border-b pb-4 border-slate-100 dark:border-slate-800 text-slate-800 dark:text-blue-100">
+              <MessageSquare className="w-5 h-5 mr-2 text-[#F59E0B]" />
+              Support Queries
+            </h4>
+
+            <form className="mb-8 space-y-4 max-w-xl" onSubmit={e => {
+              e.preventDefault();
+              if (queryForm.subject.trim() && queryForm.message.trim()) {
+                queryService.submitQuery(queryForm.subject.trim(), queryForm.message.trim());
+                setQueryForm({ subject: '', message: '' });
+                refreshQueries();
+                alert('Support query submitted successfully! The admin will review it and you will receive a notification.');
+              }
+            }}>
+              <div>
+                <label className="text-xs font-bold text-slate-500 mb-1 block">Subject</label>
+                <input required type="text" value={queryForm.subject} onChange={(e) => setQueryForm({...queryForm, subject: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" placeholder="e.g., Problem with document upload" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-500 mb-1 block">Message</label>
+                <textarea required rows={4} value={queryForm.message} onChange={(e) => setQueryForm({...queryForm, message: e.target.value})} className="w-full px-4 py-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-slate-800 rounded-sm text-sm" placeholder="Describe your issue..." />
+              </div>
+              <button type="submit" className="px-6 py-2.5 rounded-sm bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md">Submit Query</button>
+            </form>
+
+            <h5 className="font-bold text-sm text-slate-700 dark:text-slate-300 mb-4">Your Past Queries</h5>
+            {queries.length === 0 ? (
+              <div className="text-slate-500 text-sm">No support queries found.</div>
+            ) : (
+              <div className="space-y-4">
+                {queries.map(q => (
+                  <div key={q.id} className="p-4 border-2 border-slate-100 dark:border-slate-800 rounded-sm bg-slate-50 dark:bg-[#020617]/20">
+                    <div className="flex justify-between items-start mb-2">
+                       <h6 className="font-bold text-sm text-slate-900 dark:text-amber-400">{q.subject}</h6>
+                       <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded ${q.status === 'Resolved' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300'}`}>{q.status}</span>
+                    </div>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mb-3">{q.message}</p>
+                    {q.adminResponse && (
+                      <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-500 text-xs">
+                        <span className="font-bold block text-blue-800 dark:text-blue-300 mb-1">Admin Response:</span>
+                        <p className="text-blue-900 dark:text-blue-100 leading-relaxed">{q.adminResponse}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* =====================================================================
+          TAB 5: MY PROFILE
           ===================================================================== */}
       {activeTab === 'profile' && (
         <div className="bg-white dark:bg-[#1c1917] border-2 border-slate-200 dark:border-slate-800 p-6 rounded-sm text-left shadow-sm max-w-3xl mx-auto space-y-6">

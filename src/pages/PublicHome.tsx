@@ -85,7 +85,7 @@ export const PublicHome: React.FC = () => {
     const state = JSON.parse(localStorage.getItem('segan_db_v1') || '{}');
     if (state && state.applications) {
       const found = state.applications.find(
-        (app: any) => app.tokenNumber.trim().toUpperCase() === trackToken.trim().toUpperCase()
+        (app: any) => app.tokenNumber && app.tokenNumber.trim().toUpperCase() === trackToken.trim().toUpperCase()
       );
       if (found) {
         setTrackedApplication(found);

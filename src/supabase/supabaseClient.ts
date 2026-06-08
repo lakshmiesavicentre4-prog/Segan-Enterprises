@@ -41,6 +41,7 @@ interface DbState {
   applicationDocuments: ApplicationDocument[];
   notifications: Notification[];
   payments: Payment[];
+  supportQueries: any[];
   activityLogs: ActivityLog[];
   settings: AppSettings;
   currentUser: Profile | null;
@@ -289,13 +290,12 @@ function initDatabase(): DbState {
         if (!parsed.settings.supportPhone) parsed.settings.supportPhone = DEFAULT_SETTINGS.supportPhone;
         if (!parsed.settings.supportEmail) parsed.settings.supportEmail = DEFAULT_SETTINGS.supportEmail;
 
-        if (parsed.applications.length === 0) {
-          parsed.applications = DEFAULT_APPLICATIONS;
-        }
-
-        if (parsed.applicationDocuments.length === 0) {
-          parsed.applicationDocuments = DEFAULT_DOCUMENTS;
-        }
+        if (!parsed.applications) parsed.applications = DEFAULT_APPLICATIONS;
+        if (!parsed.applicationDocuments) parsed.applicationDocuments = DEFAULT_DOCUMENTS;
+        if (!parsed.notifications) parsed.notifications = DEFAULT_NOTIFICATIONS;
+        if (!parsed.payments) parsed.payments = DEFAULT_PAYMENTS;
+        if (!parsed.supportQueries) parsed.supportQueries = [];
+        if (!parsed.activityLogs) parsed.activityLogs = DEFAULT_LOGS;
 
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(parsed));
         return parsed;
@@ -313,6 +313,7 @@ function initDatabase(): DbState {
     applicationDocuments: DEFAULT_DOCUMENTS,
     notifications: DEFAULT_NOTIFICATIONS,
     payments: DEFAULT_PAYMENTS,
+    supportQueries: [],
     activityLogs: DEFAULT_LOGS,
     settings: DEFAULT_SETTINGS,
     currentUser: null // no active auth session at start
@@ -869,5 +870,50 @@ export const settingsService = {
 
     db.save(state);
     return state.settings;
+  }
+};
+
+export const queryService = {
+  submitQuery: (subject: string, message: string): void => {
+    const state = db.get();
+    const curUser = state.currentUser;
+    if (!curUser) return;
+    if (!state.supportQueries) state.supportQueries = [];
+    state.supportQueries.unshift({
+      id: 'query-' + Math.random().toString(36).substr(2, 9),
+      userId: curUser.id,
+      userFullName: curUser.fullName,
+      subject,
+      message,
+      status: 'Open',
+      createdAt: new Date().toISOString()
+    });
+    db.save(state);
+  },
+  
+  getQueries: (): any[] => {
+    const state = db.get();
+    return state.supportQueries || [];
+  },
+
+  respondToQuery: (queryId: string, response: string): void => {
+    const state = db.get();
+    if (!state.supportQueries) state.supportQueries = [];
+    const query = state.supportQueries.find((q: any) => q.id === queryId);
+    if (!query) return;
+
+    query.status = 'Resolved';
+    query.adminResponse = response;
+
+    state.notifications.unshift({
+      id: 'not-' + Math.random().toString(36).substr(2, 9),
+      userId: query.userId,
+      title: `Admin Response to Query: ${query.subject}`,
+      message: `The admin has responded to your query. Response: "${response}"`,
+      isRead: false,
+      createdAt: new Date().toISOString()
+    });
+
+    db.save(state);
   }
 };
