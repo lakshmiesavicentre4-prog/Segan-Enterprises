@@ -15,6 +15,7 @@ const HolographicFluid = () => {
   }, []);
   
   const mainScale = isMobile ? 1.5 : 2.5;
+  const positionX = isMobile ? 0 : 2; // Move somewhat to the right on desktop
   
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
@@ -26,7 +27,7 @@ const HolographicFluid = () => {
 
   return (
     <>
-      <Float speed={1.5} rotationIntensity={0.5} floatIntensity={1} position={[0, -0.5, 0]}>
+      <Float speed={1.5} rotationIntensity={0.5} floatIntensity={1} position={[positionX, -0.5, 0]}>
         {/* Deep Holographic Fluid Sphere */}
         <Sphere ref={meshRef} args={[mainScale, 128, 128]}>
           <MeshDistortMaterial

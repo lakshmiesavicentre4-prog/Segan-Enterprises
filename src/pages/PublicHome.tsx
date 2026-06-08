@@ -143,7 +143,7 @@ export const PublicHome: React.FC = () => {
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-[#FF007A]/10 rounded-full blur-[100px] pointer-events-none"></div>
         <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-[#1A0B2E] to-transparent pointer-events-none"></div>
 
-        <div className="absolute right-0 top-0 w-full md:w-1/2 h-full opacity-30 select-none hidden md:block">
+        <div className="absolute inset-0 w-full h-full opacity-30 select-none z-0">
            <Hero3D />
         </div>
 
